@@ -1,7 +1,18 @@
-﻿namespace ApiGateway.Data.EFCore.DataAccess
+﻿using System.Threading.Tasks;
+using ApiGateway.Common.Model;
+
+namespace ApiGateway.Data.EFCore.DataAccess
 {
     public class ApiData: IApiData
     {
-        
+        public Task<ApiModel> SaveApi(KeyModel key, ApiModel model)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DeleteApi(KeyModel key, ApiModel model)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

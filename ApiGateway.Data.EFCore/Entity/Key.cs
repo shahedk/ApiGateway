@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ApiGateway.Common.Model;
 
 namespace ApiGateway.Data.EFCore.Entity
 {
     public class Key : EntityBase
     {
+        [Required]
+        public KeyAccessLevel AccessLevel { get; set; }
+
         [Required]
         [StringLength(50)]
         public string PublicKey { get; set; }

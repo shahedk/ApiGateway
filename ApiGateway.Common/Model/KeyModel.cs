@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 
@@ -6,7 +7,10 @@ namespace ApiGateway.Common.Model
 {
     public class KeyModel : ModelBase
     {
-        public string Id { get; set; }
+        
+        [Required]
+        public KeyAccessLevel AccessLevel { get; set; }
+        
         public string PublicKey { get; set; }
         public List<Tag> Tags { get; set; }
 

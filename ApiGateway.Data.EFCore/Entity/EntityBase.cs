@@ -10,6 +10,10 @@ namespace ApiGateway.Data.EFCore.Entity
         [StringLength(20)]
         public string Id { get; set; }
 
+        [Required]
+        [StringLength(32)]
+        public string OwnerKeyId { get; set; }
+
 
         [Required]
         public DateTime CreateDate { get; set; } = DateTime.UtcNow;

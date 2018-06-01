@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace ApiGateway.Common.Model
 {
     public class ApiModel : ModelBase
     {
-        public string Id { get; set; }
+        [Required]
         public string ServiceId { get; set; }
 
+        [Required]
         public string Name { get; set; }
         public List<Tag> Tags { get; set; }
 
         private string _httpMethod = string.Empty;
+        
+        [Required]
         public string HttpMethod
         {
             get => _httpMethod;
@@ -28,6 +32,8 @@ namespace ApiGateway.Common.Model
                 }
             }
         }
+
+        [Required]
         public string Url { get; set; }
 
         public List<RoleModel> ApiInRole { get; set; }

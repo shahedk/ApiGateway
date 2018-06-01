@@ -6,10 +6,6 @@ namespace ApiGateway.Data.EFCore.Entity
     {
         [Required]
         [StringLength(20)]
-        public string ServiceId { get; set; }
-        
-        [Required]
-        [StringLength(20)]
         public string ApiId { get; set; }
         
         [Required]

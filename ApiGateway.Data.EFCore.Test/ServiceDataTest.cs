@@ -1,46 +1,46 @@
-﻿using System;
-using ApiGateway.Common.Extensions;
-using ApiGateway.Data.EFCore.Entity;
-using Microsoft.EntityFrameworkCore;
+﻿using ApiGateway.Common.Extensions;
+using ApiGateway.Common.Model;
+using ApiGateway.Data.EFCore.DataAccess;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Xunit;
 
 namespace ApiGateway.Data.EFCore.Test
 {
-    public class ServiceDataTest
+    public class ServiceDataTest : TestBase
     {
-        private ApiGatewayContext GetContext()
+        private IServiceData GetServiceData()
         {
-            var options = new DbContextOptionsBuilder<ApiGatewayContext>()
-                                .UseInMemoryDatabase(databaseName: "ApiGatewayDB").Options;
-
-            var context = new ApiGatewayContext(options);
-
-            return context;
+            var ctx = GetContext();
+            return new ServiceData(ctx);
+        }
+        
+        private IKeyData GetKeyData()
+        {
+            var ctx = GetContext();
+            return new KeyData(ctx);
         }
 
         [Fact]
-        public void AddNewService()
+        public void AddService()
         {
-            var ctx = GetContext();
-
-            var key = new Key()
+            var data = GetServiceData();
+            
+            // Insert new Key
+            var keyModel = new KeyModel()
             {
                 Id = ModelHelper.GenerateNewId(), 
                 PublicKey = ModelHelper.GenerateNewId(),
             };
 
-            ctx.Keys.Add(key);
-            var saveKeyResult = ctx.SaveChanges();
-
-            var service = new Service()
+            // Insert new Service
+            var serviceModel = new ServiceModel()
             {
                 Id = ModelHelper.GenerateNewId(),
-                Name = "TestService",
-                OwnerKeyId = key.Id,
+                Name = "TestService"
             };
 
-            ctx.Services.Add(service);
-            var saveServiceResult = ctx.SaveChanges();
+            
+            //data.SaveService()
         }
     }
 }

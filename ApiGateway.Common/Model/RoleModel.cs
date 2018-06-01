@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApiGateway.Common.Model
 {
     public class RoleModel : ModelBase
     {
-        public string Id { get; set; }
+        [Required]
         public string ServiceId { get; set; }
+        
+        [Required]
         public string Name { get; set; }
+
         public List<Tag> Tags { get; set; }
 
         public List<ApiModel> ApiInRole { get; set; }
