@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ApiGateway.Common.Extensions;
-using ApiGateway.Common.Model;
+using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 
 namespace ApiGateway.Data.EFCore.Extensions
@@ -21,7 +21,6 @@ namespace ApiGateway.Data.EFCore.Extensions
             return new Key
             {
                 Id = model.Id,
-                AccessLevel = model.AccessLevel,
                 Properties = model.Properties.ToJson(),
                 Tags = model.Tags.ToJson(),
                 PublicKey = model.PublicKey,
@@ -36,7 +35,6 @@ namespace ApiGateway.Data.EFCore.Extensions
             return new  KeyModel
             {
                 Id = entity.Id,
-                AccessLevel = entity.AccessLevel,
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
                 Roles = roles,

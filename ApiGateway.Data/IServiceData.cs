@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using ApiGateway.Common.Model;
+﻿using System.Threading.Tasks;
+using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data
 {

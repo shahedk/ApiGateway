@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiGateway.Common.Model
+namespace ApiGateway.Common.Models
 {
     public class AccessRuleModel : ModelBase
     {

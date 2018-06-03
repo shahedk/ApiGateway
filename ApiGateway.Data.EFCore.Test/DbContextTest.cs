@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ApiGateway.Common.Extensions;
-using ApiGateway.Common.Model;
-using ApiGateway.Data.EFCore.Entity;
+using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace ApiGateway.Data.EFCore.Test

@@ -1,7 +1,6 @@
-﻿using System.ComponentModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace ApiGateway.Common.Model
+namespace ApiGateway.Common.Models
 {
     public class Tag
     {

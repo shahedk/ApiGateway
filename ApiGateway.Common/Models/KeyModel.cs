@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
+using ApiGateway.Common.Constants;
 
-namespace ApiGateway.Common.Model
+namespace ApiGateway.Common.Models
 {
     public class KeyModel : ModelBase
     {
-        
-        [Required]
-        public KeyAccessLevel AccessLevel { get; set; }
         
         public string PublicKey { get; set; }
         public List<Tag> Tags { get; set; }
@@ -27,7 +23,7 @@ namespace ApiGateway.Common.Model
                 }
                 else
                 {
-                    var errorMessage = "Invalid data. Valid types are: " + string.Join(", ", ApiKeyTypes.AsList);
+                    var errorMessage = "Invalid data. Valid types are: " + string.Join(", ", ApiKeyTypes.ToList());
                     throw new InvalidDataException(errorMessage);
                 }
             }

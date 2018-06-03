@@ -1,5 +1,5 @@
 ﻿using ApiGateway.Common.Extensions;
-using ApiGateway.Common.Model;
+using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Xunit;

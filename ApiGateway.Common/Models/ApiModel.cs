@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using ApiGateway.Common.Constants;
 
-namespace ApiGateway.Common.Model
+namespace ApiGateway.Common.Models
 {
     public class ApiModel : ModelBase
     {
@@ -27,7 +28,7 @@ namespace ApiGateway.Common.Model
                 }
                 else
                 {
-                    var errorMessage = "Invalid data. Valid types are: " + string.Join(", ", ApiHttpMethods.AsList);
+                    var errorMessage = "Invalid data. Valid types are: " + string.Join(", ", ApiHttpMethods.ToList());
                     throw new InvalidDataException(errorMessage);
                 }
             }

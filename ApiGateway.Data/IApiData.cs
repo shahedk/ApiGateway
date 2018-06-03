@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ApiGateway.Common.Model;
+using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data
 {

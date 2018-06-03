@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApiGateway.Common.Model;
+using ApiGateway.Common.Models;
 
 namespace ApiGateway.Common.Extensions
 {

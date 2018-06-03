@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ApiGateway.Common.Extensions;
-using ApiGateway.Common.Model;
+using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 

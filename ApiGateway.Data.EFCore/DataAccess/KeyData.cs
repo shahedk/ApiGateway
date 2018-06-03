@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.Common.Exceptions;
-using ApiGateway.Common.Model;
+using ApiGateway.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiGateway.Data.EFCore.DataAccess
