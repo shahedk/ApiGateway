@@ -2,8 +2,7 @@
 
 namespace ApiGateway.Common.Constants
 {
-    //TODO: Consider renaming...
-    public class KeyPropertyDataTypes
+    public class PropertyDataTypes
     {
         public const int Count = 5;
         public const string String = "string";
@@ -12,8 +11,7 @@ namespace ApiGateway.Common.Constants
         public const string StringArray = "stringArray";
         public const string Boolean = "bool";
         
-        //TODO: Consider using ImmutableList<> and reuse in ToList() 
-        private static List<string> _list = null;
+        private static List<string> _listCache = null;
 
         public static List<string> ToList()
         {
@@ -22,10 +20,10 @@ namespace ApiGateway.Common.Constants
 
         public static bool IsValid(string type)
         {
-            if (_list == null)
-                _list = ToList();
+            if (_listCache == null)
+                _listCache = ToList();
 
-            return _list.Contains(type);
+            return _listCache.Contains(type);
         }
  
     }

@@ -4,7 +4,7 @@ namespace ApiGateway.Common.Models
 {
     public class Tag
     {
-        public string Name{ get; set; }
+        public string Name { get; set; }
         public string Value { get; set; } = string.Empty;
 
         public Tag()
@@ -14,7 +14,7 @@ namespace ApiGateway.Common.Models
 
         public Tag(string json)
         {
-            var x= JsonConvert.DeserializeObject<Tag>(json);
+            var x = JsonConvert.DeserializeObject<Tag>(json);
             this.Name = x.Name;
             this.Value = x.Value;
         }

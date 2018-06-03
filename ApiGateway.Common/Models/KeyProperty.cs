@@ -14,13 +14,13 @@ namespace ApiGateway.Common.Models
             get => _type;
             set
             {
-                if (KeyPropertyDataTypes.IsValid(value))
+                if (PropertyDataTypes.IsValid(value))
                 {
                     _type = value;
                 }
                 else
                 {
-                    var errorMessage = "Invalid data. Valid types are: " + string.Join(", ", KeyPropertyDataTypes.ToList());
+                    var errorMessage = "Invalid data. Valid types are: " + string.Join(", ", PropertyDataTypes.ToList());
                     throw new InvalidDataException(errorMessage);
                 }
             }
