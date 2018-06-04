@@ -3,9 +3,8 @@ using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data
 {
-    public interface IApiData
+    public interface IApiData : IEntityData<ApiModel>
     {
-        Task<ApiModel> SaveApi(KeyModel key, ApiModel model);
-        void DeleteApi(KeyModel key, ApiModel model);
+        Task<ApiModel> Get(KeyModel key, string serviceId, string httpMethod, string apiUrl);
     }
 }

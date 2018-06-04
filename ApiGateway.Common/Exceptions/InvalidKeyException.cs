@@ -8,10 +8,5 @@ namespace ApiGateway.Common.Exceptions
         {
             ErrorCode = 4001;
         }
-
-        public InvalidKeyException() : base("Invalid key!")
-        {
-            ErrorCode = 4001;
-        }
     }
 }

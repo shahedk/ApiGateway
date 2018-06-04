@@ -1,7 +1,7 @@
 ﻿using ApiGateway.Common.Constants;
 using Xunit;
 
-namespace ApiGateway.Common.Test
+namespace ApiGateway.Common.Test.Constants
 {
     public class ApiKeyTypesTest
     {

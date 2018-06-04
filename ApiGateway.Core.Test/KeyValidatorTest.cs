@@ -3,10 +3,10 @@ using Xunit;
 
 namespace ApiGateway.Core.Test
 {
-    public class UnitTest1
+    public class KeyValidatorTest
     {
         [Fact]
-        public void Test1()
+        public void ClientSecretKeyTest()
         {
 
         }

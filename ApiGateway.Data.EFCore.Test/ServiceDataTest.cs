@@ -2,6 +2,7 @@
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Localization;
 using Xunit;
 
 namespace ApiGateway.Data.EFCore.Test
@@ -11,7 +12,7 @@ namespace ApiGateway.Data.EFCore.Test
         private IServiceData GetServiceData()
         {
             var ctx = GetContext();
-            return new ServiceData(ctx);
+            return new ServiceData(ctx, null);
         }
         
         private IKeyData GetKeyData()

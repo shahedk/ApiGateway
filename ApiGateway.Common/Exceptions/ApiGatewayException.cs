@@ -7,10 +7,6 @@ namespace ApiGateway.Common.Exceptions
         public int ErrorCode { get; set; }
         
         public ApiGatewayException(string message):base(message){}
-
-        public ApiGatewayException()
-        {
-        }
-
+        
     }
 }

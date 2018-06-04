@@ -15,29 +15,23 @@ namespace ApiGateway.Data.EFCore.DataAccess
             _context = context;
         }
 
-
-        public async Task<KeyModel> SaveKey(string ownerKeyId, KeyModel model)
+        public Task<KeyModel> Create(string ownerKeyId, KeyModel model)
         {
-            if (string.IsNullOrEmpty(ownerKeyId))
-            {
-                throw new InvalidKeyException();
-            }
-
-            var existing = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == model.Id);
-
-            if (existing != null)
-            {
-                // Update
-
-                return null;
-            }
-            
-            // Else, Create new
-
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public Task DeleteKey(string ownerKeyId, string id)
+        public Task<KeyModel> Update(string ownerKeyId, KeyModel model)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task Delete(string ownerKeyId, string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
+        public Task<KeyModel> Get(string ownerKeyId, string keyId)
         {
             throw new System.NotImplementedException();
         }

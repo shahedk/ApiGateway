@@ -1,7 +1,7 @@
 ﻿using ApiGateway.Common.Constants;
 using Xunit;
 
-namespace ApiGateway.Common.Test
+namespace ApiGateway.Common.Test.Constants
 {
     public class ApiHttpMethodsTest
     {
@@ -19,7 +19,7 @@ namespace ApiGateway.Common.Test
             Assert.True(ApiHttpMethods.IsValid(ApiHttpMethods.Put));
             Assert.True(ApiHttpMethods.IsValid(ApiHttpMethods.Post));
             Assert.True(ApiHttpMethods.IsValid(ApiHttpMethods.Delete));
-            Assert.False(ApiHttpMethods.IsValid("some text"));
+            Assert.False(ApiHttpMethods.IsValid("some invalid text"));
         }
     }
 

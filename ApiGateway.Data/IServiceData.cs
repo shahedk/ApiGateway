@@ -3,9 +3,8 @@ using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data
 {
-    public interface IServiceData
+    public interface IServiceData: IEntityData<ServiceModel>
     {
-        Task<ServiceModel> SaveService(string ownerKeyId, ServiceModel model);
-        Task DeleteService(string ownerKeyId, string id);
+        
     }
 }

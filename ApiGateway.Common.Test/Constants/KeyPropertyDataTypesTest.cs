@@ -1,7 +1,7 @@
 ﻿using ApiGateway.Common.Constants;
 using Xunit;
 
-namespace ApiGateway.Common.Test
+namespace ApiGateway.Common.Test.Constants
 {
     public class KeyPropertyDataTypesTest
     {
@@ -20,7 +20,7 @@ namespace ApiGateway.Common.Test
             Assert.True(PropertyDataTypes.IsValid(PropertyDataTypes.Int));
             Assert.True(PropertyDataTypes.IsValid(PropertyDataTypes.StringArray));
             Assert.True(PropertyDataTypes.IsValid(PropertyDataTypes.String));
-            Assert.False(PropertyDataTypes.IsValid("some text"));
+            Assert.False(PropertyDataTypes.IsValid("some invalid text"));
         }
     }
 }

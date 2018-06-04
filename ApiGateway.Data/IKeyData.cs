@@ -3,10 +3,9 @@ using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data
 {
-    public interface IKeyData
+    public interface IKeyData : IEntityData<KeyModel>
     {
-        Task<KeyModel> SaveKey(string ownerKeyId, KeyModel model);
-        Task DeleteKey(string ownerKeyId, string id);
         
+        Task<KeyModel> Get(string ownerKeyId, string keyId);
     }
 }

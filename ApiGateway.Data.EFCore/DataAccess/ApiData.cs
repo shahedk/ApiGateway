@@ -5,12 +5,22 @@ namespace ApiGateway.Data.EFCore.DataAccess
 {
     public class ApiData: IApiData
     {
-        public Task<ApiModel> SaveApi(KeyModel key, ApiModel model)
+        public Task<ApiModel> Create(string ownerKeyId, ApiModel model)
         {
             throw new System.NotImplementedException();
         }
 
-        public void DeleteApi(KeyModel key, ApiModel model)
+        public Task<ApiModel> Update(string ownerKeyId, ApiModel model)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task Delete(string ownerKeyId, string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiModel> Get(KeyModel key, string serviceId, string httpMethod, string apiUrl)
         {
             throw new System.NotImplementedException();
         }
