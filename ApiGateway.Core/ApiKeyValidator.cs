@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
@@ -7,6 +8,7 @@ using ApiGateway.Core.KeyValidators;
 using ApiGateway.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace ApiGateway.Core
 {
@@ -14,13 +16,15 @@ namespace ApiGateway.Core
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IStringLocalizer<ApiKeyValidator> _localizer;
+        private readonly ILogger<ApiKeyValidator> _logger;
         private readonly IApiData _apiData;
         private readonly IKeyData _keyData;
 
-        public ApiKeyValidator(IServiceProvider serviceProvider, IStringLocalizer<ApiKeyValidator> localizer, IApiData apiData, IKeyData keyData)
+        public ApiKeyValidator(IServiceProvider serviceProvider, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiData apiData, IKeyData keyData)
         {
             _serviceProvider = serviceProvider;
             _localizer = localizer;
+            _logger = logger;
             _apiData = apiData;
             _keyData = keyData;
         }
@@ -91,7 +95,8 @@ namespace ApiGateway.Core
             }
             else
             {
-                throw new InvalidKeyException("Unknown key type.");
+                var msg = _localizer["Unknown key type."];
+                throw new InvalidKeyException(msg, HttpStatusCode.Unauthorized);
             }
 
             return result;

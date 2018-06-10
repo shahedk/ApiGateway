@@ -24,7 +24,7 @@ namespace ApiGateway.Core.Test
             var logger = new Mock<ILogger<ApiKeyValidator>>();
             var apiData = await GetApiData();
             var keyData = await GetKeyData();
-            return new ApiKeyValidator(null, localizer.Object, apiData , keyData);
+            return new ApiKeyValidator(null, localizer.Object, logger.Object, apiData, keyData);
         } 
 
         protected async Task<IKeyValidator> GetKeySecretValidator()

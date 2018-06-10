@@ -12,7 +12,9 @@ namespace ApiGateway.Data.EFCore.Entity
         
         [StringLength(500)]
         public string Tags { get; set; }
-        
+
+        [Required]
+        public bool IsDisabled { get; set; }
         
         private string _type = string.Empty;
         

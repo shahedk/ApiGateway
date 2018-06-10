@@ -41,7 +41,7 @@ namespace ApiGateway.Core.KeyValidators
                 else
                 {
                     var log = _localizer["Login successful for: "] + pubKey;
-                    _logger.LogInformation(LogEvents.Info.LoginSuccess, log);
+                    _logger.LogInformation(LogEvents.LoginSuccess, log);
 
                     result.IsValid = true;
                 }

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Net;
 
 namespace ApiGateway.Common.Exceptions
 {
     public class ApiGatewayException : Exception
     {
-        public int ErrorCode { get; set; }
-        
-        public ApiGatewayException(string message):base(message){}
+        public HttpStatusCode ErrorCode { get; set; }
+
+        public ApiGatewayException(string message, HttpStatusCode errorCode) : base(message)
+        {
+            ErrorCode = errorCode;
+        }
         
     }
 }

@@ -1,8 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
+using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -33,20 +39,57 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return entity.ToModel();
         }
 
-        public Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
+        public async Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
         {
-            throw new System.NotImplementedException();
+            var existing = await GetEntity(ownerPublicKey, model.Id);
+
+            // Update properties
+            existing.PublicKey = model.PublicKey;
+            existing.IsDisabled = model.IsDisabled;
+            existing.Properties = model.Properties.ToJson();
+            existing.Tags = model.Tags.ToJson();
+            existing.Type = model.Type;
+            existing.ModifiedDate = DateTime.UtcNow;
+            
+            await _context.SaveChangesAsync();
+
+            return await Get(ownerPublicKey, model.Id);
         }
 
-        public Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var existing = await GetEntity(ownerPublicKey, id);
+
+            _context.Keys.Remove(existing);
+            await _context.SaveChangesAsync();
         }
 
-
-        public Task<KeyModel> Get(string ownerPublicKey, string keyId)
+        public async Task<Key> GetEntity(string ownerPublicKey, string keyId)
         {
-            throw new System.NotImplementedException();
+            var id = int.Parse(keyId);
+            var entity = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerPublicKey && x.Id == id);
+
+            if (entity == null)
+            {
+                var msg = _localizer["No key found for the specified owner and Id"];
+                throw new ItemNotFoundException(msg);
+            }
+
+            return entity;
+        }
+
+        public async Task<KeyModel> Get(string ownerPublicKey, string keyId)
+        {
+            var id = int.Parse(keyId);
+            var entity = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerPublicKey && x.Id == id);
+
+            if (entity == null)
+            {
+                var msg = _localizer["No key found for the specified owner and Id"];
+                throw new ItemNotFoundException(msg);
+            }
+
+            return entity.ToModel();
         }
 
         public async Task<KeyModel> GetByPublicKey(string publicKey)
@@ -56,12 +99,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
             if (key == null)
             {
                 var message = _localizer["Invalid Key"];
-
-                // Log
-                _logger.LogWarning(LogEvents.Warning.InvalidPublicKey, message + ": " + publicKey);
-
-                // Throw exception
-                throw new InvalidKeyException(message);
+                throw new InvalidKeyException(message, HttpStatusCode.Unauthorized);
             }
             else
             {

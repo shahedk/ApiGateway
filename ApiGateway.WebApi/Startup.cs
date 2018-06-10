@@ -34,6 +34,7 @@ namespace ApiGateway.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
         }
     }
