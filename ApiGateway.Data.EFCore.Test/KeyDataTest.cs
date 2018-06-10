@@ -13,7 +13,11 @@ namespace ApiGateway.Data.EFCore.Test
         {
             var data = await GetKeyData();
 
-            var key = new KeyModel() {Id = ModelHelper.GenerateNewId(), PublicKey = ModelHelper.GenerateNewId(), Type = ApiKeyTypes.ClientSecret};
+            var key = new KeyModel()
+            {
+                PublicKey = ModelHelper.GeneratePublicKey(),
+                Type = ApiKeyTypes.ClientSecret
+            };
 
             var savedKey = await data.Create(string.Empty, key);
 

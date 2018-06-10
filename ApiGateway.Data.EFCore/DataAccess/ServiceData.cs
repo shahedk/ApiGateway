@@ -28,25 +28,6 @@ namespace ApiGateway.Data.EFCore.DataAccess
          
         public async Task<ServiceModel> Create(string ownerPublicKey, ServiceModel model)
         {
-            if (string.IsNullOrEmpty(model.Id))
-            {
-                model.Id = ModelHelper.GenerateNewId();
-            }
-            else
-            {
-                var key = await _keyData.GetByPublicKey(ownerPublicKey);
-
-                var id = int.Parse(model.Id);
-                var existing =
-                    await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == key.Id && x.Id == id);
-
-                if (existing != null)
-                {
-                    var errorMessage = _localizer["Another service with same ID already exists."];
-                    throw new InvalidDataException(errorMessage);
-                }
-            }
-             
             var service = model.ToEntity(ownerPublicKey);
             _context.Services.Add(service);
             await _context.SaveChangesAsync();

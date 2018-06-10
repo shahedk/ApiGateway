@@ -8,6 +8,6 @@ namespace ApiGateway.Common.Models
         [Required]
         public string Name { get; set; }
 
-        public List<Tag> Tags { get; set; }
+        public List<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

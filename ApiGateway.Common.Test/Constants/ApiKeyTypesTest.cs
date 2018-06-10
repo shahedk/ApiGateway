@@ -20,7 +20,7 @@ namespace ApiGateway.Common.Test.Constants
         }
 
         [Fact]
-        public void Check_IsValid_With_InValid_Input()
+        public void Check_IsValid_With_Invalid_Input()
         {
             Assert.False(ApiKeyTypes.IsValid("some invalid text"));
         }

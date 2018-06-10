@@ -142,7 +142,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
                 OwnerKeyId = ownerKeyId,
-                
+                Tags = model.Tags.ToJson(),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };

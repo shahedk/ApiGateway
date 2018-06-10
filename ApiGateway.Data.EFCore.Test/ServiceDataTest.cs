@@ -22,6 +22,7 @@ namespace ApiGateway.Data.EFCore.Test
             {
                 PublicKey = ModelHelper.GenerateNewId(),
                 Type = ApiKeyTypes.ClientSecret
+
             };
             var savedKey = await keyData.Create(string.Empty, keyModel);
 
