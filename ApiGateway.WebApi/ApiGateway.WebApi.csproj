@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,8 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiGateway.Client\ApiGateway.Client.csproj" />
     <ProjectReference Include="..\ApiGateway.Common\ApiGateway.Common.csproj" />
     <ProjectReference Include="..\ApiGateway.Core\ApiGateway.Core.csproj" />
+    <ProjectReference Include="..\ApiGateway.Data.EFCore\ApiGateway.Data.EFCore.csproj" />
+    <ProjectReference Include="..\ApiGateway.Data\ApiGateway.Data.csproj" />
   </ItemGroup>
 
 </Project>

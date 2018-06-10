@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Data.EFCore.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Common", "ApiGateway.Common\ApiGateway.Common.csproj", "{3E09BA3F-783F-4C23-9EC1-AE7305B4294D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway.Common.Test", "ApiGateway.Common.Test\ApiGateway.Common.Test.csproj", "{11B1F465-EE99-41A5-BCBD-B4351CA99E56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Common.Test", "ApiGateway.Common.Test\ApiGateway.Common.Test.csproj", "{11B1F465-EE99-41A5-BCBD-B4351CA99E56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Client", "ApiGateway.Client\ApiGateway.Client.csproj", "{64AFFDE6-59A9-4D29-8035-DAE1B82AD2B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway.WebApi.Test", "ApiGateway.WebApi.Test\ApiGateway.WebApi.Test.csproj", "{4A23D20C-7E26-4259-9568-7ED110C332FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,14 @@ Global
 		{11B1F465-EE99-41A5-BCBD-B4351CA99E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11B1F465-EE99-41A5-BCBD-B4351CA99E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11B1F465-EE99-41A5-BCBD-B4351CA99E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64AFFDE6-59A9-4D29-8035-DAE1B82AD2B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64AFFDE6-59A9-4D29-8035-DAE1B82AD2B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64AFFDE6-59A9-4D29-8035-DAE1B82AD2B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64AFFDE6-59A9-4D29-8035-DAE1B82AD2B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A23D20C-7E26-4259-9568-7ED110C332FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A23D20C-7E26-4259-9568-7ED110C332FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A23D20C-7E26-4259-9568-7ED110C332FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A23D20C-7E26-4259-9568-7ED110C332FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

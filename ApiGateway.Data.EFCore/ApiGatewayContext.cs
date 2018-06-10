@@ -23,21 +23,26 @@ namespace ApiGateway.Data.EFCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Key
+            modelBuilder.Entity<Key>().HasKey(x => x.PublicKey).ForSqlServerIsClustered();
             modelBuilder.Entity<Key>().HasIndex(x => x.Id).IsUnique(true);
-            modelBuilder.Entity<Key>().HasIndex(x => x.PublicKey).IsUnique(true).ForSqlServerIsClustered();
             modelBuilder.Entity<Key>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
             
+            // Key in Role
+            modelBuilder.Entity<KeyInRole>().HasIndex(x => x.Id).IsUnique();
+            modelBuilder.Entity<KeyInRole>().HasIndex(x => x.KeyId).IsUnique(false);
+            modelBuilder.Entity<KeyInRole>().HasKey(x => new {x.KeyId, x.RoleId});
+
             // Service
-            modelBuilder.Entity<Service>().HasIndex(x => x.Id).IsUnique(true).ForSqlServerIsClustered();
-            modelBuilder.Entity<Service>().HasIndex(x => new {x.OwnerKeyId, x.Name}).IsUnique();
+            modelBuilder.Entity<Service>().HasIndex(x => x.Id).IsUnique(true);
+            modelBuilder.Entity<Service>().HasKey(x => new {x.OwnerKeyId, x.Name}).ForSqlServerIsClustered();
             
             // Api
             modelBuilder.Entity<Api>().HasIndex(x => x.Id).IsUnique(true);
-            modelBuilder.Entity<Api>().HasIndex(x => new {x.ServiceId, x.Url, x.HttpMethod}).IsUnique(true);
+            modelBuilder.Entity<Api>().HasKey(x => new {x.ServiceId, x.Url, x.HttpMethod}).ForSqlServerIsClustered();
             modelBuilder.Entity<Api>().HasIndex(x => x.ServiceId).IsUnique(false);
             
             // Role
-            modelBuilder.Entity<Role>().HasIndex(x => x.Id).IsUnique(true);
+            modelBuilder.Entity<Role>().HasKey(x => x.Id).ForSqlServerIsClustered();
             modelBuilder.Entity<Role>().HasIndex(x => new {x.ServiceId, x.Name}).IsUnique(true);
             
             // ApiInRole
@@ -57,6 +62,7 @@ namespace ApiGateway.Data.EFCore
             modelBuilder.Entity<AccessRuleForRole>().HasIndex(x => x.Id).IsUnique(true);
             modelBuilder.Entity<AccessRuleForRole>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
             modelBuilder.Entity<AccessRuleForRole>().HasIndex(x => new { x.RoleId, x.AcccessRuleId }).IsUnique(true);
+    
         }
     }
 }

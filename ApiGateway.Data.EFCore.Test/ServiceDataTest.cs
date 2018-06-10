@@ -1,4 +1,6 @@
-﻿using ApiGateway.Common.Extensions;
+﻿using System.Threading.Tasks;
+using ApiGateway.Common.Constants;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -9,39 +11,32 @@ namespace ApiGateway.Data.EFCore.Test
 {
     public class ServiceDataTest : TestBase
     {
-        private IServiceData GetServiceData()
-        {
-            var ctx = GetContext();
-            return new ServiceData(ctx, null);
-        }
-        
-        private IKeyData GetKeyData()
-        {
-            var ctx = GetContext();
-            return new KeyData(ctx);
-        }
-
         [Fact]
-        public void AddService()
+        public async Task AddService()
         {
-            var data = GetServiceData();
+            var serviceData = await GetServiceData();
+            var keyData = await GetKeyData();
             
             // Insert new Key
             var keyModel = new KeyModel()
             {
-                Id = ModelHelper.GenerateNewId(), 
                 PublicKey = ModelHelper.GenerateNewId(),
+                Type = ApiKeyTypes.ClientSecret
             };
+            var savedKey = await keyData.Create(string.Empty, keyModel);
 
             // Insert new Service
             var serviceModel = new ServiceModel()
             {
-                Id = ModelHelper.GenerateNewId(),
-                Name = "TestService"
+                Name = "TestService" + ModelHelper.GenerateNewId(),
+                OwnerKeyId = savedKey.Id
             };
 
-            
-            //data.SaveService()
+            var savedService = await serviceData.Create(savedKey.PublicKey, serviceModel);
+
+            Assert.True(int.Parse(savedService.Id) > 0);
+            Assert.True(savedService.Name == serviceModel.Name);
+
         }
     }
 }

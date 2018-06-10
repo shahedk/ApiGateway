@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Extensions;
@@ -9,15 +11,15 @@ namespace ApiGateway.Data.EFCore.Test
     public class DbContextTest : TestBase
     {
         [Fact]
-        public void AddKey()
+        public async Task AddKey()
         {
-            var ctx = GetContext();
+            var ctx = await GetContext();
             
             // Insert new Key
             var keyModel = new KeyModel()
             {
-                Id = ModelHelper.GenerateNewId(), 
                 PublicKey = ModelHelper.GenerateNewId(),
+                Type = ApiKeyTypes.ClientSecret
             };
 
             var keyEntity = keyModel.ToEntity();
@@ -27,15 +29,15 @@ namespace ApiGateway.Data.EFCore.Test
             Assert.Equal(1, saveKeyResult);
 
             // Get key from database
-            var k = ctx.Keys.SingleOrDefault(x => x.Id == keyModel.Id);
-            Assert.NotNull(k);
-            Assert.Equal(k.Id, keyModel.Id);
+            var savedKey = ctx.Keys.SingleOrDefault(x => x.PublicKey == keyModel.PublicKey);
+            Assert.NotNull(savedKey);
+            Assert.Equal(savedKey.Type, keyModel.Type);
         }
 
         [Fact]
-        public void AddService()
+        public  async Task  AddService()
         {
-            var ctx = GetContext();
+            var ctx = await GetContext();
             
             // Insert new Key
             var keyModel = new KeyModel()
@@ -67,7 +69,7 @@ namespace ApiGateway.Data.EFCore.Test
             var s = ctx.Services.SingleOrDefault(x => x.Id == serviceEntity.Id);
             Assert.NotNull(s);
             Assert.Equal(s.Name, serviceModel.Name);
-            Assert.Equal(s.Id, serviceModel.Id);
+            Assert.Equal(s.Id.ToString(), serviceModel.Id);
         }
 
 

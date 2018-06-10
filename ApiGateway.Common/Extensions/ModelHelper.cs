@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ApiGateway.Common.Models;
+using Newtonsoft.Json;
 
 namespace ApiGateway.Common.Extensions
 {
@@ -11,29 +12,34 @@ namespace ApiGateway.Common.Extensions
             return Guid.NewGuid().ToString("N");
         }
 
+        public static string GeneratePublicKey()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+
         public static DateTime ToClientLocalTime(this DateTime dateTime)
         {
             return dateTime;
         }
 
-        public static string ToJson(this List<KeyProperty> properties)
+        public static string ToJson(this Dictionary<string,string> properties)
         {
-            return "";
+            return JsonConvert.SerializeObject(properties);
         }
 
-        public static List<KeyProperty> ToProperties(this string json)
+        public static Dictionary<string,string> ToProperties(this string json)
         {
-            return new List<KeyProperty>();
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
 
         public static string ToJson(this List<Tag> tags)
         {
-            return "";
+            return JsonConvert.SerializeObject(tags);
         }
 
         public static List<Tag> ToTags(this string json)
         {
-            return new List<Tag>();
+            return JsonConvert.DeserializeObject<List<Tag>>(json);
         }
     }
 }

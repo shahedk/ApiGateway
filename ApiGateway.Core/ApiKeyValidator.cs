@@ -1,23 +1,25 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core.KeyValidators;
 using ApiGateway.Data;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
 namespace ApiGateway.Core
 {
     public class ApiKeyValidator : IApiKeyValidator
     {
-        private readonly KeySecretValidator _keySecretValidator;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IStringLocalizer<ApiKeyValidator> _localizer;
         private readonly IApiData _apiData;
         private readonly IKeyData _keyData;
 
-        public ApiKeyValidator(KeySecretValidator keySecretValidator, IStringLocalizer<ApiKeyValidator> localizer, IApiData apiData, IKeyData keyData)
+        public ApiKeyValidator(IServiceProvider serviceProvider, IStringLocalizer<ApiKeyValidator> localizer, IApiData apiData, IKeyData keyData)
         {
-            _keySecretValidator = keySecretValidator;
+            _serviceProvider = serviceProvider;
             _localizer = localizer;
             _apiData = apiData;
             _keyData = keyData;
@@ -25,7 +27,7 @@ namespace ApiGateway.Core
 
         public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod, string serviceId, string apiUrl)
         {
-            var serviceKeyResult = IsKeyValid(serviceKey);
+            var serviceKeyResult = await IsKeyValid(serviceKey.Id, clientKey);
             if (!serviceKeyResult.IsValid)
             {
                 // Service key validation failed
@@ -38,7 +40,7 @@ namespace ApiGateway.Core
             }
             else
             {
-                var clientKeyResult = IsKeyValid(clientKey);
+                var clientKeyResult = await IsKeyValid(serviceKey.Id, clientKey);
                 if (!clientKeyResult.IsValid)
                 {
                     // Client key validation failed
@@ -69,18 +71,27 @@ namespace ApiGateway.Core
 
         }
 
-        private KeyValidationResult IsKeyValid(KeyModel key)
+        public Task<KeyValidationResult> IsAllowedToManageApiGateway(KeyModel clientKey)
+        {
+            // 1. Check if key=secret valid
+
+            // 2. Check if right permissions set
+
+            throw new System.NotImplementedException();
+        }
+        
+
+        private async Task<KeyValidationResult> IsKeyValid(string ownerKeyId, KeyModel key)
         {
             KeyValidationResult result;
-
-            switch (key.Type)
+            if (key.Type == ApiKeyTypes.ClientSecret)
             {
-                    case ApiKeyTypes.ClientSecret:
-                        result = _keySecretValidator.IsValid(key);
-                        break;
-
-                    default:
-                        throw new InvalidKeyException("Unknown key type.");
+                var keyValidator = _serviceProvider.GetService<KeySecretValidator>();
+                result = await keyValidator.IsValid(ownerKeyId, key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret]);
+            }
+            else
+            {
+                throw new InvalidKeyException("Unknown key type.");
             }
 
             return result;

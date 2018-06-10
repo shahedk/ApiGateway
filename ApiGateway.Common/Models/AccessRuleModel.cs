@@ -18,6 +18,6 @@ namespace ApiGateway.Common.Models
         [Required]
         public string Type { get; set; }
         
-        public List<KeyProperty> Properties { get; set; }
+        public Dictionary<string,string> Properties { get; set; }
     }
 }

@@ -5,9 +5,9 @@ namespace ApiGateway.Data
 {
     public interface IEntityData<T>
     {
-        Task<T> Create(string ownerKeyId, T model);
-        Task<T> Update(string ownerKeyId, T model);
-        Task Delete(string ownerKeyId, string id);
-
+        Task<T> Create(string ownerPublicKey, T model);
+        Task<T> Update(string ownerPublicKey, T model);
+        Task Delete(string ownerPublicKey, string id);
+        Task<T> Get(string ownerPublicKey, string id);
     }
 }

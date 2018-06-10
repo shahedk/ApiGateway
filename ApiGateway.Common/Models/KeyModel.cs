@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using ApiGateway.Common.Constants;
 
@@ -6,8 +7,11 @@ namespace ApiGateway.Common.Models
 {
     public class KeyModel : ModelBase
     {
-        
+        public bool IsDisabled { get; set; } = false;
+
+        [Key]
         public string PublicKey { get; set; }
+        
         public List<Tag> Tags { get; set; }
 
         private string _type = string.Empty;
@@ -29,7 +33,7 @@ namespace ApiGateway.Common.Models
             }
         }
 
-        public List<KeyProperty> Properties { get; set; }
+        public Dictionary<string, string> Properties { get; set; } = new    Dictionary<string, string>();
 
         public List<RoleModel> Roles { get; set; }
     }

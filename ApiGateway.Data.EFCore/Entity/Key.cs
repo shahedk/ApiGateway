@@ -10,7 +10,6 @@ namespace ApiGateway.Data.EFCore.Entity
         [StringLength(50)]
         public string PublicKey { get; set; }
         
-        [Required]
         [StringLength(500)]
         public string Tags { get; set; }
         
@@ -36,7 +35,6 @@ namespace ApiGateway.Data.EFCore.Entity
             }
         }
 
-        [Required]
         [StringLength(1000)]
         public string Properties { get; set; }
     }
