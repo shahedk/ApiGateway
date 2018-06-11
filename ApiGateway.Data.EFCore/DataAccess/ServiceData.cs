@@ -1,8 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
+using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -57,8 +60,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
                     // Update existing
 
                     existing.Name = model.Name;
-                    existing.Tags = model.Tags.ToJson();
-
+                    
                     await _context.SaveChangesAsync();
 
                     return existing.ToModel();
@@ -67,15 +69,31 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         }
         
-        public Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var entity = await GetEntity(ownerPublicKey, id);
+             _context.Services.Remove(entity);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Service> GetEntity(string ownerPublicKey, string id)
+        {
+            var key = await _keyData.GetByPublicKey(ownerPublicKey);
+            var result = await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == key.PublicKey && x.Id == int.Parse(id));
+
+            if (result == null)
+            {
+                var msg = _localizer["Service not found for the specified owner and id"];
+                throw new ItemNotFoundException(msg, HttpStatusCode.NotFound);
+            }
+
+            return result;
         }
 
         public async Task<ServiceModel> Get(string ownerPublicKey, string id)
         {
-            var key = await _keyData.GetByPublicKey(ownerPublicKey);
-            var result = await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == key.PublicKey && x.Id == int.Parse(id));
+            var result = await GetEntity(ownerPublicKey, id);
 
             return result.ToModel();
         }

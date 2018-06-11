@@ -12,8 +12,8 @@ namespace ApiGateway.Common.Models
 
         [Required]
         public string Name { get; set; }
-        public List<Tag> Tags { get; set; }
-
+        
+        [Required]
         private string _httpMethod = string.Empty;
         
         [Required]

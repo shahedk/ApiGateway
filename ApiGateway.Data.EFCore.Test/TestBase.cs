@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using ApiGateway.Common.Constants;
+using ApiGateway.Common.Extensions;
+using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +15,8 @@ namespace ApiGateway.Data.EFCore.Test
 {
     public class TestBase
     {
+        private KeyModel _ownerKeyModel = null;
+
         private ApiGatewayContext _context;
 
         protected DbContextOptions<ApiGatewayContext> GetInMemoryOptions()
@@ -83,6 +88,24 @@ namespace ApiGateway.Data.EFCore.Test
 
             var context = await GetContext();
             return new ApiData(context, localizer.Object, logger.Object);
+        }
+
+        protected async Task<KeyModel> GetOwnerKey()
+        {
+            if (_ownerKeyModel == null)
+            {
+                var keyData = await GetKeyData();
+
+                var keyModel = new KeyModel()
+                {
+                    PublicKey = ModelHelper.GeneratePublicKey(),
+                    Type = ApiKeyTypes.ClientSecret
+
+                };
+                _ownerKeyModel = await keyData.Create(string.Empty, keyModel);
+            }
+
+            return _ownerKeyModel;
         }
 
     }

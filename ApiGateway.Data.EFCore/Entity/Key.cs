@@ -10,9 +10,6 @@ namespace ApiGateway.Data.EFCore.Entity
         [StringLength(50)]
         public string PublicKey { get; set; }
         
-        [StringLength(500)]
-        public string Tags { get; set; }
-
         [Required]
         public bool IsDisabled { get; set; }
         

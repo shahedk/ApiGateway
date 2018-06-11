@@ -13,8 +13,6 @@ namespace ApiGateway.Common.Models
 
         public string Description { get; set; }
         
-        public List<Tag> Tags { get; set; }
-        
         [Required]
         public string Type { get; set; }
         

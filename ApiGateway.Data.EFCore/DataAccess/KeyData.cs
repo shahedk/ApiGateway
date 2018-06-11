@@ -47,7 +47,6 @@ namespace ApiGateway.Data.EFCore.DataAccess
             existing.PublicKey = model.PublicKey;
             existing.IsDisabled = model.IsDisabled;
             existing.Properties = model.Properties.ToJson();
-            existing.Tags = model.Tags.ToJson();
             existing.Type = model.Type;
             existing.ModifiedDate = DateTime.UtcNow;
             

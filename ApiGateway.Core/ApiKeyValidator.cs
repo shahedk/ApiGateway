@@ -72,11 +72,12 @@ namespace ApiGateway.Core
                     return result;
                 }
             }
-
         }
 
         public Task<KeyValidationResult> IsAllowedToManageApiGateway(KeyModel clientKey)
         {
+            //TODO: We should not need this. ApiGateway service should be validated just like any other api
+
             // 1. Check if key=secret valid
 
             // 2. Check if right permissions set

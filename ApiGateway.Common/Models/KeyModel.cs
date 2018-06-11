@@ -12,8 +12,6 @@ namespace ApiGateway.Common.Models
         [Key]
         public string PublicKey { get; set; }
         
-        public List<Tag> Tags { get; set; }
-
         private string _type = string.Empty;
 
         public string Type

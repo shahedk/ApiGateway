@@ -15,9 +15,6 @@ namespace ApiGateway.Data.EFCore.Entity
         [StringLength(500)]
         public string Description { get; set; }
 
-        [StringLength(500)]
-        public string Tags { get; set; }
-
         [Required]
         [StringLength(30)]
         public string Type { get; set; }

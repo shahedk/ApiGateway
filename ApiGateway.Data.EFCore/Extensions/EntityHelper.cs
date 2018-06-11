@@ -24,7 +24,6 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 OwnerKeyId = model.OwnerKeyId,
                 Properties = model.Properties.ToJson(),
-                Tags = model.Tags.ToJson(),
                 PublicKey = model.PublicKey,
                 Type = model.Type,
                 CreateDate = model.CreateDate.ToDbTime(),
@@ -39,7 +38,6 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = entity.Id.ToString(),
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
-                Tags = entity.Tags.ToTags(),
                 Type = entity.Type,
                 OwnerKeyId = entity.OwnerKeyId,
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
@@ -55,7 +53,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
                 Roles = roles.Select(x=>x.ToModel(null,null)).ToList(),
-                Tags = entity.Tags.ToTags(),
+                
                 Type = entity.Type,
                 OwnerKeyId = entity.OwnerKeyId,
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
@@ -74,7 +72,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 HttpMethod = model.HttpMethod,
                 Name = model.Name,
                 ServiceId = model.ServiceId,
-                Tags = model.Tags.ToJson(),
+                
                 Url = model.Url,
                 OwnerKeyId = model.OwnerKeyId,
                 CreateDate = model.CreateDate.ToDbTime(),
@@ -91,7 +89,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 HttpMethod = entity.HttpMethod,
                 Name = entity.Name,
                 ServiceId = entity.ServiceId,
-                Tags = entity.Tags.ToTags(),
+                
                 OwnerKeyId = entity.OwnerKeyId,
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
@@ -108,7 +106,6 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
                 ServiceId = model.ServiceId,
-                Tags = model.Tags.ToJson(),
                 
                 OwnerKeyId = model.OwnerKeyId,
                 CreateDate = model.CreateDate.ToDbTime(),
@@ -122,7 +119,7 @@ namespace ApiGateway.Data.EFCore.Extensions
             {
                 Id = entity.Id.ToString(),
                 AccessRulesForRole = accessRules,
-                Tags = entity.Tags.ToTags(),
+                
                 ApiInRole = apiInRole,
                 Name = entity.Name,
                 ServiceId = entity.ServiceId,
@@ -142,7 +139,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
                 OwnerKeyId = ownerKeyId,
-                Tags = model.Tags.ToJson(),
+                
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -154,7 +151,7 @@ namespace ApiGateway.Data.EFCore.Extensions
             {
                 Id = entity.Id.ToString(),
                 Name = entity.Name,
-                Tags = entity.Tags.ToTags(),
+                
                 OwnerKeyId = entity.OwnerKeyId,
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
@@ -174,7 +171,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Properties = model.Properties.ToJson(),
                 Name = model.Name,
                 ServiceId = model.ServiceId,
-                Tags = model.Tags.ToJson(),
+                
                 Type = model.Type,
                 OwnerKeyId = model.OwnerKeyId,
                 CreateDate = model.CreateDate.ToDbTime(),
@@ -191,7 +188,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Name = entity.Name,
                 Properties = entity.Properties.ToProperties(),
                 ServiceId = entity.ServiceId,
-                Tags = entity.Tags.ToTags(),
+                
                 Type = entity.Type,
                 OwnerKeyId = entity.OwnerKeyId,
                 CreateDate = entity.CreateDate.ToClientLocalTime(),

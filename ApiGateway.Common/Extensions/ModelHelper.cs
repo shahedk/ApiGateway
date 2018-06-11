@@ -31,15 +31,6 @@ namespace ApiGateway.Common.Extensions
         {
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
-
-        public static string ToJson(this List<Tag> tags)
-        {
-            return JsonConvert.SerializeObject(tags);
-        }
-
-        public static List<Tag> ToTags(this string json)
-        {
-            return JsonConvert.DeserializeObject<List<Tag>>(json);
-        }
+        
     }
 }

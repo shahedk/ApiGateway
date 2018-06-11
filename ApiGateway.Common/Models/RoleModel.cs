@@ -11,8 +11,6 @@ namespace ApiGateway.Common.Models
         [Required]
         public string Name { get; set; }
 
-        public List<Tag> Tags { get; set; }
-
         public List<ApiModel> ApiInRole { get; set; }
         public List<AccessRuleModel> AccessRulesForRole { get; set; }
     }
