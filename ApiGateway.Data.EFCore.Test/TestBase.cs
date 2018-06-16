@@ -70,6 +70,15 @@ namespace ApiGateway.Data.EFCore.Test
             var context = await GetContext();
             return new KeyData(context, localizer.Object, logger.Object);
         }
+
+        protected  async Task <IRoleData> GetRoleData()
+        {
+            var localizer = new Mock<IStringLocalizer<RoleData>>();
+            var logger = new Mock<ILogger<RoleData>>();
+
+            var context = await GetContext();
+            return new RoleData(context, localizer.Object, logger.Object);
+        }
         
         protected  async Task <IServiceData> GetServiceData()
         {
@@ -98,6 +107,7 @@ namespace ApiGateway.Data.EFCore.Test
 
                 var keyModel = new KeyModel()
                 {
+                    OwnerKeyId = "0",
                     PublicKey = ModelHelper.GeneratePublicKey(),
                     Type = ApiKeyTypes.ClientSecret
 

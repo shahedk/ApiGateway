@@ -30,30 +30,46 @@ namespace ApiGateway.Data.EFCore
             modelBuilder.Entity<KeyInRole>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<KeyInRole>().HasIndex(x => x.KeyId).IsUnique(false);
             modelBuilder.Entity<KeyInRole>().HasIndex(x => new {x.KeyId, x.RoleId}).IsUnique();
+            modelBuilder.Entity<KeyInRole>().HasOne(x => x.OwnerKey).WithMany(x => x.KeyInRoles)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_KeyInRole");
 
             // Service
             modelBuilder.Entity<Service>().HasIndex(x => new {x.OwnerKeyId, x.Name});
+            modelBuilder.Entity<Service>().HasOne(x => x.OwnerKey).WithMany(x => x.Services)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_Service");
             
             // Api
             modelBuilder.Entity<Api>().HasIndex(x => new {x.ServiceId, x.Url, x.HttpMethod}).IsUnique();
             modelBuilder.Entity<Api>().HasIndex(x => x.ServiceId).IsUnique(false);
+            modelBuilder.Entity<Api>().HasOne(x => x.OwnerKey).WithMany(x => x.Apis)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_Api");
             
             // Role
             modelBuilder.Entity<Role>().HasIndex(x => new {x.ServiceId, x.Name}).IsUnique();
-            
-            // ApiInRole
-            modelBuilder.Entity<ApiInRole>().HasIndex(x => new{x.ApiId, x.RoleId}).IsUnique();
-            
-            // KeyInRole
-            modelBuilder.Entity<KeyInRole>().HasIndex(x => new{x.KeyId, x.RoleId}).IsUnique();
-            
+            modelBuilder.Entity<Role>().HasOne(x => x.Service).WithMany(x => x.Roles).HasForeignKey(x => x.ServiceId)
+                .HasConstraintName("ForeignKey_Role_Service");
+
+            // ApiInRole (Many to Many)
+            modelBuilder.Entity<ApiInRole>().HasKey(x => new{x.ApiId, x.RoleId});
+            modelBuilder.Entity<ApiInRole>().HasOne(x => x.OwnerKey).WithMany(x => x.ApiInRoles)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_ApiInRole");
+
+            // KeyInRole (Many to Many)
+            modelBuilder.Entity<KeyInRole>().HasKey(x => new{x.KeyId, x.RoleId});
+            modelBuilder.Entity<KeyInRole>().HasOne(x => x.OwnerKey).WithMany(x => x.KeyInRoles)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_KeyInRole");
+
             // AccessRule
             modelBuilder.Entity<AccessRule>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
             modelBuilder.Entity<AccessRule>().HasIndex(x => new{x.ServiceId, x.Name}).IsUnique();
- 
+            modelBuilder.Entity<AccessRule>().HasOne(x => x.OwnerKey).WithMany(x => x.AccessRules)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_AccessRule");
+
             //AccessRuleForRoles
             modelBuilder.Entity<AccessRuleForRole>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
             modelBuilder.Entity<AccessRuleForRole>().HasIndex(x => new { x.RoleId, x.AcccessRuleId }).IsUnique();
+            modelBuilder.Entity<AccessRuleForRole>().HasOne(x => x.OwnerKey).WithMany(x => x.AccessRuleForRoles)
+                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_AccessRuleForRole");
         }
     }
 }

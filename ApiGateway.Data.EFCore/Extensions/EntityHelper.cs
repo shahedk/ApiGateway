@@ -22,7 +22,7 @@ namespace ApiGateway.Data.EFCore.Extensions
             return new Key
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
-                OwnerKeyId = model.OwnerKeyId,
+                OwnerKeyId = string.IsNullOrEmpty(model.OwnerKeyId) ? 0 : Int32.Parse(model.OwnerKeyId),
                 Properties = model.Properties.ToJson(),
                 PublicKey = model.PublicKey,
                 Type = model.Type,
@@ -39,23 +39,22 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
                 Type = entity.Type,
-                OwnerKeyId = entity.OwnerKeyId,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
         }
 
-        public static KeyModel ToModel(this Key entity, List<Role> roles)
+        public static KeyModel ToModel(this Key entity, List<RoleModel> roles)
         {
             return new  KeyModel
             {
                 Id = entity.Id.ToString(),
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
-                Roles = roles.Select(x=>x.ToModel(null,null)).ToList(),
-                
+                Roles = roles,
                 Type = entity.Type,
-                OwnerKeyId = entity.OwnerKeyId,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -74,7 +73,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = model.ServiceId,
                 
                 Url = model.Url,
-                OwnerKeyId = model.OwnerKeyId,
+                OwnerKeyId = int.Parse( model.OwnerKeyId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -90,7 +89,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Name = entity.Name,
                 ServiceId = entity.ServiceId,
                 
-                OwnerKeyId = entity.OwnerKeyId,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -105,11 +104,24 @@ namespace ApiGateway.Data.EFCore.Extensions
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
-                ServiceId = model.ServiceId,
+                ServiceId = Int32.Parse( model.ServiceId),
                 
-                OwnerKeyId = model.OwnerKeyId,
+                OwnerKeyId = int.Parse(model.OwnerKeyId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
+            };
+        }
+
+        public static RoleModel ToModel(this Role entity)
+        {
+            return new  RoleModel
+            {
+                Id = entity.Id.ToString(),
+                Name = entity.Name,
+                ServiceId = entity.ServiceId.ToString(),
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                CreateDate = entity.CreateDate.ToClientLocalTime(),
+                ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
         }
 
@@ -122,8 +134,8 @@ namespace ApiGateway.Data.EFCore.Extensions
                 
                 ApiInRole = apiInRole,
                 Name = entity.Name,
-                ServiceId = entity.ServiceId,
-                OwnerKeyId = entity.OwnerKeyId,
+                ServiceId = entity.ServiceId.ToString(),
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -132,7 +144,7 @@ namespace ApiGateway.Data.EFCore.Extensions
         /*
          * Service - ServiceModel
          */
-        public static Service ToEntity(this ServiceModel model, string ownerKeyId)
+        public static Service ToEntity(this ServiceModel model, int ownerKeyId)
         {
             return new Service
             {
@@ -152,7 +164,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = entity.Id.ToString(),
                 Name = entity.Name,
                 
-                OwnerKeyId = entity.OwnerKeyId,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -173,7 +185,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = model.ServiceId,
                 
                 Type = model.Type,
-                OwnerKeyId = model.OwnerKeyId,
+                OwnerKeyId = int.Parse(model.OwnerKeyId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -190,7 +202,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = entity.ServiceId,
                 
                 Type = entity.Type,
-                OwnerKeyId = entity.OwnerKeyId,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };

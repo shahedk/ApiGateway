@@ -31,8 +31,8 @@ namespace ApiGateway.Common.Models
             }
         }
 
-        public Dictionary<string, string> Properties { get; set; } = new    Dictionary<string, string>();
+        public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
-        public List<RoleModel> Roles { get; set; }
+        public List<RoleModel> Roles { get; set; } = new List<RoleModel>();
     }
 }

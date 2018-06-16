@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApiGateway.Data.EFCore.Entity
 {
@@ -24,5 +25,6 @@ namespace ApiGateway.Data.EFCore.Entity
         [StringLength(500)]
         public string Url { get; set; }
 
+        public List<ApiInRole> ApiInRoles { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
@@ -20,6 +21,16 @@ namespace ApiGateway.Data.EFCore.Test
             var count = await ctx.Keys.CountAsync();
 
             Assert.Equal(0, count);
+        }
+
+        [Fact]
+        public async Task GenerateDbScript()
+        {
+            var ctx = await GetContext();
+
+            var dbScript = ctx.Database.GenerateCreateScript();
+
+            File.WriteAllText(@"D:\Tmp\createdb.sql", dbScript);
         }
     }
 }

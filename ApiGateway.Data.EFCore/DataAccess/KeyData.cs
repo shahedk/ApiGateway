@@ -29,18 +29,59 @@ namespace ApiGateway.Data.EFCore.DataAccess
             _logger = logger;
         }
 
+        private async Task UpdateKeyInRoles(int ownerKeyId, Key key, List<RoleModel> roles)
+        {
+            var changed = false;
+            var existingRoles = await _context.KeyInRoles.Where(x => x.KeyId == key.Id).ToListAsync();
+            
+            // Remove if no longer assigned
+            foreach (var existingRole in existingRoles)
+            {
+                if (!roles.Exists(x => x.Id == existingRole.Id.ToString()))
+                {
+                    changed = true;
+                    _context.KeyInRoles.Remove(existingRole);
+                }
+            }
+
+            // Add newly assigned roles in list
+            foreach (var role in roles)
+            {
+                if (!existingRoles.Exists(x => x.Id == int.Parse(role.Id)))
+                {
+                    changed = true;
+                    var keyInRole = new KeyInRole {OwnerKeyId = ownerKeyId,  KeyId = key.Id, RoleId = int.Parse(role.Id)};
+                    _context.KeyInRoles.Add(keyInRole);
+                }
+            }
+
+            if (changed)
+            {
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
         {
             var entity = model.ToEntity();
+            var ownerKey = await GetEntityByPublicKey(ownerPublicKey);
 
+            // Save
             _context.Keys.Add(entity);
             await _context.SaveChangesAsync();
 
-            return entity.ToModel();
+            // Assign roles to key
+            var savedKey = await GetEntityByPublicKey(model.PublicKey);
+            await UpdateKeyInRoles(ownerKey.Id, savedKey, model.Roles);
+
+            _logger.LogInformation(LogEvents.NewKeyCreated,string.Empty, ownerPublicKey, model.PublicKey);
+
+            return savedKey.ToModel(model.Roles);
         }
 
         public async Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
         {
+            var ownerKey = await GetEntityByPublicKey(ownerPublicKey);
             var existing = await GetEntity(ownerPublicKey, model.Id);
 
             // Update properties
@@ -52,7 +93,10 @@ namespace ApiGateway.Data.EFCore.DataAccess
             
             await _context.SaveChangesAsync();
 
-            return await Get(ownerPublicKey, model.Id);
+            // Update roles assigned to key
+            await UpdateKeyInRoles(ownerKey.Id, existing, model.Roles);
+
+            return existing.ToModel(model.Roles);
         }
 
         public async Task Delete(string ownerPublicKey, string id)
@@ -65,8 +109,9 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<Key> GetEntity(string ownerPublicKey, string keyId)
         {
+            var ownerKeyId = await GetIdByPublicKey(ownerPublicKey);
             var id = int.Parse(keyId);
-            var entity = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerPublicKey && x.Id == id);
+            var entity = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == id);
 
             if (entity == null)
             {
@@ -79,8 +124,9 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<KeyModel> Get(string ownerPublicKey, string keyId)
         {
+            var ownerKeyId = await GetIdByPublicKey(ownerPublicKey);
             var id = int.Parse(keyId);
-            var entity = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerPublicKey && x.Id == id);
+            var entity = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == id);
 
             if (entity == null)
             {
@@ -91,7 +137,20 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return entity.ToModel();
         }
 
-        public async Task<KeyModel> GetByPublicKey(string publicKey)
+        public async Task<int> GetIdByPublicKey(string publicKey)
+        {
+            if (string.IsNullOrEmpty(publicKey))
+            {
+                return 0;
+            }
+            else
+            {
+                var key = await GetEntityByPublicKey(publicKey);
+                return key.Id;
+            }
+        }
+
+        public async Task<Key> GetEntityByPublicKey(string publicKey)
         {
             var key = await _context.Keys.SingleOrDefaultAsync(x => x.PublicKey == publicKey);
 
@@ -102,8 +161,16 @@ namespace ApiGateway.Data.EFCore.DataAccess
             }
             else
             {
-                return key.ToModel();
+                return key;
             }
-        } 
+        }
+
+        public async Task<KeyModel> GetByPublicKey(string publicKey)
+        {
+            var key = await GetEntityByPublicKey(publicKey);
+            return key.ToModel();
+        }
+        
+
     }
 }

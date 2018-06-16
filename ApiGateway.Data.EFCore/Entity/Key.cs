@@ -1,11 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using ApiGateway.Common.Constants;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace ApiGateway.Data.EFCore.Entity
 {
-    public class Key : EntityBase
+    public class Key 
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [Required]
         [StringLength(50)]
         public string PublicKey { get; set; }
@@ -34,7 +41,23 @@ namespace ApiGateway.Data.EFCore.Entity
             }
         }
 
+        [Required]
         [StringLength(1000)]
         public string Properties { get; set; }
+
+        public int? OwnerKeyId { get; set; }
+
+        [Required]
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public DateTime ModifiedDate { get; set; }  = DateTime.UtcNow;
+
+        public List<KeyInRole> KeyInRoles { get; set; }
+        public List<Service> Services { get; set; }
+        public List<Api> Apis { get; set; }
+        public List<ApiInRole> ApiInRoles { get; set; }
+        public List<AccessRule> AccessRules { get; set; }
+        public List<AccessRuleForRole> AccessRuleForRoles { get; set; }
     }
 }

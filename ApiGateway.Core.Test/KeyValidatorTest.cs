@@ -15,12 +15,11 @@ namespace ApiGateway.Core.Test
         {
             var validator = await GetKeySecretValidator();
             var keyData = await GetKeyData();
+            var ownerKey = await GetOwnerKey();
 
-            var ownerId = ModelHelper.GenerateNewId();
-            
             var key = new KeyModel
             {
-                OwnerKeyId =  ownerId,
+                OwnerKeyId =  ownerKey.Id,
                 PublicKey = ModelHelper.GeneratePublicKey(),
                 Type = ApiKeyTypes.ClientSecret
             };
@@ -28,10 +27,10 @@ namespace ApiGateway.Core.Test
             key.Properties.Add(ApiKeyPropertyNames.ClientSecret, "Supper secret string");
 
             // Save key
-            await keyData.Create(ownerId, key);
+            await keyData.Create(ownerKey.PublicKey, key);
 
             // Validate key
-            var result = await validator.IsValid(ownerId, key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret]);
+            var result = await validator.IsValid(ownerKey.PublicKey, key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret]);
 
             Assert.True(result.IsValid);
         }

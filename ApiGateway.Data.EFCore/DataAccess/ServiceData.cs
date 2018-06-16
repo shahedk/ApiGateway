@@ -31,7 +31,8 @@ namespace ApiGateway.Data.EFCore.DataAccess
          
         public async Task<ServiceModel> Create(string ownerPublicKey, ServiceModel model)
         {
-            var service = model.ToEntity(ownerPublicKey);
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+            var service = model.ToEntity(int.Parse(ownerKey.Id));
             _context.Services.Add(service);
             await _context.SaveChangesAsync();
 
@@ -47,9 +48,12 @@ namespace ApiGateway.Data.EFCore.DataAccess
             }
             else
             {
+                var key = await _keyData.GetByPublicKey(ownerPublicKey);
+                var ownerKeyId = int.Parse(key.Id);
+
                 var id = int.Parse(model.Id);
                 var existing =
-                    await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerPublicKey && x.Id == id);
+                    await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == id);
 
                 if (existing == null)
                 {
@@ -80,7 +84,9 @@ namespace ApiGateway.Data.EFCore.DataAccess
         public async Task<Service> GetEntity(string ownerPublicKey, string id)
         {
             var key = await _keyData.GetByPublicKey(ownerPublicKey);
-            var result = await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == key.PublicKey && x.Id == int.Parse(id));
+            var ownerKeyId = int.Parse(key.Id);
+
+            var result = await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == int.Parse(id));
 
             if (result == null)
             {
