@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
@@ -62,7 +63,7 @@ namespace ApiGateway.Core
                     var api = await _apiData.Get(serviceKey, serviceId, httpMethod, apiUrl);
                     foreach (var role in api.ApiInRole)
                     {
-                        result.IsValid = clientKey.Roles.Exists(x => x.Id == role.Id);
+                        result.IsValid = clientKey.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
                         if (result.IsValid)
                         {
                             break;

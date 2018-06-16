@@ -25,14 +25,7 @@ namespace ApiGateway.Data.EFCore
             // Key
             modelBuilder.Entity<Key>().HasIndex(x => x.PublicKey).IsUnique();
             modelBuilder.Entity<Key>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
-            
-            // Key in Role
-            modelBuilder.Entity<KeyInRole>().HasIndex(x => x.Id).IsUnique();
-            modelBuilder.Entity<KeyInRole>().HasIndex(x => x.KeyId).IsUnique(false);
-            modelBuilder.Entity<KeyInRole>().HasIndex(x => new {x.KeyId, x.RoleId}).IsUnique();
-            modelBuilder.Entity<KeyInRole>().HasOne(x => x.OwnerKey).WithMany(x => x.KeyInRoles)
-                .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_KeyInRole");
-
+             
             // Service
             modelBuilder.Entity<Service>().HasIndex(x => new {x.OwnerKeyId, x.Name});
             modelBuilder.Entity<Service>().HasOne(x => x.OwnerKey).WithMany(x => x.Services)
@@ -50,15 +43,16 @@ namespace ApiGateway.Data.EFCore
                 .HasConstraintName("ForeignKey_Role_Service");
 
             // ApiInRole (Many to Many)
-            modelBuilder.Entity<ApiInRole>().HasKey(x => new{x.ApiId, x.RoleId});
+            modelBuilder.Entity<ApiInRole>().HasIndex(x => new{x.ApiId, x.RoleId});
             modelBuilder.Entity<ApiInRole>().HasOne(x => x.OwnerKey).WithMany(x => x.ApiInRoles)
                 .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_ApiInRole");
 
             // KeyInRole (Many to Many)
-            modelBuilder.Entity<KeyInRole>().HasKey(x => new{x.KeyId, x.RoleId});
+            modelBuilder.Entity<KeyInRole>().HasIndex(x => x.KeyId).IsUnique(false);
+            modelBuilder.Entity<KeyInRole>().HasIndex(x => new {x.KeyId, x.RoleId}).IsUnique();
             modelBuilder.Entity<KeyInRole>().HasOne(x => x.OwnerKey).WithMany(x => x.KeyInRoles)
                 .HasForeignKey(x => x.OwnerKeyId).HasConstraintName("ForeignKey_OwnerKey_KeyInRole");
-
+            
             // AccessRule
             modelBuilder.Entity<AccessRule>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
             modelBuilder.Entity<AccessRule>().HasIndex(x => new{x.ServiceId, x.Name}).IsUnique();

@@ -15,17 +15,17 @@ namespace ApiGateway.Data.EFCore.Test
         [Fact]
         public async Task<KeyModel> CreateKey()
         {
-            var ownerKey = await GetOwnerKey();
+            var rootKey = await GetRootKey();
             var data = await GetKeyData();
 
             var key = new KeyModel()
             {
-                OwnerKeyId = ownerKey.Id,
+                OwnerKeyId = rootKey.Id,
                 PublicKey = ModelHelper.GeneratePublicKey(),
                 Type = ApiKeyTypes.ClientSecret
             };
 
-            var savedKey = await data.Create(ownerKey.PublicKey, key);
+            var savedKey = await data.Create(rootKey.PublicKey, key);
 
             Assert.Equal(key.PublicKey, savedKey.PublicKey);
 
@@ -37,12 +37,13 @@ namespace ApiGateway.Data.EFCore.Test
         {
             var data = await GetKeyData();
             var savedKey = await CreateKey();
+            var rootKey = await GetRootKey();
 
             // Update key
             savedKey.PublicKey = ModelHelper.GeneratePublicKey();
-            await data.Update(string.Empty, savedKey);
+            await data.Update(rootKey.PublicKey, savedKey);
 
-            var updatedKey = await data.Get(string.Empty, savedKey.Id);
+            var updatedKey = await data.Get(rootKey.PublicKey, savedKey.Id);
             
             Assert.Equal(updatedKey.PublicKey, savedKey.PublicKey);
         }
@@ -51,12 +52,13 @@ namespace ApiGateway.Data.EFCore.Test
         public async Task DeleteKey()
         {
             var data = await GetKeyData();
+            var rootKey = await GetRootKey();
 
             // Create new key
             var savedKey = await CreateKey(); 
 
             // Delete
-            await data.Delete(string.Empty, savedKey.Id);
+            await data.Delete(rootKey.PublicKey, savedKey.Id);
 
             try
             {
@@ -74,28 +76,5 @@ namespace ApiGateway.Data.EFCore.Test
             }
         }
 
-        [Fact]
-        public async Task AddRoles()
-        {
-            var serviceData = await GetServiceData();
-            var keyData = await GetKeyData();
-            var roleData = await GetRoleData();
-            var userKey = await CreateKey();
-            var systemKey = await GetOwnerKey();
-
-            var serviceModel = new ServiceModel(){Name = "TestService", OwnerKeyId = userKey.Id};
-            var savedService = await serviceData.Create(userKey.PublicKey, serviceModel);
-            
-            var roleModel = new RoleModel(){Name = "TestRole", OwnerKeyId = userKey.Id, ServiceId = savedService.Id};
-            var savedRole = await roleData.Create(userKey.PublicKey, roleModel);
-
-            userKey.Roles.Add(savedRole);
-            await keyData.Update(systemKey.PublicKey, userKey);
-
-            var savedKey = await keyData.GetByPublicKey(systemKey.PublicKey);
-
-            Assert.True(savedKey.Roles.Count == 1);
-            Assert.Equal(savedKey.Roles[0].Name , roleModel.Name);
-        }
     }
 }

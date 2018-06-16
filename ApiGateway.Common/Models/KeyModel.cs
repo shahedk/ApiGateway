@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using ApiGateway.Common.Constants;
@@ -33,6 +35,16 @@ namespace ApiGateway.Common.Models
 
         public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
-        public List<RoleModel> Roles { get; set; } = new List<RoleModel>();
+        public ReadOnlyCollection<RoleModel> Roles;
+
+        public KeyModel()
+        {
+
+        }
+
+        public KeyModel(List<RoleModel> roles)
+        {
+            Roles = new ReadOnlyCollection<RoleModel>(roles);
+        }
     }
 }

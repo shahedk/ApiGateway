@@ -47,12 +47,11 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static KeyModel ToModel(this Key entity, List<RoleModel> roles)
         {
-            return new  KeyModel
+            return new  KeyModel(roles)
             {
                 Id = entity.Id.ToString(),
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
-                Roles = roles,
                 Type = entity.Type,
                 OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),

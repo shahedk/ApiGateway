@@ -13,7 +13,7 @@ namespace ApiGateway.Data.EFCore.Test
         public async Task<ServiceModel> CreateService()
         {
             var serviceData = await GetServiceData();
-            var ownerKey = await GetOwnerKey();
+            var ownerKey = await GetRootKey();
 
             // Insert new Service
             var serviceModel = new ServiceModel()
@@ -36,7 +36,7 @@ namespace ApiGateway.Data.EFCore.Test
         {
             var serviceData = await GetServiceData();
             var model = await CreateService();
-            var ownerKey = await GetOwnerKey();
+            var ownerKey = await GetRootKey();
 
             model.Name = "some new name";
 
@@ -50,7 +50,7 @@ namespace ApiGateway.Data.EFCore.Test
         {
             var serviceData = await GetServiceData();
             var model = await CreateService();
-            var ownerKey = await GetOwnerKey();
+            var ownerKey = await GetRootKey();
 
             await serviceData.Delete(ownerKey.PublicKey, model.Id);
 

@@ -15,7 +15,7 @@ namespace ApiGateway.Core.Test
         {
             var validator = await GetKeySecretValidator();
             var keyData = await GetKeyData();
-            var ownerKey = await GetOwnerKey();
+            var ownerKey = await GetRootKey();
 
             var key = new KeyModel
             {

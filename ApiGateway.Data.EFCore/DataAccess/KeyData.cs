@@ -29,62 +29,37 @@ namespace ApiGateway.Data.EFCore.DataAccess
             _logger = logger;
         }
 
-        private async Task UpdateKeyInRoles(int ownerKeyId, Key key, List<RoleModel> roles)
-        {
-            var changed = false;
-            var existingRoles = await _context.KeyInRoles.Where(x => x.KeyId == key.Id).ToListAsync();
-            
-            // Remove if no longer assigned
-            foreach (var existingRole in existingRoles)
-            {
-                if (!roles.Exists(x => x.Id == existingRole.Id.ToString()))
-                {
-                    changed = true;
-                    _context.KeyInRoles.Remove(existingRole);
-                }
-            }
-
-            // Add newly assigned roles in list
-            foreach (var role in roles)
-            {
-                if (!existingRoles.Exists(x => x.Id == int.Parse(role.Id)))
-                {
-                    changed = true;
-                    var keyInRole = new KeyInRole {OwnerKeyId = ownerKeyId,  KeyId = key.Id, RoleId = int.Parse(role.Id)};
-                    _context.KeyInRoles.Add(keyInRole);
-                }
-            }
-
-            if (changed)
-            {
-                await _context.SaveChangesAsync();
-            }
-        }
-
+        
         public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
         {
             var entity = model.ToEntity();
-            var ownerKey = await GetEntityByPublicKey(ownerPublicKey);
+
+            var ownerKeyId = 0;
+
+            if (!string.IsNullOrEmpty(ownerPublicKey))
+            {
+                ownerKeyId = (await GetEntityByPublicKey(ownerPublicKey)).Id;
+            }
 
             // Save
+            entity.OwnerKeyId = ownerKeyId;
             _context.Keys.Add(entity);
             await _context.SaveChangesAsync();
 
             // Assign roles to key
             var savedKey = await GetEntityByPublicKey(model.PublicKey);
-            await UpdateKeyInRoles(ownerKey.Id, savedKey, model.Roles);
 
             _logger.LogInformation(LogEvents.NewKeyCreated,string.Empty, ownerPublicKey, model.PublicKey);
 
-            return savedKey.ToModel(model.Roles);
+            return savedKey.ToModel();
         }
 
         public async Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
         {
-            var ownerKey = await GetEntityByPublicKey(ownerPublicKey);
             var existing = await GetEntity(ownerPublicKey, model.Id);
 
             // Update properties
+            existing.OwnerKeyId = int.Parse(model.OwnerKeyId);
             existing.PublicKey = model.PublicKey;
             existing.IsDisabled = model.IsDisabled;
             existing.Properties = model.Properties.ToJson();
@@ -93,10 +68,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
             
             await _context.SaveChangesAsync();
 
-            // Update roles assigned to key
-            await UpdateKeyInRoles(ownerKey.Id, existing, model.Roles);
-
-            return existing.ToModel(model.Roles);
+            return existing.ToModel();
         }
 
         public async Task Delete(string ownerPublicKey, string id)
@@ -134,7 +106,9 @@ namespace ApiGateway.Data.EFCore.DataAccess
                 throw new ItemNotFoundException(msg);
             }
 
-            return entity.ToModel();
+            var roles = await _context.KeyInRoles.Where(x => x.KeyId == entity.Id).Select(x => x.Role.ToModel()).ToListAsync();
+
+            return entity.ToModel(roles);
         }
 
         public async Task<int> GetIdByPublicKey(string publicKey)
@@ -167,8 +141,11 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<KeyModel> GetByPublicKey(string publicKey)
         {
-            var key = await GetEntityByPublicKey(publicKey);
-            return key.ToModel();
+            var entity = await GetEntityByPublicKey(publicKey);
+            
+            var roles = await _context.KeyInRoles.Where(x => x.KeyId == entity.Id).Select(x => x.Role.ToModel()).ToListAsync();
+
+            return entity.ToModel(roles);
         }
         
 

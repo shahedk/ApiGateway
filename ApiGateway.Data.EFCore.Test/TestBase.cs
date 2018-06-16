@@ -75,9 +75,9 @@ namespace ApiGateway.Data.EFCore.Test
         {
             var localizer = new Mock<IStringLocalizer<RoleData>>();
             var logger = new Mock<ILogger<RoleData>>();
-
+            var keyData = await GetKeyData();
             var context = await GetContext();
-            return new RoleData(context, localizer.Object, logger.Object);
+            return new RoleData(context, localizer.Object, logger.Object, keyData);
         }
         
         protected  async Task <IServiceData> GetServiceData()
@@ -99,7 +99,7 @@ namespace ApiGateway.Data.EFCore.Test
             return new ApiData(context, localizer.Object, logger.Object);
         }
 
-        protected async Task<KeyModel> GetOwnerKey()
+        protected async Task<KeyModel> GetRootKey()
         {
             if (_ownerKeyModel == null)
             {
