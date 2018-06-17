@@ -24,13 +24,15 @@ namespace ApiGateway.Core.Test
                 Type = ApiKeyTypes.ClientSecret
             };
 
-            key.Properties.Add(ApiKeyPropertyNames.ClientSecret, "Supper secret string");
+            var secret = "Supper secret string";
+
+            key.Properties.Add(ApiKeyPropertyNames.ClientSecret, secret);
 
             // Save key
             await keyData.Create(ownerKey.PublicKey, key);
 
             // Validate key
-            var result = await validator.IsValid(ownerKey.PublicKey, key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret]);
+            var result = await validator.IsValid(ownerKey.PublicKey, key.PublicKey, secret);
 
             Assert.True(result.IsValid);
         }
