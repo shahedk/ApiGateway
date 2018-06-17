@@ -32,7 +32,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
         public async Task<ServiceModel> Create(string ownerPublicKey, ServiceModel model)
         {
             var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            var service = model.ToEntity(int.Parse(ownerKey.Id));
+            var service = model.ToEntity();
             _context.Services.Add(service);
             await _context.SaveChangesAsync();
 

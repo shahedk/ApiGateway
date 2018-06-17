@@ -84,7 +84,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
             }
             else
             {
-                var msg = _localizer["Api already in role"];
+                var msg = _localizer["Key already in role"];
                 throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
             }
         }
@@ -103,12 +103,65 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
             if (exists == null)
             {
-                var msg = _localizer["Api does not exits in role"];
+                var msg = _localizer["Key does not exits in role"];
                 throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
             }
             else
             {
                 _context.KeyInRoles.Remove(exists);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId)
+        {
+            var ownerKey = await _keyData.GetByPublicKey(roleOwnerPublicKey);
+            var role = await Get(roleOwnerPublicKey, roleId);
+
+            var apiId2 = int.Parse(apiId);
+            var roleId2 = int.Parse(role.Id);
+            var ownerKeyId = int.Parse(ownerKey.Id);
+
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId);
+
+            if (exists == null)
+            {
+                var map = new ApiInRole()
+                {
+                    OwnerKeyId =  int.Parse(role.OwnerKeyId),
+                    ApiId = apiId2,
+                    RoleId = roleId2
+                };
+
+                _context.ApiInRoles.Add(map);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                var msg = _localizer["Api already in role"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId)
+        {
+            var ownerKey = await _keyData.GetByPublicKey(roleOwnerPublicKey);
+            var role = await Get(roleOwnerPublicKey, roleId);
+
+            var apiId2 = int.Parse(apiId);
+            var roleId2 = int.Parse(role.Id);
+            var ownerKeyId = int.Parse(ownerKey.Id);
+
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId);
+
+            if (exists == null)
+            {
+                var msg = _localizer["Api does not exits in role"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                _context.ApiInRoles.Remove(exists);
                 await _context.SaveChangesAsync();
             }
         }

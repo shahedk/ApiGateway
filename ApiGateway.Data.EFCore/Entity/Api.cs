@@ -7,7 +7,7 @@ namespace ApiGateway.Data.EFCore.Entity
     {
         [Required]
         [StringLength(20)]
-        public string ServiceId { get; set; }
+        public int ServiceId { get; set; }
 
         [Required]
         [StringLength(50)]

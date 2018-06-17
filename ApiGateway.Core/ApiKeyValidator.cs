@@ -60,8 +60,8 @@ namespace ApiGateway.Core
                 {
                     // Both keys are valid. Now check if client has the right permission to access the api/url
                     var result = new KeyValidationResult();
-                    var api = await _apiData.Get(serviceKey, serviceId, httpMethod, apiUrl);
-                    foreach (var role in api.ApiInRole)
+                    var api = await _apiData.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
+                    foreach (var role in api.Roles)
                     {
                         result.IsValid = clientKey.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
                         if (result.IsValid)

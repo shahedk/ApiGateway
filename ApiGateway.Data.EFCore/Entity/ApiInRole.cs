@@ -6,11 +6,10 @@ namespace ApiGateway.Data.EFCore.Entity
     {
         [Required]
         [StringLength(20)]
-        public string ApiId { get; set; }
+        public int ApiId { get; set; }
         
         [Required]
-        [StringLength(20)]
-        public string RoleId { get; set; }
+        public int RoleId { get; set; }
 
         public Api Api { get; set; }
 

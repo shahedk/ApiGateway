@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using ApiGateway.Common.Constants;
@@ -37,6 +38,13 @@ namespace ApiGateway.Common.Models
         [Required]
         public string Url { get; set; }
 
-        public List<RoleModel> ApiInRole { get; set; }
+        public ReadOnlyCollection<RoleModel> Roles;
+
+        public ApiModel(){}
+
+        public ApiModel(IList<RoleModel> roles)
+        {
+            Roles = new ReadOnlyCollection<RoleModel>(roles);
+        }
     }
 }

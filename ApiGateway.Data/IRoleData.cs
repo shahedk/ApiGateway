@@ -7,5 +7,8 @@ namespace ApiGateway.Data
     {
         Task AddKeyInRole(string roleOwnerPublicKey, string roleId, string keyPublicKey);
         Task RemoveKeyFromRole(string roleOwnerPublicKey, string roleId, string keyPublicKey);
+
+        Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId);
+        Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId);
     }
 }

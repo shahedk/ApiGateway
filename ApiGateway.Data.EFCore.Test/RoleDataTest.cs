@@ -11,7 +11,6 @@ namespace ApiGateway.Data.EFCore.Test
 {
     public class RoleDataTest : TestBase
     {
-        
         [Fact]
         public async Task AddKeyInRole()
         {
@@ -99,6 +98,76 @@ namespace ApiGateway.Data.EFCore.Test
             var updatedKey = await keyData.GetByPublicKey(userKey.PublicKey);
             Assert.NotNull(updatedKey);
             Assert.True(updatedKey.Roles.Count == 0);
+
+        }
+
+
+        [Fact]
+        public async Task AddApiInRole()
+        {
+            var rootKey = await GetRootKey();
+            var serviceData = await GetServiceData();
+            var roleData = await GetRoleData();
+            var apiData = await GetApiData();
+
+            // # 1. Create service
+            var serviceModel = new ServiceModel(){Name = "TestService", OwnerKeyId = rootKey.Id};
+            var savedService = await serviceData.Create(rootKey.PublicKey, serviceModel);
+            
+            // # 2. Create Api
+            var apiModel = new ApiModel(){ Name = "Test APi", OwnerKeyId = rootKey.Id, HttpMethod = ApiHttpMethods.Get, ServiceId = savedService.Id, Url = "/testurl"};
+            var savedApi = await apiData.Create(rootKey.PublicKey, apiModel);
+
+            // # 3. Create role
+            var roleModel = new RoleModel(){Name = "TestRole", OwnerKeyId = rootKey.Id, ServiceId = savedService.Id};
+            var savedRole = await roleData.Create(rootKey.PublicKey, roleModel);
+
+            // # 4. Assign Api to Role
+            await roleData.AddApiInRole(rootKey.PublicKey, savedRole.Id, savedApi.Id);
+
+            var apiInfo = await apiData.Get(rootKey.PublicKey, savedApi.Id);
+
+            Assert.NotNull(apiInfo);
+            Assert.True(apiInfo.Roles.Count == 1);
+            Assert.Equal(apiInfo.Roles[0].Name , roleModel.Name);
+        }
+
+        [Fact]
+        public async Task RemoveApiFromRole()
+        {
+            var rootKey = await GetRootKey();
+            var serviceData = await GetServiceData();
+            var roleData = await GetRoleData();
+            var apiData = await GetApiData();
+
+            // # 1. Create service
+            var serviceModel = new ServiceModel(){Name = "TestService", OwnerKeyId = rootKey.Id};
+            var savedService = await serviceData.Create(rootKey.PublicKey, serviceModel);
+            
+            // # 2. Create Api
+            var apiModel = new ApiModel(){ Name = "Test APi", OwnerKeyId = rootKey.Id, HttpMethod = ApiHttpMethods.Get, ServiceId = savedService.Id, Url = "/testurl"};
+            var savedApi = await apiData.Create(rootKey.PublicKey, apiModel);
+
+            // # 3. Create role
+            var roleModel = new RoleModel(){Name = "TestRole", OwnerKeyId = rootKey.Id, ServiceId = savedService.Id};
+            var savedRole = await roleData.Create(rootKey.PublicKey, roleModel);
+            
+            // # 4. Assign Api to Role
+            await roleData.AddApiInRole(rootKey.PublicKey, savedRole.Id, savedApi.Id);
+
+            var apiInfo = await apiData.Get(rootKey.PublicKey, savedApi.Id);
+
+            Assert.NotNull(apiInfo);
+            Assert.True(apiInfo.Roles.Count == 1);
+            Assert.Equal(apiInfo.Roles[0].Name , roleModel.Name);
+
+            // # 5. Remove Api from Role
+            await roleData.RemoveApiFromRole(rootKey.PublicKey, savedRole.Id, savedApi.Id);
+
+            var updatedAPi = await apiData.Get(rootKey.PublicKey, savedApi.Id);
+
+            Assert.NotNull(updatedAPi);
+            Assert.True(updatedAPi.Roles.Count == 0);
 
         }
     }

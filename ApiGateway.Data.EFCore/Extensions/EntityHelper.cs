@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
@@ -69,7 +70,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 HttpMethod = model.HttpMethod,
                 Name = model.Name,
-                ServiceId = model.ServiceId,
+                ServiceId = int.Parse(model.ServiceId),
                 
                 Url = model.Url,
                 OwnerKeyId = int.Parse( model.OwnerKeyId),
@@ -78,16 +79,31 @@ namespace ApiGateway.Data.EFCore.Extensions
             };
         }
 
-        public static ApiModel ToModel(this Api entity, List<RoleModel> roles)
+        public static ApiModel ToModel(this Api entity)
         {
             return new ApiModel
             {
                 Id = entity.Id.ToString(),
-                ApiInRole = roles,
                 HttpMethod = entity.HttpMethod,
                 Name = entity.Name,
-                ServiceId = entity.ServiceId,
-                
+                ServiceId = entity.ServiceId.ToString(),
+                Url = entity.Url,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                CreateDate = entity.CreateDate.ToClientLocalTime(),
+                ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
+            };
+        }
+
+
+        public static ApiModel ToModel(this Api entity, List<RoleModel> roles)
+        {
+            return new ApiModel(roles)
+            {
+                Id = entity.Id.ToString(),
+                HttpMethod = entity.HttpMethod,
+                Name = entity.Name,
+                ServiceId = entity.ServiceId.ToString(),
+                Url = entity.Url,
                 OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
@@ -143,14 +159,13 @@ namespace ApiGateway.Data.EFCore.Extensions
         /*
          * Service - ServiceModel
          */
-        public static Service ToEntity(this ServiceModel model, int ownerKeyId)
+        public static Service ToEntity(this ServiceModel model)
         {
             return new Service
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
-                OwnerKeyId = ownerKeyId,
-                
+                OwnerKeyId = int.Parse(model.OwnerKeyId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };

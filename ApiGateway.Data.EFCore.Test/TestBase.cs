@@ -94,9 +94,9 @@ namespace ApiGateway.Data.EFCore.Test
         {
             var localizer = new Mock<IStringLocalizer<ApiData>>();
             var logger = new Mock<ILogger<ApiData>>();
-
+            var keyData = await GetKeyData();
             var context = await GetContext();
-            return new ApiData(context, localizer.Object, logger.Object);
+            return new ApiData(context, localizer.Object, logger.Object, keyData);
         }
 
         protected async Task<KeyModel> GetRootKey()
