@@ -115,7 +115,7 @@ namespace ApiGateway.Data.EFCore.Test
             var savedService = await serviceData.Create(rootKey.PublicKey, serviceModel);
             
             // # 2. Create Api
-            var apiModel = new ApiModel(){ Name = "Test APi", OwnerKeyId = rootKey.Id, HttpMethod = ApiHttpMethods.Get, ServiceId = savedService.Id, Url = "/testurl"};
+            var apiModel = new ApiModel(){ Name = "Test Api", OwnerKeyId = rootKey.Id, HttpMethod = ApiHttpMethods.Get, ServiceId = savedService.Id, Url = "/testurl"};
             var savedApi = await apiData.Create(rootKey.PublicKey, apiModel);
 
             // # 3. Create role
