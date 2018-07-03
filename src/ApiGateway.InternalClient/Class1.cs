@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ApiGateway.Client
+namespace ApiGateway.InternalClient
 {
     public class Class1
     {
