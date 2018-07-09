@@ -30,6 +30,9 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<RoleModel> Create(string ownerPublicKey, RoleModel model)
         {
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+
+            model.OwnerKeyId = ownerKey.Id;
             var entity = model.ToEntity();
 
             _context.Roles.Add(entity);
@@ -38,24 +41,53 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return entity.ToModel();
         }
 
-        public Task<RoleModel> Update(string ownerPublicKey, RoleModel model)
+        public async Task<RoleModel> Update(string ownerPublicKey, RoleModel model)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+            var roleId = int.Parse(model.Id);
+            var ownerKeyId = int.Parse(ownerKey.Id);
+
+            model.OwnerKeyId = ownerKey.Id;
+
+            var existing = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == roleId);
+
+            existing.Name = model.Name;
+            existing.ServiceId = int.Parse(model.ServiceId);
+
+            await _context.SaveChangesAsync();
+
+            return existing.ToModel();
         }
 
-        public Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var existing = await GetEntity(ownerPublicKey, id);
+
+            _context.Roles.Remove(existing);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<RoleModel> Get(string ownerPublicKey, string id)
+        {
+            var role = await GetEntity(ownerPublicKey, id);
+
+            return role.ToModel();
+        }
+
+        private async Task<Role> GetEntity(string ownerPublicKey, string id)
         {
             var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
             var ownerKeyId = int.Parse(ownerKey.Id);
             var roleId = int.Parse(id);
             var role = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == roleId);
 
-            return role.ToModel();
+            if (role == null)
+            {
+                var msg = _localizer["Role not found for the specified owner and id"];
+                throw new ItemNotFoundException(msg, HttpStatusCode.NotFound);
+            }
+
+            return role;
         }
 
         public async Task AddKeyInRole(string roleOwnerPublicKey, string roleId, string keyPublicKey)

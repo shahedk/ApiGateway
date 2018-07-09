@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiGateway.Client;
+using ApiGateway.Common.Models;
+using ApiGateway.Data;
+using ApiGateway.Data.EFCore.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,38 +13,49 @@ namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/Role")]
-    public class RoleController : Controller
+    public class RoleController : ApiControllerBase
     {
+        private readonly IRoleData _roleData;
+
+        public RoleController( IRoleData roleData, IApiRequestHelper apiRequestHelper):base(apiRequestHelper)
+        {
+            _roleData = roleData;
+        }
+
         // GET: api/Role
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            return new string[] { "value1", "value2" };
+            return ":)";
         }
 
         // GET: api/Role/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<RoleModel> Get(string id)
         {
-            return "value";
+            return await _roleData.Get(ApiKey, id);
         }
         
         // POST: api/Role
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<RoleModel> Post([FromBody]RoleModel model)
         {
+            return await _roleData.Create(ApiKey, model);
         }
         
         // PUT: api/Role/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<RoleModel> Put(string id, [FromBody]RoleModel model)
         {
+            model.Id = id;
+            return await _roleData.Update(ApiKey, model);
         }
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(string id)
         {
+            await _roleData.Delete(ApiKey, id);
         }
     }
 }

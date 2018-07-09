@@ -39,8 +39,7 @@ namespace ApiGateway.Data.EFCore
             
             // Role
             modelBuilder.Entity<Role>().HasIndex(x => new {x.ServiceId, x.Name}).IsUnique();
-            modelBuilder.Entity<Role>().HasOne(x => x.Service).WithMany(x => x.Roles).HasForeignKey(x => x.ServiceId)
-                .HasConstraintName("ForeignKey_Role_Service");
+            modelBuilder.Entity<Role>().HasOne(x => x.Service).WithMany(x => x.Roles).HasForeignKey(x => x.ServiceId).HasConstraintName("ForeignKey_Role_Service");
 
             // ApiInRole (Many to Many)
             modelBuilder.Entity<ApiInRole>().HasIndex(x => new{x.ApiId, x.RoleId});

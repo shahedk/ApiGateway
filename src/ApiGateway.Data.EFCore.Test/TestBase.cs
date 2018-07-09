@@ -15,7 +15,8 @@ namespace ApiGateway.Data.EFCore.Test
 {
     public class TestBase
     {
-        private KeyModel _ownerKeyModel = null;
+        private KeyModel _rootKeyModel = null;
+        private KeyModel _userKeyModel = null;
 
         private ApiGatewayContext _context;
 
@@ -101,7 +102,7 @@ namespace ApiGateway.Data.EFCore.Test
 
         protected async Task<KeyModel> GetRootKey()
         {
-            if (_ownerKeyModel == null)
+            if (_rootKeyModel == null)
             {
                 var keyData = await GetKeyData();
 
@@ -112,10 +113,30 @@ namespace ApiGateway.Data.EFCore.Test
                     Type = ApiKeyTypes.ClientSecret
 
                 };
-                _ownerKeyModel = await keyData.Create(string.Empty, keyModel);
+                _rootKeyModel = await keyData.Create(string.Empty, keyModel);
             }
 
-            return _ownerKeyModel;
+            return _rootKeyModel;
+        }
+
+        protected async Task<KeyModel> GetUserKey()
+        {
+            if (_userKeyModel == null)
+            {
+                var rootKey = await GetRootKey();
+                var keyData = await GetKeyData();
+
+                var keyModel = new KeyModel()
+                {
+                    OwnerKeyId = rootKey.Id,
+                    PublicKey = ModelHelper.GeneratePublicKey(),
+                    Type = ApiKeyTypes.ClientSecret
+
+                };
+                _userKeyModel = await keyData.Create(string.Empty, keyModel);
+            }
+
+            return _userKeyModel;
         }
 
     }
