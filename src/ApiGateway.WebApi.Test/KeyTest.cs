@@ -11,9 +11,9 @@ using Xunit;
 
 namespace ApiGateway.WebApi.Test
 {
-    public class KeyTest : CoreTestBase
+    public class KeyTest : WebApiTestBase
     {
-        private async Task<KeyController> GetController()
+        protected async Task<KeyController> GetKeyController()
         {
             var rootKey = await GetRootKey();
             var requestHelper = new MockApiRequestHelper(rootKey.PublicKey);
@@ -26,7 +26,7 @@ namespace ApiGateway.WebApi.Test
         public async Task<KeyModel> Create()
         {
             var rootKey = await GetRootKey();
-            var keyController = await GetController();
+            var keyController = await GetKeyController();
 
             var key = new KeyModel()
             {
@@ -46,7 +46,7 @@ namespace ApiGateway.WebApi.Test
         [Fact]
         public async Task Update()
         {
-            var keyController = await GetController();
+            var keyController = await GetKeyController();
             var existingKey = await Create();
 
             var model = new KeyModel()
@@ -68,7 +68,7 @@ namespace ApiGateway.WebApi.Test
         [Fact]
         public async Task Get()
         {
-            var keyController = await GetController();
+            var keyController = await GetKeyController();
             var existingKey = await Create();
 
             var saved  = await keyController.Get(existingKey.Id);
@@ -79,7 +79,7 @@ namespace ApiGateway.WebApi.Test
         [Fact]
         public async Task Delete()
         {
-            var keyController = await GetController();
+            var keyController = await GetKeyController();
             var existingKey = await Create();
 
             await keyController.Delete(existingKey.Id);
@@ -87,6 +87,7 @@ namespace ApiGateway.WebApi.Test
             try
             {
                 var saved = await keyController.Get(existingKey.Id);
+                Assert.Null(saved);
             }
             catch (Exception ex)
             {
