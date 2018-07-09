@@ -13,15 +13,6 @@ namespace ApiGateway.WebApi.Test
 {
     public class KeyTest : WebApiTestBase
     {
-        protected async Task<KeyController> GetKeyController()
-        {
-            var rootKey = await GetRootKey();
-            var requestHelper = new MockApiRequestHelper(rootKey.PublicKey);
-            var keyController = new KeyController(await GetKeyData(), requestHelper);
-
-            return keyController;
-        }
-
         [Fact]
         public async Task<KeyModel> Create()
         {

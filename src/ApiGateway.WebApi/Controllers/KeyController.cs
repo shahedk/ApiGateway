@@ -10,40 +10,34 @@ namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/Key")]
-    public class KeyController : Controller
+    public class KeyController : ApiControllerBase
     {
         private readonly IKeyData _keyData;
-        private readonly IApiRequestHelper _apiRequestHelper;
 
-        public KeyController( IKeyData keyData, IApiRequestHelper apiRequestHelper)
+        public KeyController( IKeyData keyData, IApiRequestHelper apiRequestHelper):base(apiRequestHelper)
         {
             _keyData = keyData;
-            _apiRequestHelper = apiRequestHelper;
         }
 
         // GET: api/Key
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            return new string[] { "value1", "value2" };
+            return ":)";
         }
 
         // GET: api/Key/5
         [HttpGet("{id}", Name = "Get")]
         public async Task<KeyModel> Get(string id)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-
-            return await _keyData.Get(publicKey, id);
+            return await _keyData.Get(ApiKey, id);
         }
         
         // POST: api/Key
         [HttpPost]
         public async Task<KeyModel> Post([FromBody]KeyModel model)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-
-            var keyModel = await _keyData.Create(publicKey, model);
+            var keyModel = await _keyData.Create(ApiKey, model);
 
             return keyModel;
         }
@@ -52,11 +46,8 @@ namespace ApiGateway.WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<KeyModel> Put(string id, [FromBody]KeyModel model)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-
             model.Id = id;
-
-            var keyModel = await _keyData.Update(publicKey, model);
+            var keyModel = await _keyData.Update(ApiKey, model);
 
             return keyModel;
         }
@@ -65,9 +56,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-
-            await _keyData.Delete(publicKey, id);
+            await _keyData.Delete(ApiKey, id);
         }
     }
 }

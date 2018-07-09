@@ -13,19 +13,10 @@ namespace ApiGateway.WebApi.Controllers
     public class ServiceController : ApiControllerBase
     {
         private readonly IServiceData _serviceData;
-        private readonly IApiKeyValidator _keyValidator;
-        private readonly IKeyData _keyData;
-        private readonly IStringLocalizer<ServiceController> _stringLocalizer;
-        private readonly IApiRequestHelper _apiRequestHelper;
 
-        public ServiceController(IServiceData serviceData, IApiKeyValidator keyValidator, IKeyData keyData,
-            IStringLocalizer<ServiceController> stringLocalizer, IApiRequestHelper apiRequestHelper)
+        public ServiceController(IServiceData serviceData, IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
         {
             _serviceData = serviceData;
-            _keyValidator = keyValidator;
-            _keyData = keyData;
-            _stringLocalizer = stringLocalizer;
-            _apiRequestHelper = apiRequestHelper;
         }
 
 
@@ -40,8 +31,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<ServiceModel> Get(string id)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-            var model = await _serviceData.Get(publicKey, id);
+            var model = await _serviceData.Get(ApiKey, id);
 
             return model;
         }
@@ -50,8 +40,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpPost]
         public async Task<ServiceModel> Post([FromBody]ServiceModel model)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-            var result = await _serviceData.Create(publicKey, model);
+            var result = await _serviceData.Create(ApiKey, model);
 
             return result;
         }
@@ -61,8 +50,7 @@ namespace ApiGateway.WebApi.Controllers
         public async Task<ServiceModel> Put(string id, [FromBody]ServiceModel model)
         {
             model.Id = id;
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-            var result = await _serviceData.Update(publicKey, model);
+            var result = await _serviceData.Update(ApiKey, model);
 
             return result;
         }
@@ -71,8 +59,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            var publicKey = _apiRequestHelper.GetApiPublicKey();
-            await _serviceData.Delete(publicKey, id);
+            await _serviceData.Delete(ApiKey, id);
         }
     }
 }

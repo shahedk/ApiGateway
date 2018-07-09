@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
+using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -57,21 +59,37 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return existing.ToModel();
         }
 
-        public Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var existing = await GetEntity(ownerPublicKey, id);
+
+            _context.Apis.Remove(existing);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<ApiModel> Get(string ownerPublicKey, string id)
+        {
+            var entity = await GetEntity(ownerPublicKey, id);
+
+            var roles = await _context.ApiInRoles.Where(x => x.ApiId == entity.Id).Select(x => x.Role.ToModel()).ToListAsync();
+
+            return entity.ToModel(roles);
+        }
+
+        private async Task<Api> GetEntity(string ownerPublicKey, string id)
         {
             var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
             var ownerKeyId = int.Parse(ownerKey.Id);
             var keyId = int.Parse(id);
             var entity = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == keyId);
 
-            var roles = await _context.ApiInRoles.Where(x => x.ApiId== entity.Id).Select(x => x.Role.ToModel()).ToListAsync();
+            if (entity == null)
+            {
+                var msg = _localizer["No Api found for the specified owner and Id"];
+                throw new ItemNotFoundException(msg);
+            }
 
-            return entity.ToModel(roles);
+            return entity;
         }
 
         public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
