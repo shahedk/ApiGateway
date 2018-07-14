@@ -42,7 +42,35 @@ namespace ApiGateway.WebApi.Controllers
         {
             return await _roleData.Create(ApiKey, model);
         }
+
+        [Route("/api/Role/AddKeyInRole")]
+        [HttpPost]
+        public async Task AddKeyInRole(string key, string roleId)
+        {
+            await _roleData.AddKeyInRole(ApiKey, roleId, key);
+        }
+
+        [Route("/api/Role/RemoveKeyFromRole")]
+        [HttpPost]
+        public async Task RemoveKeyFromRole(string key, string roleId)
+        {
+            await _roleData.RemoveKeyFromRole(ApiKey, roleId, key);
+        }
         
+        [Route("/api/Role/AddApiInRole")]
+        [HttpPost]
+        public async Task AddApiInRole(string apiId, string roleId)
+        {
+            await _roleData.AddApiInRole(ApiKey, roleId, apiId);
+        }
+
+        [Route("/api/Role/RemoveApiFromRole")]
+        [HttpPost]
+        public async Task RemoveApiFromRole(string apiId, string roleId)
+        {
+            await _roleData.RemoveApiFromRole(ApiKey, roleId, apiId);
+        }
+
         // PUT: api/Role/5
         [HttpPut("{id}")]
         public async Task<RoleModel> Put(string id, [FromBody]RoleModel model)

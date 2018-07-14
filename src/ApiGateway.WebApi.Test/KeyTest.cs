@@ -4,9 +4,6 @@ using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
-using ApiGateway.Core.Test;
-using ApiGateway.WebApi.Controllers;
-using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace ApiGateway.WebApi.Test
@@ -84,8 +81,8 @@ namespace ApiGateway.WebApi.Test
             {
                 Assert.True( ex is ItemNotFoundException);
             }
-
-            
         }
+
+        
     }
 }

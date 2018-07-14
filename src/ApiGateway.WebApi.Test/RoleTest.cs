@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
-using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using Xunit;
 
@@ -31,8 +31,11 @@ namespace ApiGateway.WebApi.Test
             };
 
             var savedModel = await controller.Post(model);
+            
+            var roleModel = await controller.Get(savedModel.Id);
 
             Assert.Equal(model.Name, savedModel.Name);
+            Assert.Equal(model.Name, roleModel.Name);
 
             return savedModel;
         }
@@ -80,6 +83,90 @@ namespace ApiGateway.WebApi.Test
             {
                 Assert.True( ex is ItemNotFoundException);
             }
+        }
+
+        [Fact]
+        public async Task AddApiInRole()
+        {
+            var role = await Create();
+            var apiController = await GetApiController();
+            var rootkey = await GetRootKey();
+            var service = await GetService();
+
+            var apiModel = new ApiModel(){ Name = "Test api" + DateTime.Now, HttpMethod = ApiHttpMethods.Get, Url = "https://apitest.com", ServiceId = service.Id};
+
+            var savedApi = await apiController.Post(apiModel);
+
+            var controller = await GetRoleController();
+            await controller.AddApiInRole(savedApi.Id, role.Id);
+
+            savedApi = await apiController.Get(savedApi.Id);
+
+            Assert.True(savedApi.Roles.Count == 1);
+            Assert.True(savedApi.Roles[0].Name == role.Name);
+        }
+
+        [Fact]
+        public async Task RemoveApiFromRole()
+        {
+            var role = await Create();
+            var apiController = await GetApiController();
+            var service = await GetService();
+
+            var apiModel = new ApiModel(){ Name = "Test api" + DateTime.Now, HttpMethod = ApiHttpMethods.Get, Url = "https://apitest.com", ServiceId = service.Id};
+
+            var savedApi = await apiController.Post(apiModel);
+
+            var controller = await GetRoleController();
+            await controller.AddApiInRole(savedApi.Id, role.Id);
+
+            // Check Api in roles
+            savedApi = await apiController.Get(savedApi.Id);
+            Assert.True(savedApi.Roles.Count == 1);
+            Assert.True(savedApi.Roles[0].Name == role.Name);
+
+            await controller.RemoveApiFromRole(savedApi.Id, role.Id);
+
+            // Check Api in roles
+            savedApi = await apiController.Get(savedApi.Id);
+            Assert.True(savedApi.Roles.Count == 0);
+        }
+
+        [Fact]
+        public async Task AddKeyInRole()
+        {
+            var role = await Create();
+            var userKey = await GetUserKey();
+
+            var roleController = await GetRoleController();
+            await roleController.AddKeyInRole(userKey.PublicKey, role.Id);
+
+            var keyRole = await GetKeyController();
+            var savedKey = await keyRole.Get(userKey.Id);
+
+            Assert.True(savedKey.Roles.Count == 1);
+            Assert.True(savedKey.Roles[0].Name == role.Name);
+        }
+
+        [Fact]
+        public async Task RemoveKeyFromRole()
+        {
+            var role = await Create();
+            var userKey = await GetUserKey();
+
+            var roleController = await GetRoleController();
+            await roleController.AddKeyInRole(userKey.PublicKey, role.Id);
+
+            var keyRole = await GetKeyController();
+            var savedKey = await keyRole.Get(userKey.Id);
+            
+            Assert.True(savedKey.Roles.Count == 1);
+            Assert.True(savedKey.Roles[0].Name == role.Name);
+
+            await roleController.RemoveKeyFromRole(userKey.PublicKey, role.Id);
+            savedKey = await keyRole.Get(userKey.Id);
+            
+            Assert.True(savedKey.Roles.Count == 0);
         }
     }
 }

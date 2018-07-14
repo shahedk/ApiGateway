@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
+using ApiGateway.WebApi.Controllers;
 using Xunit;
 
 namespace ApiGateway.WebApi.Test
@@ -51,16 +54,6 @@ namespace ApiGateway.WebApi.Test
             var savedApiModel = await controller.Put(apiModel.Id, apiModel);
 
             Assert.Equal(apiModel.Name, savedApiModel.Name);
-
-        }
-
-        public async Task AddApiInRole()
-        {
-
-        }
-
-        public async Task RemoveApiFromRole()
-        {
 
         }
 

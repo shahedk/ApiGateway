@@ -133,10 +133,20 @@ namespace ApiGateway.Data.EFCore.Test
                     Type = ApiKeyTypes.ClientSecret
 
                 };
-                _userKeyModel = await keyData.Create(string.Empty, keyModel);
+                _userKeyModel = await keyData.Create(rootKey.PublicKey, keyModel);
             }
 
             return _userKeyModel;
+        }
+
+        protected async Task<ServiceModel> GetService()
+        {
+            var rootKey = await GetRootKey();
+            var model = new ServiceModel(){ Name = "Test service", OwnerKeyId = rootKey.PublicKey};
+
+            var serviceData = await GetServiceData();
+
+            return await serviceData.Create(rootKey.PublicKey, model);
         }
 
     }

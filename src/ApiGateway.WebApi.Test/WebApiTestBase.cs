@@ -15,11 +15,11 @@ namespace ApiGateway.WebApi.Test
             return new MockApiRequestHelper(rootKey.PublicKey);
         }
 
-        private async Task<IApiRequestHelper> GetApiRequestHelperWithUserKey()
-        {
-            var rootKey = await GetUserKey();
-            return new MockApiRequestHelper(rootKey.PublicKey);
-        }
+        //private async Task<IApiRequestHelper> GetApiRequestHelperWithUserKey()
+        //{
+        //    var rootKey = await GetUserKey();
+        //    return new MockApiRequestHelper(rootKey.PublicKey);
+        //}
 
         protected async Task<KeyController> GetKeyController()
         {
@@ -38,7 +38,7 @@ namespace ApiGateway.WebApi.Test
 
         protected async Task<RoleController> GetRoleController()
         {
-            return new RoleController(await GetRoleData(), await GetApiRequestHelperWithUserKey());
+            return new RoleController(await GetRoleData(), await GetApiRequestHelperWithRootKey());
         }
     }
 }
