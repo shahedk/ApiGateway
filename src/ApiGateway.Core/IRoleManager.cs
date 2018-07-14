@@ -2,7 +2,7 @@
 
 namespace ApiGateway.Core
 {
-    public interface IServiceManager : IManager<ServiceModel>
+    public interface IRoleManager : IManager<RoleModel>
     {
         
     }
