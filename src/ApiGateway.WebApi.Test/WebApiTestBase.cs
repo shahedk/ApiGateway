@@ -40,5 +40,10 @@ namespace ApiGateway.WebApi.Test
         {
             return new RoleController(await GetRoleData(), await GetApiRequestHelperWithRootKey());
         }
+
+        protected async Task<IsValidController> GetIsValidController()
+        {
+            return new IsValidController(await GetApiKeyValidator(), await GetApiRequestHelperWithRootKey());
+        }
     }
 }

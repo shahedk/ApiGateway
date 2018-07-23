@@ -17,6 +17,7 @@ namespace ApiGateway.Data.EFCore.Test
     {
         private KeyModel _rootKeyModel = null;
         private KeyModel _userKeyModel = null;
+        private ServiceModel _defaultServiceModel = null;
 
         private ApiGatewayContext _context;
 
@@ -139,14 +140,18 @@ namespace ApiGateway.Data.EFCore.Test
             return _userKeyModel;
         }
 
-        protected async Task<ServiceModel> GetService()
+        protected async Task<ServiceModel> GetServiceModel()
         {
-            var rootKey = await GetRootKey();
-            var model = new ServiceModel(){ Name = "Test service", OwnerKeyId = rootKey.PublicKey};
+            if (_defaultServiceModel == null)
+            {
+                var rootKey = await GetRootKey();
+                var model = new ServiceModel() {Name = "Test service", OwnerKeyId = rootKey.PublicKey};
 
-            var serviceData = await GetServiceData();
+                var serviceData = await GetServiceData();
+                _defaultServiceModel = await serviceData.Create(rootKey.PublicKey, model);
+            }
 
-            return await serviceData.Create(rootKey.PublicKey, model);
+            return _defaultServiceModel;
         }
 
     }

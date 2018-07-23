@@ -91,7 +91,7 @@ namespace ApiGateway.WebApi.Test
             var role = await Create();
             var apiController = await GetApiController();
             var rootkey = await GetRootKey();
-            var service = await GetService();
+            var service = await GetServiceModel();
 
             var apiModel = new ApiModel(){ Name = "Test api" + DateTime.Now, HttpMethod = ApiHttpMethods.Get, Url = "https://apitest.com", ServiceId = service.Id};
 
@@ -111,7 +111,7 @@ namespace ApiGateway.WebApi.Test
         {
             var role = await Create();
             var apiController = await GetApiController();
-            var service = await GetService();
+            var service = await GetServiceModel();
 
             var apiModel = new ApiModel(){ Name = "Test api" + DateTime.Now, HttpMethod = ApiHttpMethods.Get, Url = "https://apitest.com", ServiceId = service.Id};
 

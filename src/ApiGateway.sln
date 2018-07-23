@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Client", "ApiGat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.WebApi.Test", "ApiGateway.WebApi.Test\ApiGateway.WebApi.Test.csproj", "{4A23D20C-7E26-4259-9568-7ED110C332FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway.InternalClient", "ApiGateway.InternalClient\ApiGateway.InternalClient.csproj", "{8B4C2651-2120-4B69-939B-17EFFB2A1FF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.InternalClient", "ApiGateway.InternalClient\ApiGateway.InternalClient.csproj", "{8B4C2651-2120-4B69-939B-17EFFB2A1FF3}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{44D168A8-03BC-4170-ADCD-AF7392C6CB6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{8B4C2651-2120-4B69-939B-17EFFB2A1FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B4C2651-2120-4B69-939B-17EFFB2A1FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B4C2651-2120-4B69-939B-17EFFB2A1FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44D168A8-03BC-4170-ADCD-AF7392C6CB6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44D168A8-03BC-4170-ADCD-AF7392C6CB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44D168A8-03BC-4170-ADCD-AF7392C6CB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44D168A8-03BC-4170-ADCD-AF7392C6CB6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

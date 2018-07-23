@@ -12,13 +12,6 @@ namespace ApiGateway.WebApi.Test
 {
     public class ApiTest : WebApiTestBase
     {
-        private async Task<ServiceModel> GetServiceModel()
-        {
-            var serviceTest = new ServiceTest();
-            var serviceModel = await serviceTest.Create();
-
-            return serviceModel;
-        }
 
         [Fact]
         public async Task<ApiModel> Create()

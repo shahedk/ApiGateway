@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ApiGateway.Client;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Models;
 using ApiGateway.Core;
@@ -11,18 +12,15 @@ namespace ApiGateway.WebApi.Controllers
     public class IsValidController : Controller
     {
         private readonly IApiKeyValidator _keyValidator;
+        private readonly IApiRequestHelper _apiRequestHelper;
 
-        public IsValidController(IApiKeyValidator keyValidator)
+        public IsValidController(IApiKeyValidator keyValidator, IApiRequestHelper apiRequestHelper)
         {
             _keyValidator = keyValidator;
+            _apiRequestHelper = apiRequestHelper;
         }
 
         [HttpGet]
-        public string Get()
-        {
-            return ":)";
-        }
-
         public async Task<KeyValidationResult> Get(string serviceId, string apiUrl, string httpMethod, 
             [FromHeader] string apiKey, [FromHeader] string apiSecret, [FromHeader] string serviceApiKey, [FromHeader] string serviceApiSecret)
         {
