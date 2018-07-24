@@ -2,8 +2,6 @@
 using ApiGateway.Client;
 using ApiGateway.Core.Test;
 using ApiGateway.WebApi.Controllers;
-using Microsoft.Extensions.Localization;
-using Moq;
 
 namespace ApiGateway.WebApi.Test
 {

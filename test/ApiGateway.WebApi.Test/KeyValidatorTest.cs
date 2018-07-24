@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using ApiGateway.Common.Models;
 using Xunit;
 
 namespace ApiGateway.WebApi.Test

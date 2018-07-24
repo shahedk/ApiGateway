@@ -12,7 +12,7 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ApiGateway.Common\ApiGateway.Common.csproj" />
-    <ProjectReference Include="..\ApiGateway.Data.EFCore\ApiGateway.Data.EFCore.csproj" />
+    <ProjectReference Include="..\..\src\ApiGateway.Common\ApiGateway.Common.csproj" />
+    <ProjectReference Include="..\..\src\ApiGateway.Data.EFCore\ApiGateway.Data.EFCore.csproj" />
   </ItemGroup>
 </Project>

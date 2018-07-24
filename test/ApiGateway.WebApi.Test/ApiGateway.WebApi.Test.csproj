@@ -13,8 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ApiGateway.Common\ApiGateway.Common.csproj" />
+    <ProjectReference Include="..\..\src\ApiGateway.WebApi\ApiGateway.WebApi.csproj" />
     <ProjectReference Include="..\ApiGateway.Core.Test\ApiGateway.Core.Test.csproj" />
-    <ProjectReference Include="..\ApiGateway.WebApi\ApiGateway.WebApi.csproj" />
+    <ProjectReference Include="..\ApiGateway.Data.EFCore.Test\ApiGateway.Data.EFCore.Test.csproj" />
   </ItemGroup>
 
 </Project>

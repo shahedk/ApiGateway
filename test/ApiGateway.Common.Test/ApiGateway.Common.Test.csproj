@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiGateway.Common\ApiGateway.Common.csproj" />
+    <ProjectReference Include="..\..\src\ApiGateway.Common\ApiGateway.Common.csproj" />
   </ItemGroup>
 
 </Project>

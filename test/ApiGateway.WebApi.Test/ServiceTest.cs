@@ -2,10 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
-using ApiGateway.Data.EFCore.Test;
-using ApiGateway.WebApi.Controllers;
-using Microsoft.Extensions.Localization;
-using Moq;
 using Xunit;
 
 namespace ApiGateway.WebApi.Test
