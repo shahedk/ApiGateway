@@ -18,16 +18,14 @@ namespace ApiGateway.Core
         private readonly IServiceProvider _serviceProvider;
         private readonly IStringLocalizer<ApiKeyValidator> _localizer;
         private readonly ILogger<ApiKeyValidator> _logger;
-        private readonly IApiData _apiData;
-        private readonly IKeyData _keyData;
+        private readonly IApiManager _apiManager;
 
-        public ApiKeyValidator(IServiceProvider serviceProvider, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiData apiData, IKeyData keyData)
+        public ApiKeyValidator(IServiceProvider serviceProvider, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiManager apiManager)
         {
             _serviceProvider = serviceProvider;
             _localizer = localizer;
             _logger = logger;
-            _apiData = apiData;
-            _keyData = keyData;
+            _apiManager = apiManager;
         }
 
         public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod, string serviceId, string apiUrl)
@@ -60,7 +58,7 @@ namespace ApiGateway.Core
                 {
                     // Both keys are valid. Now check if client has the right permission to access the api/url
                     var result = new KeyValidationResult();
-                    var api = await _apiData.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
+                    var api = await _apiManager.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
                     foreach (var role in api.Roles)
                     {
                         result.IsValid = clientKey.Roles.SingleOrDefault(x => x.Id == role.Id) != null;

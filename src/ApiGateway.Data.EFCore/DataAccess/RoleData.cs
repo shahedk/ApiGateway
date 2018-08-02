@@ -1,38 +1,23 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using ApiGateway.Common.Exceptions;
+﻿using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Localization.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace ApiGateway.Data.EFCore.DataAccess
 {
     public class RoleData: IRoleData
     {
         private readonly ApiGatewayContext _context;
-        private readonly IStringLocalizer<RoleData> _localizer;
-        private readonly ILogger<RoleData> _logger;
-        private readonly IKeyData _keyData;
 
-        public RoleData(ApiGatewayContext context, IStringLocalizer<RoleData> localizer, ILogger<RoleData> logger, IKeyData keyData)
+        public RoleData(ApiGatewayContext context)
         {
             _context = context;
-            _localizer = localizer;
-            _logger = logger;
-            _keyData = keyData;
         }
 
 
-        public async Task<RoleModel> Create(string ownerPublicKey, RoleModel model)
+        public async Task<RoleModel> Create(RoleModel model)
         {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-
-            model.OwnerKeyId = ownerKey.Id;
             var entity = model.ToEntity();
 
             _context.Roles.Add(entity);
@@ -41,13 +26,10 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return entity.ToModel();
         }
 
-        public async Task<RoleModel> Update(string ownerPublicKey, RoleModel model)
+        public async Task<RoleModel> Update(RoleModel model)
         {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
             var roleId = int.Parse(model.Id);
-            var ownerKeyId = int.Parse(ownerKey.Id);
-
-            model.OwnerKeyId = ownerKey.Id;
+            var ownerKeyId = int.Parse(model.OwnerKeyId);
 
             var existing = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == roleId);
 
@@ -59,108 +41,100 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return existing.ToModel();
         }
 
-        public async Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerKeyId, string id)
         {
-            var existing = await GetEntity(ownerPublicKey, id);
+            var existing = await GetEntity(ownerKeyId, id);
 
             _context.Roles.Remove(existing);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<RoleModel> Get(string ownerPublicKey, string id)
+        public async Task<RoleModel> Get(string ownerKeyId, string id)
         {
-            var role = await GetEntity(ownerPublicKey, id);
+            var role = await GetEntity(ownerKeyId, id);
 
             return role.ToModel();
         }
 
-        private async Task<Role> GetEntity(string ownerPublicKey, string id)
+        private async Task<Role> GetEntity(string ownerKeyId, string id)
         {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            var ownerKeyId = int.Parse(ownerKey.Id);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
             var roleId = int.Parse(id);
-            var role = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == roleId);
-
-            if (role == null)
-            {
-                var msg = _localizer["Role not found for the specified owner and id"];
-                throw new ItemNotFoundException(msg, HttpStatusCode.NotFound);
-            }
+            var role = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId2 && x.Id == roleId);
 
             return role;
         }
 
-        public async Task AddKeyInRole(string roleOwnerPublicKey, string roleId, string keyPublicKey)
+        public async Task<bool> IsKeyInRole(string ownerKeyId, string roleId, string keyId)
         {
-            var ownerKey = await _keyData.GetByPublicKey(roleOwnerPublicKey);
-            var key = await _keyData.GetByPublicKey(keyPublicKey);
-            var role = await Get(roleOwnerPublicKey, roleId);
-
-            var keyId = int.Parse(key.Id);
+            var role = await Get(ownerKeyId, roleId);
+            var keyId2 = int.Parse(keyId);
             var roleId2 = int.Parse(role.Id);
-            var ownerKeyId = int.Parse(ownerKey.Id);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
 
-            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId);
+            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
 
-            if (exists == null)
-            {
-                var map = new KeyInRole()
-                {
-                    OwnerKeyId =  int.Parse(role.OwnerKeyId),
-                    KeyId = keyId,
-                    RoleId = roleId2
-                };
-
-                _context.KeyInRoles.Add(map);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                var msg = _localizer["Key already in role"];
-                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
-            }
+            return (exists != null);
         }
 
-        public async Task RemoveKeyFromRole(string roleOwnerPublicKey, string roleId, string keyPublicKey)
+        public async Task AddKeyInRole(string ownerKeyId, string roleId, string keyId)
         {
-            var ownerKey = await _keyData.GetByPublicKey(roleOwnerPublicKey);
-            var key = await _keyData.GetByPublicKey(keyPublicKey);
-            var role = await Get(roleOwnerPublicKey, roleId);
+            var role = await Get(ownerKeyId, roleId);
 
-            var keyId = int.Parse(key.Id);
+            var keyId2 = int.Parse(keyId);
             var roleId2 = int.Parse(role.Id);
-            var ownerKeyId = int.Parse(ownerKey.Id);
 
-            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId);
-
-            if (exists == null)
+            var map = new KeyInRole()
             {
-                var msg = _localizer["Key does not exits in role"];
-                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
-            }
-            else
+                OwnerKeyId =  int.Parse(role.OwnerKeyId),
+                KeyId = keyId2,
+                RoleId = roleId2
+            };
+
+            _context.KeyInRoles.Add(map);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveKeyFromRole(string ownerKeyId, string roleId, string keyId)
+        {
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+            var keyId2 = int.Parse(keyId);
+            var roleId2 = int.Parse(roleId);
+
+            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+
+            if (exists != null)
             {
                 _context.KeyInRoles.Remove(exists);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId)
+        public async Task<bool> IsApiInRole(string ownerKeyId, string roleId, string apiId)
         {
-            var ownerKey = await _keyData.GetByPublicKey(roleOwnerPublicKey);
-            var role = await Get(roleOwnerPublicKey, roleId);
-
+            var role = await Get(ownerKeyId, roleId);
             var apiId2 = int.Parse(apiId);
             var roleId2 = int.Parse(role.Id);
-            var ownerKeyId = int.Parse(ownerKey.Id);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
 
-            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId);
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+
+            return (exists != null);
+        }
+
+        public async Task AddApiInRole(string ownerKeyId, string roleId, string apiId)
+        {
+            var apiId2 = int.Parse(apiId);
+            var roleId2 = int.Parse(roleId);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
 
             if (exists == null)
             {
                 var map = new ApiInRole()
                 {
-                    OwnerKeyId =  int.Parse(role.OwnerKeyId),
+                    OwnerKeyId =  ownerKeyId2,
                     ApiId = apiId2,
                     RoleId = roleId2
                 };
@@ -168,30 +142,17 @@ namespace ApiGateway.Data.EFCore.DataAccess
                 _context.ApiInRoles.Add(map);
                 await _context.SaveChangesAsync();
             }
-            else
-            {
-                var msg = _localizer["Api already in role"];
-                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
-            }
         }
 
-        public async Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId)
+        public async Task RemoveApiFromRole(string ownerKeyId, string roleId, string apiId)
         {
-            var ownerKey = await _keyData.GetByPublicKey(roleOwnerPublicKey);
-            var role = await Get(roleOwnerPublicKey, roleId);
-
             var apiId2 = int.Parse(apiId);
-            var roleId2 = int.Parse(role.Id);
-            var ownerKeyId = int.Parse(ownerKey.Id);
+            var roleId2 = int.Parse(roleId);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
 
-            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId);
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
 
-            if (exists == null)
-            {
-                var msg = _localizer["Api does not exits in role"];
-                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
-            }
-            else
+            if (exists != null)
             {
                 _context.ApiInRoles.Remove(exists);
                 await _context.SaveChangesAsync();

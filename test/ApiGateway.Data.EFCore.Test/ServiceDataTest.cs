@@ -22,7 +22,7 @@ namespace ApiGateway.Data.EFCore.Test
                 OwnerKeyId = ownerKey.Id
             };
 
-            var savedService = await serviceData.Create(ownerKey.PublicKey, serviceModel);
+            var savedService = await serviceData.Create(serviceModel);
 
             Assert.True(int.Parse(savedService.Id) > 0);
             Assert.True(savedService.Name == serviceModel.Name);
@@ -40,7 +40,7 @@ namespace ApiGateway.Data.EFCore.Test
 
             model.Name = "some new name";
 
-            var updatedServie  = await serviceData.Update(ownerKey.PublicKey, model);
+            var updatedServie  = await serviceData.Update(model);
 
             Assert.Equal(model.Name, updatedServie.Name);
         }
@@ -52,11 +52,11 @@ namespace ApiGateway.Data.EFCore.Test
             var model = await CreateService();
             var ownerKey = await GetRootKey();
 
-            await serviceData.Delete(ownerKey.PublicKey, model.Id);
+            await serviceData.Delete(ownerKey.Id, model.Id);
 
             try
             {
-                var existing = await serviceData.Get(ownerKey.PublicKey, model.Id);
+                var existing = await serviceData.Get(ownerKey.Id, model.Id);
                 Assert.Null(existing);
             }
             catch (Exception ex)

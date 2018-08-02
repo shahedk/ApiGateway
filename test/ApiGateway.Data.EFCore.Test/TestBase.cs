@@ -5,11 +5,6 @@ using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace ApiGateway.Data.EFCore.Test
 {
@@ -66,39 +61,26 @@ namespace ApiGateway.Data.EFCore.Test
         
         protected  async Task <IKeyData> GetKeyData()
         {
-            var localizer = new Mock<IStringLocalizer<KeyData>>();
-            var logger = new Mock<ILogger<KeyData>>();
-
             var context = await GetContext();
-            return new KeyData(context, localizer.Object, logger.Object);
+            return new KeyData(context);
         }
 
         protected  async Task <IRoleData> GetRoleData()
         {
-            var localizer = new Mock<IStringLocalizer<RoleData>>();
-            var logger = new Mock<ILogger<RoleData>>();
-            var keyData = await GetKeyData();
             var context = await GetContext();
-            return new RoleData(context, localizer.Object, logger.Object, keyData);
+            return new RoleData(context);
         }
         
         protected  async Task <IServiceData> GetServiceData()
         {
-            var localizer = new Mock<IStringLocalizer<ServiceData>>();
-            var logger = new Mock<ILogger<ServiceData>>();
-            var keyData = await GetKeyData();
-
             var context = await GetContext();
-            return new ServiceData(context, localizer.Object, logger.Object, keyData);
+            return new ServiceData(context);
         }
         
         protected  async Task <IApiData> GetApiData()
         {
-            var localizer = new Mock<IStringLocalizer<ApiData>>();
-            var logger = new Mock<ILogger<ApiData>>();
-            var keyData = await GetKeyData();
             var context = await GetContext();
-            return new ApiData(context, localizer.Object, logger.Object, keyData);
+            return new ApiData(context);
         }
 
         protected async Task<KeyModel> GetRootKey()
@@ -114,7 +96,7 @@ namespace ApiGateway.Data.EFCore.Test
                     Type = ApiKeyTypes.ClientSecret
 
                 };
-                _rootKeyModel = await keyData.Create(string.Empty, keyModel);
+                _rootKeyModel = await keyData.Create(keyModel);
             }
 
             return _rootKeyModel;
@@ -134,7 +116,7 @@ namespace ApiGateway.Data.EFCore.Test
                     Type = ApiKeyTypes.ClientSecret
 
                 };
-                _userKeyModel = await keyData.Create(rootKey.PublicKey, keyModel);
+                _userKeyModel = await keyData.Create(keyModel);
             }
 
             return _userKeyModel;
@@ -145,10 +127,10 @@ namespace ApiGateway.Data.EFCore.Test
             if (_defaultServiceModel == null)
             {
                 var rootKey = await GetRootKey();
-                var model = new ServiceModel() {Name = "Test service", OwnerKeyId = rootKey.PublicKey};
+                var model = new ServiceModel() {Name = "Test service", OwnerKeyId = rootKey.Id};
 
                 var serviceData = await GetServiceData();
-                _defaultServiceModel = await serviceData.Create(rootKey.PublicKey, model);
+                _defaultServiceModel = await serviceData.Create(model);
             }
 
             return _defaultServiceModel;

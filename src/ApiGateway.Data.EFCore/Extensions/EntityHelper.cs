@@ -20,6 +20,8 @@ namespace ApiGateway.Data.EFCore.Extensions
          */
         public static Key ToEntity(this KeyModel model)
         {
+            if (model == null) return null;
+
             return new Key
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
@@ -34,6 +36,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static KeyModel ToModel(this Key entity)
         {
+            if (entity == null) return null;
+
             return new  KeyModel
             {
                 Id = entity.Id.ToString(),
@@ -48,6 +52,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static KeyModel ToModel(this Key entity, List<RoleModel> roles)
         {
+            if (entity == null) return null;
+
             return new  KeyModel(roles)
             {
                 Id = entity.Id.ToString(),
@@ -65,6 +71,8 @@ namespace ApiGateway.Data.EFCore.Extensions
          */
         public static Api ToEntity(this ApiModel model)
         {
+            if (model == null) return null;
+
             return new Api
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
@@ -81,6 +89,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static ApiModel ToModel(this Api entity)
         {
+            if (entity == null) return null;
+
             return new ApiModel
             {
                 Id = entity.Id.ToString(),
@@ -97,6 +107,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static ApiModel ToModel(this Api entity, List<RoleModel> roles)
         {
+            if (entity == null) return null;
+
             return new ApiModel(roles)
             {
                 Id = entity.Id.ToString(),
@@ -115,6 +127,8 @@ namespace ApiGateway.Data.EFCore.Extensions
          */
         public static Role ToEntity(this RoleModel model)
         {
+            if (model == null) return null;
+
             return new Role
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
@@ -129,6 +143,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static RoleModel ToModel(this Role entity)
         {
+            if (entity == null) return null;
+
             return new  RoleModel
             {
                 Id = entity.Id.ToString(),
@@ -142,6 +158,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static RoleModel ToModel(this Role entity, List<AccessRuleModel> accessRules, List<ApiModel> apiInRole)
         {
+            if (entity == null) return null;
+
             return new  RoleModel
             {
                 Id = entity.Id.ToString(),
@@ -161,6 +179,8 @@ namespace ApiGateway.Data.EFCore.Extensions
          */
         public static Service ToEntity(this ServiceModel model)
         {
+            if (model == null) return null;
+
             return new Service
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
@@ -173,6 +193,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static ServiceModel ToModel(this Service entity)
         {
+            if (entity == null) return null;
+
             return new  ServiceModel
             {
                 Id = entity.Id.ToString(),
@@ -190,6 +212,8 @@ namespace ApiGateway.Data.EFCore.Extensions
          */
         public static AccessRule ToEntity(this AccessRuleModel model)
         {
+            if (model == null) return null;
+
             return new AccessRule
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
@@ -207,6 +231,8 @@ namespace ApiGateway.Data.EFCore.Extensions
 
         public static AccessRuleModel ToModel(this AccessRule entity)
         {
+            if (entity == null) return null;
+
             return new  AccessRuleModel
             {
                 Id = entity.Id.ToString(),

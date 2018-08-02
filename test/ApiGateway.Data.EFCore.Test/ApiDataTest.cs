@@ -16,16 +16,17 @@ namespace ApiGateway.Data.EFCore.Test
             var apiData = await GetApiData();
 
             var serviceModel = new ServiceModel {Name = "Test service", OwnerKeyId = rootKey.Id};
-            var savedService = await serviceData.Create(rootKey.PublicKey, serviceModel);
+            var savedService = await serviceData.Create(serviceModel);
 
             var apiModel = new ApiModel()
             {
+                OwnerKeyId = savedService.OwnerKeyId,
                 Name = "Test Api",
                 ServiceId = savedService.Id,
                 HttpMethod = ApiHttpMethods.Get,
                 Url = "http://testapi.com"
             };
-            var savedApi = await apiData.Create(rootKey.PublicKey, apiModel);
+            var savedApi = await apiData.Create(apiModel);
 
             Assert.Equal(apiModel.Name, savedApi.Name);
 
@@ -42,7 +43,7 @@ namespace ApiGateway.Data.EFCore.Test
             var existingApi = await CreateApi();
 
             existingApi.Name = "Updated Api Name";
-            var updatedApi = await apiData.Update(rootKey.PublicKey, existingApi);
+            var updatedApi = await apiData.Update(existingApi);
 
             Assert.Equal(existingApi.Name, updatedApi.Name);
         }

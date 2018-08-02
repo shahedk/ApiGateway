@@ -1,36 +1,124 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace ApiGateway.Core
 {
     public class RoleManager : IRoleManager
     {
         private readonly IRoleData _roleData;
+        private readonly IKeyManager _keyManager;
+        private readonly IStringLocalizer<RoleManager> _localizer;
+        private readonly ILogger<RoleManager> _logger;
 
-        public RoleManager(IRoleData roleData)
+
+        public RoleManager(IRoleData roleData, IStringLocalizer<RoleManager> localizer, ILogger<RoleManager> logger, IKeyManager keyManager)
         {
             _roleData = roleData;
+            _localizer = localizer;
+            _logger = logger;
+            _keyManager = keyManager;
         }
 
-        public Task<RoleModel> Create(string ownerPublicKey, RoleModel model)
+        public async Task<RoleModel> Create(string ownerPublicKey, RoleModel model)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            model.OwnerKeyId = ownerKey.Id;
+
+            return await _roleData.Create(model);
         }
 
-        public Task<RoleModel> Update(string ownerPublicKey, RoleModel model)
+        public async Task<RoleModel> Update(string ownerPublicKey, RoleModel model)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            model.OwnerKeyId = ownerKey.Id;
+
+            return await _roleData.Update(model);
         }
 
-        public Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            await _roleData.Delete(ownerKey.Id, id);
         }
 
-        public Task<RoleModel> Get(string ownerPublicKey, string id)
+        public async Task<RoleModel> Get(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            var model = await _roleData.Get(ownerKey.Id, id);
+            if (model == null)
+            {
+                var msg = _localizer["Role not found for the specified owner and id"];
+                throw new ItemNotFoundException(msg, HttpStatusCode.NotFound);
+            }
+
+            return model;
+        }
+
+        public async Task AddKeyInRole(string roleOwnerPublicKey, string roleId, string keyPublicKey)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(roleOwnerPublicKey);
+            var key = await _keyManager.GetByPublicKey(keyPublicKey);
+
+            if (await _roleData.IsKeyInRole(ownerKey.Id, roleId, key.Id))
+            {
+                var msg = _localizer["Key already in role"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                await _roleData.AddKeyInRole(ownerKey.Id, roleId, key.Id);
+            }
+        }
+
+        public async  Task RemoveKeyFromRole(string roleOwnerPublicKey, string roleId, string keyPublicKey)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(roleOwnerPublicKey);
+            var key = await _keyManager.GetByPublicKey(keyPublicKey);
+
+            if (await _roleData.IsKeyInRole(ownerKey.Id, roleId, key.Id))
+            {
+                await _roleData.RemoveKeyFromRole(ownerKey.Id, roleId, key.Id);
+            }
+            else
+            {
+                var msg = _localizer["Key does not exits in role"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
+        }
+
+        public  async Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(roleOwnerPublicKey);
+
+            if (await _roleData.IsApiInRole(ownerKey.Id, roleId, apiId))
+            {
+                var msg = _localizer["Api already in role"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                await _roleData.AddApiInRole(ownerKey.Id, roleId, apiId);
+            }
+        }
+
+        public  async Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(roleOwnerPublicKey);
+
+            if (await _roleData.IsApiInRole(ownerKey.Id, roleId, apiId))
+            {
+                await _roleData.RemoveApiFromRole(ownerKey.Id, roleId, apiId);
+            }
+            else
+            {
+                var msg = _localizer["Api does not exits in role"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
         }
     }
 }

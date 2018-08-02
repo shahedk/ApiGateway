@@ -21,22 +21,22 @@ namespace ApiGateway.WebApi.Test
 
         protected async Task<KeyController> GetKeyController()
         {
-            return new KeyController(await GetKeyData(), await GetApiRequestHelperWithRootKey());
+            return new KeyController(await GetKeyManager(), await GetApiRequestHelperWithRootKey());
         }
 
         protected async Task<ServiceController> GetServiceController()
         {
-            return new ServiceController(await GetServiceData(), await GetApiRequestHelperWithRootKey());
+            return new ServiceController(await GetServiceManager(), await GetApiRequestHelperWithRootKey());
         }
 
         protected async Task<ApiController> GetApiController()
         {
-            return new ApiController(await GetApiData(), await GetApiRequestHelperWithRootKey());
+            return new ApiController(await GetApiManager(), await GetApiRequestHelperWithRootKey());
         }
 
         protected async Task<RoleController> GetRoleController()
         {
-            return new RoleController(await GetRoleData(), await GetApiRequestHelperWithRootKey());
+            return new RoleController(await GetRoleManager(), await GetApiRequestHelperWithRootKey());
         }
 
         protected async Task<IsValidController> GetIsValidController()

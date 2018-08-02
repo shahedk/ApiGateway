@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Common.Models;
-using ApiGateway.Data;
-using ApiGateway.Data.EFCore.Entity;
-using Microsoft.AspNetCore.Http;
+using ApiGateway.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
@@ -15,11 +10,11 @@ namespace ApiGateway.WebApi.Controllers
     [Route("api/Role")]
     public class RoleController : ApiControllerBase
     {
-        private readonly IRoleData _roleData;
+        private readonly IRoleManager _manager;
 
-        public RoleController( IRoleData roleData, IApiRequestHelper apiRequestHelper):base(apiRequestHelper)
+        public RoleController( IRoleManager manager, IApiRequestHelper apiRequestHelper):base(apiRequestHelper)
         {
-            _roleData = roleData;
+            _manager = manager;
         }
 
         // GET: api/Role
@@ -33,42 +28,42 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<RoleModel> Get(string id)
         {
-            return await _roleData.Get(ApiKey, id);
+            return await _manager.Get(ApiKey, id);
         }
         
         // POST: api/Role
         [HttpPost]
         public async Task<RoleModel> Post([FromBody]RoleModel model)
         {
-            return await _roleData.Create(ApiKey, model);
+            return await _manager.Create(ApiKey, model);
         }
 
         [Route("/api/Role/AddKeyInRole")]
         [HttpPost]
         public async Task AddKeyInRole(string key, string roleId)
         {
-            await _roleData.AddKeyInRole(ApiKey, roleId, key);
+            await _manager.AddKeyInRole(ApiKey, roleId, key);
         }
 
         [Route("/api/Role/RemoveKeyFromRole")]
         [HttpPost]
         public async Task RemoveKeyFromRole(string key, string roleId)
         {
-            await _roleData.RemoveKeyFromRole(ApiKey, roleId, key);
+            await _manager.RemoveKeyFromRole(ApiKey, roleId, key);
         }
         
         [Route("/api/Role/AddApiInRole")]
         [HttpPost]
         public async Task AddApiInRole(string apiId, string roleId)
         {
-            await _roleData.AddApiInRole(ApiKey, roleId, apiId);
+            await _manager.AddApiInRole(ApiKey, roleId, apiId);
         }
 
         [Route("/api/Role/RemoveApiFromRole")]
         [HttpPost]
         public async Task RemoveApiFromRole(string apiId, string roleId)
         {
-            await _roleData.RemoveApiFromRole(ApiKey, roleId, apiId);
+            await _manager.RemoveApiFromRole(ApiKey, roleId, apiId);
         }
 
         // PUT: api/Role/5
@@ -76,14 +71,14 @@ namespace ApiGateway.WebApi.Controllers
         public async Task<RoleModel> Put(string id, [FromBody]RoleModel model)
         {
             model.Id = id;
-            return await _roleData.Update(ApiKey, model);
+            return await _manager.Update(ApiKey, model);
         }
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            await _roleData.Delete(ApiKey, id);
+            await _manager.Delete(ApiKey, id);
         }
     }
 }

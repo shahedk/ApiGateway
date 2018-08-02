@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Common.Models;
+using ApiGateway.Core;
 using ApiGateway.Data;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,11 @@ namespace ApiGateway.WebApi.Controllers
     [Route("api/Key")]
     public class KeyController : ApiControllerBase
     {
-        private readonly IKeyData _keyData;
+        private readonly IKeyManager _manager;
 
-        public KeyController( IKeyData keyData, IApiRequestHelper apiRequestHelper):base(apiRequestHelper)
+        public KeyController( IKeyManager manager, IApiRequestHelper apiRequestHelper):base(apiRequestHelper)
         {
-            _keyData = keyData;
+            _manager = manager;
         }
 
         // GET: api/Key
@@ -30,14 +31,14 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<KeyModel> Get(string id)
         {
-            return await _keyData.Get(ApiKey, id);
+            return await _manager.Get(ApiKey, id);
         }
         
         // POST: api/Key
         [HttpPost]
         public async Task<KeyModel> Post([FromBody]KeyModel model)
         {
-            var keyModel = await _keyData.Create(ApiKey, model);
+            var keyModel = await _manager.Create(ApiKey, model);
 
             return keyModel;
         }
@@ -47,7 +48,7 @@ namespace ApiGateway.WebApi.Controllers
         public async Task<KeyModel> Put(string id, [FromBody]KeyModel model)
         {
             model.Id = id;
-            var keyModel = await _keyData.Update(ApiKey, model);
+            var keyModel = await _manager.Update(ApiKey, model);
 
             return keyModel;
         }
@@ -56,7 +57,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            await _keyData.Delete(ApiKey, id);
+            await _manager.Delete(ApiKey, id);
         }
     }
 }

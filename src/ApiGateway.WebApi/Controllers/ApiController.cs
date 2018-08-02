@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Common.Models;
-using ApiGateway.Data;
-using Microsoft.AspNetCore.Http;
+using ApiGateway.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
@@ -14,11 +10,11 @@ namespace ApiGateway.WebApi.Controllers
     [Route("api/Api")]
     public class ApiController : ApiControllerBase
     {
-        private readonly IApiData _apiData;
+        private readonly IApiManager _manager;
 
-        public ApiController(IApiData apiData, IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
+        public ApiController(IApiManager manager, IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
         {
-            _apiData = apiData;
+            _manager = manager;
         }
 
         // GET: api/Api
@@ -32,14 +28,14 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<ApiModel> Get(string id)
         {
-            return await _apiData.Get(ApiKey, id);
+            return await _manager.Get(ApiKey, id);
         }
         
         // POST: api/Api
         [HttpPost]
         public async Task<ApiModel> Post([FromBody]ApiModel model)
         {
-            var apiModel = await _apiData.Create(ApiKey, model);
+            var apiModel = await _manager.Create(ApiKey, model);
 
             return apiModel;
         }
@@ -49,7 +45,7 @@ namespace ApiGateway.WebApi.Controllers
         public async Task<ApiModel> Put(string id, [FromBody]ApiModel model)
         {
             model.Id = id;
-            var apiModel = await _apiData.Update(ApiKey, model);
+            var apiModel = await _manager.Update(ApiKey, model);
 
             return apiModel;
         }
@@ -58,7 +54,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete("{id}")]
         public  async Task  Delete(string id)
         {
-            await _apiData.Delete(ApiKey, id);
+            await _manager.Delete(ApiKey, id);
         }
     }
 }

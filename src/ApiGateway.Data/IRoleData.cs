@@ -5,10 +5,12 @@ namespace ApiGateway.Data
 {
     public interface IRoleData : IEntityData<RoleModel>
     {
-        Task AddKeyInRole(string roleOwnerPublicKey, string roleId, string keyPublicKey);
-        Task RemoveKeyFromRole(string roleOwnerPublicKey, string roleId, string keyPublicKey);
+        Task<bool> IsKeyInRole(string ownerKeyId, string roleId, string keyId);
+        Task AddKeyInRole(string ownerKeyId, string roleId, string keyId);
+        Task RemoveKeyFromRole(string ownerKeyId, string roleId, string keyId);
 
-        Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId);
-        Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId);
+        Task<bool> IsApiInRole(string ownerKeyId, string roleId, string apiId);
+        Task AddApiInRole(string ownerKeyId, string roleId, string apiId);
+        Task RemoveApiFromRole(string ownerKeyId, string roleId, string apiId);
     }
 }

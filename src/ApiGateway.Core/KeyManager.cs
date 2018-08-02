@@ -1,36 +1,71 @@
 ﻿using System.Threading.Tasks;
+using ApiGateway.Common.Constants;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace ApiGateway.Core
 {
     public class KeyManager : IKeyManager
     {
         private readonly IKeyData _keyData;
+        private readonly IStringLocalizer<IKeyManager> _localizer;
+        private readonly ILogger<IKeyManager> _logger;
 
-        public KeyManager( IKeyData keyData)
+        public KeyManager( IKeyData keyData,IStringLocalizer<IKeyManager> localizer,ILogger<IKeyManager> logger)
         {
             _keyData = keyData;
+            _localizer = localizer;
+            _logger = logger;
         }
 
-        public Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
+        public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+            model.OwnerKeyId = ownerKey.Id;
+
+            var result = await _keyData.Create(model);
+            _logger.LogInformation(LogEvents.NewKeyCreated,string.Empty, ownerPublicKey, model.PublicKey);
+
+            return result;
         }
 
-        public Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
+        public async Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+            model.OwnerKeyId = ownerKey.Id;
+
+            var result = await _keyData.Update(model);
+            _logger.LogInformation(LogEvents.NewKeyUpdated,string.Empty, ownerPublicKey, model.PublicKey);
+
+            return result;
         }
 
-        public Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+
+            await _keyData.Delete(ownerKey.Id, id);
         }
 
-        public Task<KeyModel> Get(string ownerPublicKey, string id)
+        public async Task<KeyModel> Get(string ownerPublicKey, string id)
         {
-            throw new System.NotImplementedException();
+            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
+            var model = await _keyData.Get(ownerKey.Id, id);
+            if (model == null)
+            {
+                var msg = _localizer["No key found for the specified owner and Id"];
+                throw new ItemNotFoundException(msg);
+            }
+
+            return model;
+        }
+
+        public async Task<KeyModel> GetByPublicKey(string publicKey)
+        {
+            return await _keyData.GetByPublicKey(publicKey);
         }
     }
 }

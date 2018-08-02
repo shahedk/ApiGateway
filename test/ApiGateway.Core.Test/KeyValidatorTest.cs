@@ -29,7 +29,7 @@ namespace ApiGateway.Core.Test
             key.Properties.Add(ApiKeyPropertyNames.ClientSecret, secret);
 
             // Save key
-            await keyData.Create(ownerKey.PublicKey, key);
+            await keyData.Create(key);
 
             // Validate key
             var result = await validator.IsValid(ownerKey.PublicKey, key.PublicKey, secret);

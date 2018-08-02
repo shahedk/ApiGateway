@@ -1,36 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 
 namespace ApiGateway.Data.EFCore.DataAccess
 {
     public class ApiData: IApiData
     {
         private readonly ApiGatewayContext _context;
-        private readonly IStringLocalizer<ApiData> _localizer;
-        private readonly ILogger<ApiData> _logger;
-        private readonly IKeyData _keyData;
-
-        public ApiData(ApiGatewayContext context, IStringLocalizer<ApiData> localizer, ILogger<ApiData> logger, IKeyData keyData)
+        public ApiData(ApiGatewayContext context)
         {
             _context = context;
-            _localizer = localizer;
-            _logger = logger;
-            _keyData = keyData;
         }
 
-        public async Task<ApiModel> Create(string ownerPublicKey, ApiModel model)
+        public async Task<ApiModel> Create(ApiModel model)
         {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-
-            model.OwnerKeyId = ownerKey.Id;
             var entity = model.ToEntity();
 
             _context.Apis.Add(entity);
@@ -39,13 +26,11 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return entity.ToModel();
         }
 
-        public async Task<ApiModel> Update(string ownerPublicKey, ApiModel model)
+        public async Task<ApiModel> Update(ApiModel model)
         {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            var ownerKeyId = int.Parse(ownerKey.Id);
+            var ownerKey = int.Parse(model.OwnerKeyId);
             var apiId = int.Parse(model.Id);
-
-            var existing = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == apiId);
+            var existing = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId ==  ownerKey && x.Id == apiId);
 
             existing.Name = model.Name;
             existing.HttpMethod = model.HttpMethod;
@@ -59,48 +44,50 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return existing.ToModel();
         }
 
-        public async Task Delete(string ownerPublicKey, string id)
+        public async Task Delete(string ownerKeyId, string id)
         {
-            var existing = await GetEntity(ownerPublicKey, id);
+            var ownerKey = int.Parse(ownerKeyId);
+            var keyId = int.Parse(id);
+            var entity = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKey && x.Id == keyId);
 
-            _context.Apis.Remove(existing);
+            _context.Apis.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ApiModel> Get(string ownerPublicKey, string id)
+        public async Task<ApiModel> Get(string ownerKeyId, string id)
         {
-            var entity = await GetEntity(ownerPublicKey, id);
-
-            var roles = await _context.ApiInRoles.Where(x => x.ApiId == entity.Id).Select(x => x.Role.ToModel()).ToListAsync();
-
-            return entity.ToModel(roles);
-        }
-
-        private async Task<Api> GetEntity(string ownerPublicKey, string id)
-        {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            var ownerKeyId = int.Parse(ownerKey.Id);
-            var keyId = int.Parse(id);
-            var entity = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == keyId);
+            var entity = await GetEntity(ownerKeyId, id);
 
             if (entity == null)
             {
-                var msg = _localizer["No Api found for the specified owner and Id"];
-                throw new ItemNotFoundException(msg);
+                return null;
             }
+            else
+            {
+                var roles = await _context.ApiInRoles.Where(x => x.ApiId == entity.Id).Select(x => x.Role.ToModel())
+                    .ToListAsync();
+
+                return entity.ToModel(roles);
+            }
+        }
+
+        private async Task<Api> GetEntity(string ownerKeyId, string id)
+        {
+            var ownerKey = int.Parse(ownerKeyId);
+            var keyId = int.Parse(id);
+            var entity = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKey && x.Id == keyId);
 
             return entity;
         }
 
-        public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
+        public async Task<ApiModel> Get(string ownerKeyId, string serviceId, string httpMethod, string apiUrl)
         {
-            var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            var ownerKeyId = int.Parse(ownerKey.Id);
+            var ownerKey = int.Parse(ownerKeyId);
             var serviceId2 = int.Parse(serviceId);
             var url = string.IsNullOrEmpty(apiUrl) ? string.Empty : apiUrl.ToLower();
 
             var api = await _context.Apis.SingleOrDefaultAsync(x =>
-                x.OwnerKeyId == ownerKeyId && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
+                x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
                 x.Url == url);
 
             var roles = await _context.ApiInRoles.Where(x => x.ApiId== api.Id).Select(x => x.Role.ToModel()).ToListAsync();

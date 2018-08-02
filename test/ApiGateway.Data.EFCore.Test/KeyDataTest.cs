@@ -25,7 +25,7 @@ namespace ApiGateway.Data.EFCore.Test
                 Type = ApiKeyTypes.ClientSecret
             };
 
-            var savedKey = await data.Create(rootKey.PublicKey, key);
+            var savedKey = await data.Create(key);
 
             Assert.Equal(key.PublicKey, savedKey.PublicKey);
 
@@ -41,9 +41,9 @@ namespace ApiGateway.Data.EFCore.Test
 
             // Update key
             savedKey.PublicKey = ModelHelper.GeneratePublicKey();
-            await data.Update(rootKey.PublicKey, savedKey);
+            await data.Update(savedKey);
 
-            var updatedKey = await data.Get(rootKey.PublicKey, savedKey.Id);
+            var updatedKey = await data.Get(rootKey.Id, savedKey.Id);
             
             Assert.Equal(updatedKey.PublicKey, savedKey.PublicKey);
         }
@@ -58,11 +58,11 @@ namespace ApiGateway.Data.EFCore.Test
             var savedKey = await CreateKey(); 
 
             // Delete
-            await data.Delete(rootKey.PublicKey, savedKey.Id);
+            await data.Delete(rootKey.Id, savedKey.Id);
 
             try
             {
-                var x = await data.GetByPublicKey(savedKey.PublicKey);
+                var x = await data.GetByPublicKey(savedKey.Id);
 
                 if (x != null)
                 {

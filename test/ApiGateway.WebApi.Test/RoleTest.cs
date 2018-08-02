@@ -20,7 +20,7 @@ namespace ApiGateway.WebApi.Test
              
             // # 2. Create service
             var serviceModel = new ServiceModel(){Name = "TestService", OwnerKeyId = userKey.Id};
-            var savedService = await serviceData.Create(userKey.PublicKey, serviceModel);
+            var savedService = await serviceData.Create(serviceModel);
 
             var model = new RoleModel()
             {

@@ -19,6 +19,7 @@ namespace ApiGateway.WebApi.Test
             
             var apiModel = new ApiModel()
             {
+                OwnerKeyId = serviceModel.OwnerKeyId,
                 Name = "Test Api " + DateTime.Now,
                 ServiceId = serviceModel.Id,
                 HttpMethod = ApiHttpMethods.Get,

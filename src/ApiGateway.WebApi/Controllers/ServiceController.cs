@@ -12,11 +12,11 @@ namespace ApiGateway.WebApi.Controllers
     [Route("api/Service")]
     public class ServiceController : ApiControllerBase
     {
-        private readonly IServiceData _serviceData;
+        private readonly IServiceManager _manager;
 
-        public ServiceController(IServiceData serviceData, IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
+        public ServiceController(IServiceManager manager, IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
         {
-            _serviceData = serviceData;
+            _manager = manager;
         }
 
 
@@ -31,7 +31,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<ServiceModel> Get(string id)
         {
-            var model = await _serviceData.Get(ApiKey, id);
+            var model = await _manager.Get(ApiKey, id);
 
             return model;
         }
@@ -40,7 +40,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpPost]
         public async Task<ServiceModel> Post([FromBody]ServiceModel model)
         {
-            var result = await _serviceData.Create(ApiKey, model);
+            var result = await _manager.Create(ApiKey, model);
 
             return result;
         }
@@ -50,7 +50,7 @@ namespace ApiGateway.WebApi.Controllers
         public async Task<ServiceModel> Put(string id, [FromBody]ServiceModel model)
         {
             model.Id = id;
-            var result = await _serviceData.Update(ApiKey, model);
+            var result = await _manager.Update(ApiKey, model);
 
             return result;
         }
@@ -59,7 +59,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            await _serviceData.Delete(ApiKey, id);
+            await _manager.Delete(ApiKey, id);
         }
     }
 }
