@@ -2,6 +2,12 @@
 {
     public interface IApiRequestHelper
     {
-        string GetApiPublicKey();
+        string GetApiKey();
+
+        string GetApiSecret();
+
+        string GetServiceApiKey();
+
+        string GetServiceApiSecret();
     }
 }

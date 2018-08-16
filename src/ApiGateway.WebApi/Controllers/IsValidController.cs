@@ -9,31 +9,28 @@ namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/Key")]
-    public class IsValidController : Controller
+    public class IsValidController : ApiControllerBase
     {
         private readonly IApiKeyValidator _keyValidator;
-        private readonly IApiRequestHelper _apiRequestHelper;
 
-        public IsValidController(IApiKeyValidator keyValidator, IApiRequestHelper apiRequestHelper)
+        public IsValidController(IApiKeyValidator keyValidator, IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
         {
             _keyValidator = keyValidator;
-            _apiRequestHelper = apiRequestHelper;
         }
 
         [HttpGet]
-        public async Task<KeyValidationResult> Get(string serviceId, string apiUrl, string httpMethod, 
-            [FromHeader] string apiKey, [FromHeader] string apiSecret, [FromHeader] string serviceApiKey, [FromHeader] string serviceApiSecret)
+        public async Task<KeyValidationResult> Get(string serviceId, string apiUrl, string httpMethod)
         {
             var clientKey = new KeyModel
             {
-                PublicKey = apiKey,
-                Properties = {[ApiHttpHeaders.ApiSecret] = apiSecret}
+                PublicKey = ApiKey,
+                Properties = {[ApiHttpHeaders.ApiSecret] = ApiSecret}
             };
 
             var serviceKey = new KeyModel
             {
-                PublicKey = serviceApiKey,
-                Properties = {[ApiHttpHeaders.ApiSecret] = serviceApiSecret}
+                PublicKey = ServiceApiKey,
+                Properties = {[ApiHttpHeaders.ApiSecret] = ServiceApiSecret}
             };
 
             var result = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceId, apiUrl);

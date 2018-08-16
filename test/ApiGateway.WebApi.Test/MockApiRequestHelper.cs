@@ -10,9 +10,24 @@ namespace ApiGateway.WebApi.Test
         {
             _publicKey = publicKey;
         }
-        public string GetApiPublicKey()
+        public string GetApiKey()
         {
             return _publicKey;
+        }
+
+        public string GetApiSecret()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetServiceApiKey()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetServiceApiSecret()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

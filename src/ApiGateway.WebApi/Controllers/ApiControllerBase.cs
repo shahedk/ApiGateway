@@ -16,6 +16,12 @@ namespace ApiGateway.WebApi.Controllers
             _apiRequestHelper = apiRequestHelper;
         }
 
-        public string ApiKey => _apiRequestHelper.GetApiPublicKey();
+        public string ApiKey => _apiRequestHelper.GetApiKey();
+
+        public string ApiSecret => _apiRequestHelper.GetApiSecret();
+
+        public string ServiceApiKey => _apiRequestHelper.GetServiceApiKey();
+
+        public string ServiceApiSecret => _apiRequestHelper.GetServiceApiSecret();
     }
 }

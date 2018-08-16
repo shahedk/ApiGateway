@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using ApiGateway.Client;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/AccessRule")]
-    public class AccessRuleController : Controller
+    public class AccessRuleController : ApiControllerBase
     {
-        public AccessRuleController()
+        public AccessRuleController(IApiRequestHelper apiRequestHelper) : base(apiRequestHelper)
         {
 
         }
