@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core.KeyValidators;
 using ApiGateway.Data;
@@ -15,17 +16,19 @@ namespace ApiGateway.Core
 {
     public class ApiKeyValidator : IApiKeyValidator
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly KeySecretValidator _keySecretValidator;
         private readonly IStringLocalizer<ApiKeyValidator> _localizer;
         private readonly ILogger<ApiKeyValidator> _logger;
         private readonly IApiManager _apiManager;
+        private readonly IKeyManager _keyManager;
 
-        public ApiKeyValidator(IServiceProvider serviceProvider, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiManager apiManager)
+        public ApiKeyValidator(KeySecretValidator keySecretValidator, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiManager apiManager, IKeyManager keyManager)
         {
-            _serviceProvider = serviceProvider;
+            _keySecretValidator = keySecretValidator;
             _localizer = localizer;
             _logger = logger;
             _apiManager = apiManager;
+            _keyManager = keyManager;
         }
 
         public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod, string serviceId, string apiUrl)
@@ -59,9 +62,10 @@ namespace ApiGateway.Core
                     // Both keys are valid. Now check if client has the right permission to access the api/url
                     var result = new KeyValidationResult();
                     var api = await _apiManager.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
+                    var clientKeyWithRoles = await _keyManager.GetByPublicKey(clientKey.PublicKey);
                     foreach (var role in api.Roles)
                     {
-                        result.IsValid = clientKey.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
+                        result.IsValid = clientKeyWithRoles.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
                         if (result.IsValid)
                         {
                             break;
@@ -78,8 +82,7 @@ namespace ApiGateway.Core
             KeyValidationResult result;
             if (key.Type == ApiKeyTypes.ClientSecret)
             {
-                var keyValidator = _serviceProvider.GetService<KeySecretValidator>();
-                result = await keyValidator.IsValid(ownerKeyId, key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret]);
+                result = await _keySecretValidator.IsValid(ownerKeyId, key.PublicKey, key.GetSecret());
             }
             else
             {

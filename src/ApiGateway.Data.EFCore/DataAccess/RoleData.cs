@@ -81,18 +81,24 @@ namespace ApiGateway.Data.EFCore.DataAccess
         {
             var role = await Get(ownerKeyId, roleId);
 
+            var ownerKeyId2 = int.Parse(ownerKeyId);
             var keyId2 = int.Parse(keyId);
             var roleId2 = int.Parse(role.Id);
 
-            var map = new KeyInRole()
-            {
-                OwnerKeyId =  int.Parse(role.OwnerKeyId),
-                KeyId = keyId2,
-                RoleId = roleId2
-            };
+            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
 
-            _context.KeyInRoles.Add(map);
-            await _context.SaveChangesAsync();
+            if (exists == null)
+            {
+                var map = new KeyInRole()
+                {
+                    OwnerKeyId = int.Parse(role.OwnerKeyId),
+                    KeyId = keyId2,
+                    RoleId = roleId2
+                };
+
+                _context.KeyInRoles.Add(map);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task RemoveKeyFromRole(string ownerKeyId, string roleId, string keyId)

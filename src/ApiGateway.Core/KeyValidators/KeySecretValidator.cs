@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,7 @@ namespace ApiGateway.Core.KeyValidators
             {
                 var key = await _keyManager.GetByPublicKey(pubKey);
 
-                if (key == null || key.Properties[ApiKeyPropertyNames.ClientSecret] != secret)
+                if (key == null || key.GetSecret() != secret)
                 {
                     result.IsValid = false;
                     result.Message = _localizer["Key and secrect does not match"];

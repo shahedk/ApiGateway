@@ -6,5 +6,6 @@
         public const string ApiSecret = "apisecret";
         public const string ServiceApiKey = "serviceapikey";
         public const string ServiceApiSecret = "serviceapisecret";
+        public const string KeyType = "keytype";
     }
 }

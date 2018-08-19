@@ -39,5 +39,24 @@ namespace ApiGateway.WebApi
 
             return apiKey;
         }
+
+        public string GetApiKeyType()
+        {
+            var type = ApiKeyTypes.ClientSecret; // Default 
+
+            var keyType = _context.Items[ApiHttpHeaders.KeyType] as string;
+
+            if (keyType == "JWT")
+            {
+                type = ApiKeyTypes.JwtToken;
+            }
+
+            return type;
+        }
+
+        public string GetServiceApiKeyType()
+        {
+            return GetApiKeyType();
+        }
     }
 }

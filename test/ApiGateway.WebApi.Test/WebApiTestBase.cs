@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ApiGateway.Client;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Core.Test;
 using ApiGateway.WebApi.Controllers;
 
@@ -10,14 +11,16 @@ namespace ApiGateway.WebApi.Test
         private async Task<IApiRequestHelper> GetApiRequestHelperWithRootKey()
         {
             var rootKey = await GetRootKey();
-            return new MockApiRequestHelper(rootKey.PublicKey);
+            return new MockApiRequestHelper(rootKey.PublicKey, rootKey.GetSecret());
         }
 
-        //private async Task<IApiRequestHelper> GetApiRequestHelperWithUserKey()
-        //{
-        //    var rootKey = await GetUserKey();
-        //    return new MockApiRequestHelper(rootKey.PublicKey);
-        //}
+        private async Task<IApiRequestHelper> GetApiRequestHelperWithUserKeyAndServiceKey()
+        {
+            var userKey = await GetUserKey();
+            var serviceKey = await GetRootKey();
+
+            return new MockApiRequestHelper(userKey.PublicKey, userKey.GetSecret(), serviceKey.PublicKey, serviceKey.GetSecret());
+        }
 
         protected async Task<KeyController> GetKeyController()
         {
@@ -41,7 +44,7 @@ namespace ApiGateway.WebApi.Test
 
         protected async Task<IsValidController> GetIsValidController()
         {
-            return new IsValidController(await GetApiKeyValidator(), await GetApiRequestHelperWithRootKey());
+            return new IsValidController(await GetApiKeyValidator(), await GetApiRequestHelperWithUserKeyAndServiceKey());
         }
     }
 }

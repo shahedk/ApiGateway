@@ -17,6 +17,11 @@ namespace ApiGateway.Common.Extensions
             return Guid.NewGuid().ToString("N");
         }
 
+        public static string GenerateSecret()
+        {
+            return Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
+        }
+
         public static DateTime ToClientLocalTime(this DateTime dateTime)
         {
             return dateTime;

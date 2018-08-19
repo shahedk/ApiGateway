@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.Client;
+using ApiGateway.Common.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
@@ -15,6 +16,10 @@ namespace ApiGateway.WebApi.Controllers
         {
             _apiRequestHelper = apiRequestHelper;
         }
+
+        public string ApiKeyType => _apiRequestHelper.GetApiKeyType();
+
+        public string ServiceKeyType => _apiRequestHelper.GetServiceApiKeyType();
 
         public string ApiKey => _apiRequestHelper.GetApiKey();
 

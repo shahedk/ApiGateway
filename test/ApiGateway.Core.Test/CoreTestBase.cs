@@ -12,10 +12,13 @@ namespace ApiGateway.Core.Test
         protected async Task<IApiKeyValidator> GetApiKeyValidator()
         {
             var localizer = new Mock<IStringLocalizer<ApiKeyValidator>>();
+            var localizer2 = new Mock<IStringLocalizer<KeySecretValidator>>();
             var logger = new Mock<ILogger<ApiKeyValidator>>();
+            var logger2 = new Mock<ILogger<KeySecretValidator>>();
             var apiManager = await GetApiManager();
             var keyManager = await GetKeyManager();
-            return new ApiKeyValidator(null, localizer.Object, logger.Object, apiManager);
+            var keyValidator = new KeySecretValidator(keyManager, localizer2.Object, logger2.Object);
+            return new ApiKeyValidator(keyValidator, localizer.Object, logger.Object, apiManager, keyManager);
         } 
 
         protected async Task<IKeyValidator> GetKeySecretValidator()

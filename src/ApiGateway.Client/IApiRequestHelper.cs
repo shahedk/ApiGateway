@@ -1,4 +1,6 @@
-﻿namespace ApiGateway.Client
+﻿using ApiGateway.Common.Constants;
+
+namespace ApiGateway.Client
 {
     public interface IApiRequestHelper
     {
@@ -9,5 +11,9 @@
         string GetServiceApiKey();
 
         string GetServiceApiSecret();
+
+        string GetApiKeyType();
+
+        string GetServiceApiKeyType();
     }
 }

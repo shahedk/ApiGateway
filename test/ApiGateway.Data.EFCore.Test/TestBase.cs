@@ -12,7 +12,9 @@ namespace ApiGateway.Data.EFCore.Test
     {
         private KeyModel _rootKeyModel = null;
         private KeyModel _userKeyModel = null;
-        private ServiceModel _defaultServiceModel = null;
+        private ServiceModel _serviceModel = null;
+        private ApiModel _apiModel = null;
+        private RoleModel _roleModel = null;
 
         private ApiGatewayContext _context;
 
@@ -89,13 +91,15 @@ namespace ApiGateway.Data.EFCore.Test
             {
                 var keyData = await GetKeyData();
 
-                var keyModel = new KeyModel()
+                var keyModel = new KeyModel
                 {
                     OwnerKeyId = "0",
                     PublicKey = ModelHelper.GeneratePublicKey(),
-                    Type = ApiKeyTypes.ClientSecret
-
+                    Type = ApiKeyTypes.ClientSecret,
+                    Properties = {[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret()}
                 };
+
+
                 _rootKeyModel = await keyData.Create(keyModel);
             }
 
@@ -109,13 +113,15 @@ namespace ApiGateway.Data.EFCore.Test
                 var rootKey = await GetRootKey();
                 var keyData = await GetKeyData();
 
-                var keyModel = new KeyModel()
+                var keyModel = new KeyModel
                 {
                     OwnerKeyId = rootKey.Id,
                     PublicKey = ModelHelper.GeneratePublicKey(),
-                    Type = ApiKeyTypes.ClientSecret
-
+                    Type = ApiKeyTypes.ClientSecret,
+                    Properties = {[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret()}
                 };
+
+
                 _userKeyModel = await keyData.Create(keyModel);
             }
 
@@ -124,17 +130,49 @@ namespace ApiGateway.Data.EFCore.Test
 
         protected async Task<ServiceModel> GetServiceModel()
         {
-            if (_defaultServiceModel == null)
+            if (_serviceModel == null)
             {
                 var rootKey = await GetRootKey();
                 var model = new ServiceModel() {Name = "Test service", OwnerKeyId = rootKey.Id};
 
                 var serviceData = await GetServiceData();
-                _defaultServiceModel = await serviceData.Create(model);
+                _serviceModel = await serviceData.Create(model);
             }
 
-            return _defaultServiceModel;
+            return _serviceModel;
         }
 
+        protected async Task<ApiModel> GetApiModel()
+        {
+            if (_apiModel == null)
+            {
+                var service = await GetServiceModel();
+                var apiData = await GetApiData();
+
+                var model = new ApiModel(){ Name = "Test Api", OwnerKeyId =  _rootKeyModel.Id, HttpMethod = ApiHttpMethods.Get, Url = "/test/", ServiceId = service.Id};
+
+                _apiModel = await apiData.Create(model);
+            }
+
+            return _apiModel;
+        }
+
+        protected async Task<RoleModel> GetRoleModel()
+        {
+            if (_roleModel == null)
+            {
+                var roleData = await GetRoleData();
+                var model = new RoleModel()
+                {
+                    Name = "Test role",
+                    OwnerKeyId = _rootKeyModel.Id,
+                    ServiceId = _serviceModel.Id
+                };
+
+                _roleModel = await roleData.Create(model);
+            }
+
+            return _roleModel;
+        }
     }
 }
