@@ -40,7 +40,9 @@ namespace ApiGateway.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
+            
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
         }
