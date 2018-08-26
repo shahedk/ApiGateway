@@ -22,4 +22,8 @@
     <ProjectReference Include="..\ApiGateway.Data\ApiGateway.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp" />
+  </ItemGroup>
+
 </Project>
