@@ -20,10 +20,12 @@
     <ProjectReference Include="..\ApiGateway.Core\ApiGateway.Core.csproj" />
     <ProjectReference Include="..\ApiGateway.Data.EFCore\ApiGateway.Data.EFCore.csproj" />
     <ProjectReference Include="..\ApiGateway.Data\ApiGateway.Data.csproj" />
+    <ProjectReference Include="..\ApiGateway.InternalClient\ApiGateway.InternalClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp" />
+    <Folder Include="Resources" />
   </ItemGroup>
 
 </Project>

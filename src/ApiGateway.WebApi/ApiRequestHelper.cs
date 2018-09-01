@@ -6,36 +6,36 @@ namespace ApiGateway.WebApi
 {
     public class ApiRequestHelper : IApiRequestHelper
     {
-        private readonly HttpContext _context;
+        private readonly IHttpContextAccessor _accessor;
 
-        public ApiRequestHelper(HttpContext context)
+        public ApiRequestHelper(IHttpContextAccessor accessor)
         {
-            _context = context;
+            _accessor = accessor;
         }
         public string GetApiKey()
         {
-            var apiKey = _context.Items[ApiHttpHeaders.ApiKey] as string;
+            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ApiKey] as string;
 
             return apiKey;
         }
 
         public string GetApiSecret()
         {
-            var apiKey = _context.Items[ApiHttpHeaders.ApiSecret] as string;
+            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ApiSecret] as string;
 
             return apiKey;
         }
         
         public string GetServiceApiKey()
         {
-            var apiKey = _context.Items[ApiHttpHeaders.ServiceApiKey] as string;
+            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ServiceApiKey] as string;
 
             return apiKey;
         }
 
         public string GetServiceApiSecret()
         {
-            var apiKey = _context.Items[ApiHttpHeaders.ServiceApiSecret] as string;
+            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ServiceApiSecret] as string;
 
             return apiKey;
         }
@@ -44,7 +44,7 @@ namespace ApiGateway.WebApi
         {
             var type = ApiKeyTypes.ClientSecret; // Default 
 
-            var keyType = _context.Items[ApiHttpHeaders.KeyType] as string;
+            var keyType = _accessor.HttpContext.Items[ApiHttpHeaders.KeyType] as string;
 
             if (keyType == "JWT")
             {
