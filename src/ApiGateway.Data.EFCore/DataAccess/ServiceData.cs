@@ -69,5 +69,12 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
             return result.ToModel();
         }
+
+        public async Task<int> Count()
+        {
+            var c = await _context.Services.CountAsync();
+
+            return c;
+        }
     }
 }

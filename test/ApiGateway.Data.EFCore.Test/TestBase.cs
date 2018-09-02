@@ -38,7 +38,7 @@ namespace ApiGateway.Data.EFCore.Test
 
         protected DbContextOptions<ApiGatewayContext> GetSqliteDbOptions()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
+            var connection = new SqliteConnection("DataSource=ApiGateway.db");
             connection.Open();
             var options = new DbContextOptionsBuilder<ApiGatewayContext>()
                 .UseSqlite(connection) // Set the connection explicitly, so it won't be closed automatically by EF

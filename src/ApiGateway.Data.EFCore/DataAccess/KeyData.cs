@@ -87,7 +87,12 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
             return entity.ToModel(roles);
         }
-        
 
+        public async Task<int> Count()
+        {
+            var count = await _context.Keys.CountAsync();
+
+            return count;
+        }
     }
 }

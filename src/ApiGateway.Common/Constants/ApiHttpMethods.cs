@@ -8,7 +8,7 @@ namespace ApiGateway.Common.Constants
         public const string Get = "GET";
         public const string Post = "POST";
         public const string Delete = "DELETE";
-        public const string Put = "Put";
+        public const string Put = "PUT";
     
         private static List<string> _listCache = null;
 

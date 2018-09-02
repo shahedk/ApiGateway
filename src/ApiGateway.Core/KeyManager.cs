@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data;
 using Microsoft.Extensions.Localization;
@@ -66,6 +68,29 @@ namespace ApiGateway.Core
         public async Task<KeyModel> GetByPublicKey(string publicKey)
         {
             return await _keyData.GetByPublicKey(publicKey);
+        }
+
+        public async Task<KeyModel> CreateRootKey()
+        {
+            var existingKeyCount = await _keyData.Count();
+
+            if (existingKeyCount > 0)
+            {
+                var msg = _localizer["Master key can only be created for empty database"];
+                throw new InvalidOperationException(msg);
+            }
+
+            var model = new KeyModel
+            {
+                Type = ApiKeyTypes.ClientSecret,
+                PublicKey = ModelHelper.GeneratePublicKey(),
+                Properties = {[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret()}
+            };
+
+
+            var saved = await _keyData.Create(model);
+
+            return saved;
         }
     }
 }

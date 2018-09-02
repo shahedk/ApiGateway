@@ -6,5 +6,6 @@ namespace ApiGateway.Core
     public interface IKeyManager : IManager<KeyModel>
     {
         Task<KeyModel> GetByPublicKey(string publicKey);
+        Task<KeyModel> CreateRootKey();
     }
 }

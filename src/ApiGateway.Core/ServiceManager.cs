@@ -63,5 +63,10 @@ namespace ApiGateway.Core
 
             return model;
         }
+
+        public async Task<int> Count()
+        {
+            return await _serviceData.Count();
+        }
     }
 }

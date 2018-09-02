@@ -2,12 +2,12 @@
 
 namespace ApiGateway.Core.Test
 {
-    public class ApiKeyManagerTest
+    public class ApiKeyManagerTest : CoreTestBase
     {
         [Fact]
         public void Test()
         {
-
+            
         }
     }
 }

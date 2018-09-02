@@ -5,6 +5,6 @@ namespace ApiGateway.Data
 {
     public interface IServiceData: IEntityData<ServiceModel>
     {
-        
+        Task<int> Count();
     }
 }

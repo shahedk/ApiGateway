@@ -7,5 +7,6 @@ namespace ApiGateway.Data
     public interface IKeyData : IEntityData<KeyModel>
     {
         Task<KeyModel> GetByPublicKey(string publicKey);
+        Task<int> Count();
     }
 }
