@@ -4,7 +4,7 @@ using ApiGateway.Common.Models;
 
 namespace ApiGateway.Core
 {
-    public class AppEnvironment
+    public class AppEnvironment : IAppEnvironment
     {
         private readonly IKeyManager _keyManager;
         private readonly IServiceManager _serviceManager;

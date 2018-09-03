@@ -41,6 +41,8 @@ namespace ApiGateway.WebApi
 
             services.AddMvc();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddTransient<IAppEnvironment, AppEnvironment>();
             services.AddTransient<IClientLoginService, InternalClientLoginService>();
             services.AddTransient<IApiRequestHelper, ApiRequestHelper>();
             services.AddTransient<KeySecretValidator, KeySecretValidator>();
