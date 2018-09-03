@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +38,7 @@ namespace ApiGateway.WebApi
         {
             services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
 
-            services.AddDbContext<ApiGatewayContext>(o => o.UseSqlite("ApiGateway.db"));
+            services.AddDbContext<ApiGatewayContext>(o => o.UseSqlite(new SqliteConnection("DataSource=ApiGateway.db")));
 
             services.AddMvc();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -88,6 +89,10 @@ namespace ApiGateway.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+                // For dev environment only: Check if database is created
+                var dbContext = app.ApplicationServices.GetService<ApiGatewayContext>();
+                dbContext.Database.EnsureCreated();
             }
 
             app.UseDefaultFiles();
@@ -100,6 +105,7 @@ namespace ApiGateway.WebApi
             app.UseRequestLocalization(options.Value);
 
             app.UseMvc();
+
         }
     }
 }

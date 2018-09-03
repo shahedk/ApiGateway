@@ -15,4 +15,10 @@
     <ProjectReference Include="..\ApiGateway.Data\ApiGateway.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Data.Sqlite, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.data.sqlite.core\2.1.0\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

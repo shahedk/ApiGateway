@@ -13,15 +13,8 @@ namespace ApiGateway.WebApi.Controllers
 
         }
 
-        // GET: api/AccessRule
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // GET: api/AccessRule/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";

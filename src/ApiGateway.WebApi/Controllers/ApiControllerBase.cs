@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
 {
-    [ApiController]
     public class ApiControllerBase : Controller
     {
         private readonly IApiRequestHelper _apiRequestHelper;

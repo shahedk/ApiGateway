@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Key")]
+    [Route("api/IsValid")]
     public class IsValidController : ApiControllerBase
     {
         private readonly IApiKeyValidator _keyValidator;
@@ -18,9 +18,11 @@ namespace ApiGateway.WebApi.Controllers
             _keyValidator = keyValidator;
         }
 
-        [HttpGet]
-        public async Task<KeyValidationResult> Get(string serviceId, string apiUrl, string httpMethod)
+        [HttpGet("{id}")]
+        public async Task<KeyValidationResult> Get(string id, string apiUrl, string httpMethod)
         {
+            var serviceId = id;
+         
             var clientKey = new KeyModel
             {
                 Type = ApiKeyType,

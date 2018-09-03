@@ -7,6 +7,7 @@ using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -72,9 +73,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<int> Count()
         {
-            var c = await _context.Services.CountAsync();
-
-            return c;
+            return await _context.Services.CountAsync();
         }
     }
 }

@@ -20,15 +20,8 @@ namespace ApiGateway.WebApi.Controllers
             _manager = manager;
         }
 
-        // GET: api/Key
-        [HttpGet]
-        public string Get()
-        {
-            return ":)";
-        }
-
         // GET: api/Key/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public async Task<KeyModel> Get(string id)
         {
             return await _manager.Get(ApiKey, id);
