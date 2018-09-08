@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data.EFCore.DataAccess
@@ -21,6 +22,11 @@ namespace ApiGateway.Data.EFCore.DataAccess
         }
 
         public Task<AccessRuleModel> Get(string ownerKeyId, string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IList<AccessRuleModel>> GetAll(string ownerKeyId)
         {
             throw new System.NotImplementedException();
         }

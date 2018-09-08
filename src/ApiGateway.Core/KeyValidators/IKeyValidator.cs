@@ -5,6 +5,6 @@ namespace ApiGateway.Core.KeyValidators
 {
     public interface IKeyValidator
     {
-        Task<KeyValidationResult> IsValid(string ownerKeyId, string pubKey, string secret);
+        Task<KeyValidationResult> IsValid(string pubKey, string secret);
     }
 }

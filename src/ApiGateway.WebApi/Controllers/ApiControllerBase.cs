@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
 {
+    [ApiController]
     public class ApiControllerBase : Controller
     {
         private readonly IApiRequestHelper _apiRequestHelper;
@@ -17,16 +18,16 @@ namespace ApiGateway.WebApi.Controllers
             _apiRequestHelper = apiRequestHelper;
         }
 
-        public string ApiKeyType => _apiRequestHelper.GetApiKeyType();
+        protected string ApiKeyType => _apiRequestHelper.GetApiKeyType();
 
-        public string ServiceKeyType => _apiRequestHelper.GetServiceApiKeyType();
+        protected string ServiceKeyType => _apiRequestHelper.GetServiceApiKeyType();
 
-        public string ApiKey => _apiRequestHelper.GetApiKey();
+        protected string ApiKey => _apiRequestHelper.GetApiKey();
 
-        public string ApiSecret => _apiRequestHelper.GetApiSecret();
+        protected string ApiSecret => _apiRequestHelper.GetApiSecret();
 
-        public string ServiceApiKey => _apiRequestHelper.GetServiceApiKey();
+        protected string ServiceApiKey => _apiRequestHelper.GetServiceApiKey();
 
-        public string ServiceApiSecret => _apiRequestHelper.GetServiceApiSecret();
+        protected string ServiceApiSecret => _apiRequestHelper.GetServiceApiSecret();
     }
 }

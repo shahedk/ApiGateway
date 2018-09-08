@@ -23,13 +23,36 @@ namespace ApiGateway.Core
             _stringLocalizer = stringLocalizer;
         }
 
+        public async Task<AppState> GetApplicationState()
+        {
+            var state = new AppState();
+            
+            var serviceCount = await GetServiceCount();
+
+            if (serviceCount > 0)
+            {
+                var msgTemplate = _stringLocalizer["Total {0} services registered."];
+                state.Message = string.Format(msgTemplate, serviceCount);
+                state.IsConfigured = true;
+            }
+            else
+            {
+                state.Message = _stringLocalizer["No service found. Please configure application environment."];
+                state.IsConfigured = false;
+            }
+
+            return state;
+        }
+
         public async Task<int> GetServiceCount()
         {
             return await _serviceManager.Count();
         }
 
-        public async Task Initialize()
+        public async Task<AppState> Initialize()
         {
+            var state = new AppState();
+            
             var serviceCount = await _serviceManager.Count();
             if ( serviceCount > 0)
             {
@@ -45,7 +68,7 @@ namespace ApiGateway.Core
             // Create ApiGateway service definitions
             var service = await _serviceManager.Create(rootKey.PublicKey, new ServiceModel
             {
-                Name = "ApiGateway"
+                Name = AppConstants.LocalApiServiceName
             });
 
             // Create Role definitions
@@ -249,6 +272,11 @@ namespace ApiGateway.Core
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiDel.Id);
+
+            state.IsConfigured = true;
+            state.Message = _stringLocalizer["System successfully initialized"];
+
+            return state;
 
             #endregion
         }

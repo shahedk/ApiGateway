@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using ApiGateway.Common.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ApiGateway.Data
 {
@@ -9,5 +9,6 @@ namespace ApiGateway.Data
         Task<T> Update(T model);
         Task Delete(string ownerKeyId, string id);
         Task<T> Get(string ownerKeyId, string id);
+        Task<IList<T>> GetAll(string ownerKeyId);
     }
 }

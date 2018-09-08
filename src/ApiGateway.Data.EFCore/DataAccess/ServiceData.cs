@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -69,6 +70,15 @@ namespace ApiGateway.Data.EFCore.DataAccess
             var result = await GetEntity(ownerKeyId, id);
 
             return result.ToModel();
+        }
+
+        public async Task<IList<ServiceModel>> GetAll(string ownerKeyId)
+        {
+            
+            var ownerKey = int.Parse(ownerKeyId);
+            var list = await _context.Services.Where(x => x.OwnerKeyId == ownerKey).Select(x=>x.ToModel()).ToListAsync();
+
+            return list;
         }
 
         public async Task<int> Count()

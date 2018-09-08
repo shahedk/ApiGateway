@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data;
@@ -62,10 +64,17 @@ namespace ApiGateway.Core
 
         }
 
+        public async Task<IList<ApiModel>> GetAll(string ownerPublicKey)
+        {
+            return await _apiData.GetAll(ownerPublicKey);
+        }
+
         public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            return await _apiData.Get(ownerKey.Id, serviceId, httpMethod, apiUrl);
+            var api = await _apiData.Get(ownerKey.Id, serviceId, httpMethod, apiUrl);
+
+            return api;
         }
     }
 }

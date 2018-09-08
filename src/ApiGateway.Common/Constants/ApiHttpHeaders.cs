@@ -4,8 +4,8 @@
     {
         public const string ApiKey = "apikey";
         public const string ApiSecret = "apisecret";
-        public const string ServiceApiKey = "serviceapikey";
-        public const string ServiceApiSecret = "serviceapisecret";
+        public const string ServiceApiKey = "servicekey";
+        public const string ServiceApiSecret = "servicesecret";
         public const string KeyType = "keytype";
     }
 }

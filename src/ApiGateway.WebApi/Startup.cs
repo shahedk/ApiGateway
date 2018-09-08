@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Core;
@@ -38,11 +39,16 @@ namespace ApiGateway.WebApi
         {
             services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
 
-            services.AddDbContext<ApiGatewayContext>(o => o.UseSqlite(new SqliteConnection("DataSource=ApiGateway.db")));
+            services.AddDbContext<ApiGatewayContext>(o =>
+            {
+                o.EnableSensitiveDataLogging();
+                o.UseSqlite(new SqliteConnection("DataSource=ApiGateway.db"));
+            });
 
             services.AddMvc();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            //services.AddSingleton<HttpClient, HttpClient>();
+            
             services.AddTransient<IAppEnvironment, AppEnvironment>();
             services.AddTransient<IClientLoginService, InternalClientLoginService>();
             services.AddTransient<IApiRequestHelper, ApiRequestHelper>();
@@ -91,20 +97,22 @@ namespace ApiGateway.WebApi
                 app.UseDeveloperExceptionPage();
                 
                 // For dev environment only: Check if database is created
-                var dbContext = app.ApplicationServices.GetService<ApiGatewayContext>();
-                dbContext.Database.EnsureCreated();
+                //var dbContext = app.ApplicationServices.GetService<ApiGatewayContext>();
+                //dbContext.Database.EnsureCreated();
+                
             }
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
-            app.UseMiddleware(typeof(ClientApiKeyValidationMiddleware));
+            app.UseMiddleware(typeof(InternalClientApiKeyValidationMiddleware));
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             
             var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(options.Value);
 
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("SystemApi", "sys/{controller}/{action}");
+                routes.MapRoute("AppServices", "api/{*url}", new { controller = "AppService", action = "Spa" });
+            });
 
         }
     }

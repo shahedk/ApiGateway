@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 using ApiGateway.Data;
 
@@ -29,6 +30,11 @@ namespace ApiGateway.Core
         }
 
         public Task<AccessRuleModel> Get(string ownerPublicKey, string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IList<AccessRuleModel>> GetAll(string ownerPublicKey)
         {
             throw new System.NotImplementedException();
         }

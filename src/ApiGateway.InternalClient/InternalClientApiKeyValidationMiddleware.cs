@@ -1,21 +1,21 @@
-﻿using System.Net;
+using System.Net;
 using System.Threading.Tasks;
+using ApiGateway.Client;
 using ApiGateway.Common;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace ApiGateway.Client
+namespace ApiGateway.InternalClient
 {
-    public class ClientApiKeyValidationMiddleware
+    public class InternalClientApiKeyValidationMiddleware
     {
-        private readonly RequestDelegate _next;
+    private readonly RequestDelegate _next;
         private readonly IClientLoginService _clientLoginService;
         private readonly ApiGatewaySettings _settings;
 
-        public ClientApiKeyValidationMiddleware(RequestDelegate next, IClientLoginService clientLoginService, IOptions<ApiGatewaySettings> settings)
+        public InternalClientApiKeyValidationMiddleware(RequestDelegate next, IClientLoginService clientLoginService, IOptions<ApiGatewaySettings> settings)
         {
             _next = next;
             _clientLoginService = clientLoginService;
@@ -27,7 +27,7 @@ namespace ApiGateway.Client
             if (context.Request.Path.HasValue)
             {
                 var path = context.Request.Path.Value.ToLower();
-                if (path.ToLower().StartsWith("/api/appenv/") || path.ToLower().StartsWith("/api/isvalid/"))
+                if (path.ToLower().StartsWith("/sys/appenv/") || path.ToLower().StartsWith("/sys/isvalid/"))
                 {
                     // These two special paths don't need api-key validation
                     await _next.Invoke(context);
@@ -45,10 +45,14 @@ namespace ApiGateway.Client
             {
                 string apiKey = context.Request.Headers[ApiHttpHeaders.ApiKey];
                 string apiSecret = context.Request.Headers[ApiHttpHeaders.ApiSecret];
+                string serviceKey = context.Request.Headers[ApiHttpHeaders.ServiceApiKey];
+                string serviceSecret = context.Request.Headers[ApiHttpHeaders.ServiceApiSecret];
                 string action = context.Request.Method;
                 string apiUrl = context.Request.Path;
 
-                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ApiKey, _settings.ApiSecret, _settings.ServiceId, apiUrl, action);
+                var serviceId = "1";
+                
+                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceKey, serviceSecret, serviceId, apiUrl, action);
 
                 if (result.IsValid)
                 {
@@ -65,12 +69,4 @@ namespace ApiGateway.Client
         }
     }
 
-    public static class UserKeyValidationExtension
-    {
-        public static IApplicationBuilder UseClientApiKeyValidation(this IApplicationBuilder app)
-        {
-            app.UseMiddleware<ClientApiKeyValidationMiddleware>();
-            return app;
-        }
-    }
 }

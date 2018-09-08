@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
@@ -63,6 +64,11 @@ namespace ApiGateway.Core
             }
 
             return model;
+        }
+
+        public async Task<IList<KeyModel>> GetAll(string ownerPublicKey)
+        {
+            return await _keyData.GetAll(ownerPublicKey);
         }
 
         public async Task<KeyModel> GetByPublicKey(string publicKey)

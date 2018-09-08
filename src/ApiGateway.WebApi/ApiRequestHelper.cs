@@ -1,6 +1,7 @@
 ﻿using ApiGateway.Client;
 using ApiGateway.Common.Constants;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace ApiGateway.WebApi
 {
@@ -12,51 +13,51 @@ namespace ApiGateway.WebApi
         {
             _accessor = accessor;
         }
+
+        private string GetValue(string key)
+        {
+            _accessor.HttpContext.Request.Headers.TryGetValue(key, out var val);
+
+            return val.ToString();
+        }
+
         public string GetApiKey()
         {
-            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ApiKey] as string;
-
-            return apiKey;
+            return GetValue(ApiHttpHeaders.ApiKey);
         }
 
         public string GetApiSecret()
         {
-            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ApiSecret] as string;
-
-            return apiKey;
+            return GetValue(ApiHttpHeaders.ApiSecret);
         }
         
         public string GetServiceApiKey()
         {
-            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ServiceApiKey] as string;
-
-            return apiKey;
+            return GetValue(ApiHttpHeaders.ServiceApiKey);
         }
 
         public string GetServiceApiSecret()
         {
-            var apiKey = _accessor.HttpContext.Items[ApiHttpHeaders.ServiceApiSecret] as string;
-
-            return apiKey;
+            return GetValue(ApiHttpHeaders.ServiceApiSecret);
         }
 
         public string GetApiKeyType()
         {
-            var type = ApiKeyTypes.ClientSecret; // Default 
+            var type= GetValue(ApiHttpHeaders.KeyType);
 
-            var keyType = _accessor.HttpContext.Items[ApiHttpHeaders.KeyType] as string;
-
-            if (keyType == "JWT")
+            if (string.IsNullOrEmpty(type))
             {
-                type = ApiKeyTypes.JwtToken;
+                return ApiKeyTypes.ClientSecret;
             }
-
-            return type;
+            else
+            {
+                return type;
+            }
         }
 
         public string GetServiceApiKeyType()
         {
-            return GetApiKeyType();
+            return GetValue(ApiHttpHeaders.KeyType) ?? ApiKeyTypes.ClientSecret;
         }
     }
 }

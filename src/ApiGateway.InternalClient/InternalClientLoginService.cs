@@ -23,8 +23,6 @@ namespace ApiGateway.InternalClient
         public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret, string serviceApiKey, string serviceApiSecret,
             string serviceId, string apiUrl, string httpMethod)
         {
-            // throw new NotImplementedException();
-            
             var validationResult = new KeyValidationResult();
 
             var clientKey = new KeyModel

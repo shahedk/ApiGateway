@@ -31,58 +31,71 @@ namespace ApiGateway.Core
             _keyManager = keyManager;
         }
 
-        public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod, string serviceId, string apiUrl)
+        public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod,
+            string serviceId, string apiUrl)
         {
-            var serviceKeyResult = await IsKeyValid(serviceKey.Id, clientKey);
-            if (!serviceKeyResult.IsValid)
+
+            // For non-local api (eg. "/sys/...") service key is required 
+            if (!apiUrl.StartsWith(AppConstants.LocalApiUrlPrefix))
             {
-                // Service key validation failed
-                return new KeyValidationResult()
+                var serviceKeyResult = await IsKeyValid(clientKey);
+                if (!serviceKeyResult.IsValid)
                 {
-                    InnerValidationResult = serviceKeyResult,
-                    IsValid = false,
-                    Message = _localizer["Service key validation failed"]
-                };
-            }
-            else
-            {
-                var clientKeyResult = await IsKeyValid(serviceKey.Id, clientKey);
-                if (!clientKeyResult.IsValid)
-                {
-                    // Client key validation failed
-                    return new KeyValidationResult()
+                    // Service key validation failed
+                    return new KeyValidationResult
                     {
-                        InnerValidationResult = clientKeyResult,
+                        InnerValidationResult = serviceKeyResult,
                         IsValid = false,
-                        Message = _localizer["Client key validation failed"]
+                        Message = _localizer["Service key validation failed"]
                     };
                 }
-                else
-                {
-                    // Both keys are valid. Now check if client has the right permission to access the api/url
-                    var result = new KeyValidationResult();
-                    var api = await _apiManager.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
-                    var clientKeyWithRoles = await _keyManager.GetByPublicKey(clientKey.PublicKey);
-                    foreach (var role in api.Roles)
-                    {
-                        result.IsValid = clientKeyWithRoles.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
-                        if (result.IsValid)
-                        {
-                            break;
-                        }
-                    }
+            }
 
-                    return result;
+            // Validate client key
+            var clientKeyResult = await IsKeyValid(clientKey);
+            if (!clientKeyResult.IsValid)
+            {
+                // Client key validation failed
+                return new KeyValidationResult
+                {
+                    InnerValidationResult = clientKeyResult,
+                    IsValid = false,
+                    Message = _localizer["Client key validation failed"]
+                };
+            }
+
+            // Key validation passed. Now check if client has the right permission to access the api/url
+            
+            var result = new KeyValidationResult();
+            
+            var api = await _apiManager.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
+            if (api == null)
+            {
+                result.Message = _localizer["Api not found"];
+                result.IsValid = false;
+                return result;
+            }
+
+            var clientKeyWithRoles = await _keyManager.GetByPublicKey(clientKey.PublicKey);
+            foreach (var role in api.Roles)
+            {
+                result.IsValid = clientKeyWithRoles.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
+                if (result.IsValid)
+                {
+                    break;
                 }
             }
+
+            return result;
+
         }
 
-        private async Task<KeyValidationResult> IsKeyValid(string ownerKeyId, KeyModel key)
+        private async Task<KeyValidationResult> IsKeyValid(KeyModel key)
         {
             KeyValidationResult result;
             if (key.Type == ApiKeyTypes.ClientSecret)
             {
-                result = await _keySecretValidator.IsValid(ownerKeyId, key.PublicKey, key.GetSecret());
+                result = await _keySecretValidator.IsValid(key.PublicKey, key.GetSecret());
             }
             else
             {

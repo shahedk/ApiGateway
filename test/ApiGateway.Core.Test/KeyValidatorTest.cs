@@ -32,7 +32,7 @@ namespace ApiGateway.Core.Test
             await keyData.Create(key);
 
             // Validate key
-            var result = await validator.IsValid(ownerKey.PublicKey, key.PublicKey, secret);
+            var result = await validator.IsValid(key.PublicKey, secret);
 
             Assert.True(result.IsValid);
         }

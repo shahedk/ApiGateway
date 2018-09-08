@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
@@ -62,6 +63,11 @@ namespace ApiGateway.Core
                 }
 
             return model;
+        }
+
+        public async Task<IList<ServiceModel>> GetAll(string ownerPublicKey)
+        {
+            return await _serviceData.GetAll(ownerPublicKey);
         }
 
         public async Task<int> Count()

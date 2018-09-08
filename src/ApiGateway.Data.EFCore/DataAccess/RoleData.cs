@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
@@ -54,6 +56,15 @@ namespace ApiGateway.Data.EFCore.DataAccess
             var role = await GetEntity(ownerKeyId, id);
 
             return role.ToModel();
+        }
+
+        public async Task<IList<RoleModel>> GetAll(string ownerKeyId)
+        {
+            
+            var ownerKey = int.Parse(ownerKeyId);
+            var list = await _context.Roles.Where(x => x.OwnerKeyId == ownerKey).Select(x=>x.ToModel()).ToListAsync();
+
+            return list;
         }
 
         private async Task<Role> GetEntity(string ownerKeyId, string id)

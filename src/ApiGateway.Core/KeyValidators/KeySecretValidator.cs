@@ -20,7 +20,7 @@ namespace ApiGateway.Core.KeyValidators
             _logger = logger;
         }
 
-        public async Task<KeyValidationResult> IsValid(string ownerKeyId, string pubKey, string secret)
+        public async Task<KeyValidationResult> IsValid(string pubKey, string secret)
         {
             var result = new KeyValidationResult();
 

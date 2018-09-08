@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.Common.Extensions;
@@ -75,6 +76,15 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
                 return entity.ToModel(roles);
             }
+        }
+
+        public async Task<IList<KeyModel>> GetAll(string ownerKeyId)
+        {
+            
+            var ownerKey = int.Parse(ownerKeyId);
+            var list = await _context.Keys.Where(x => x.OwnerKeyId == ownerKey).Select(x=>x.ToModel()).ToListAsync();
+
+            return list;
         }
 
         public async Task<KeyModel> GetByPublicKey(string publicKey)

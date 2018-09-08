@@ -7,6 +7,11 @@ namespace ApiGateway.Common.Extensions
 {
     public static class ModelHelper
     {
+        public static string ToJson(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+        
         public static string GenerateNewId()
         {
             return Guid.NewGuid().ToString("N");

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
@@ -57,6 +58,12 @@ namespace ApiGateway.Core
             }
 
             return model;
+        }
+
+        public async Task<IList<RoleModel>> GetAll(string ownerPublicKey)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            return await _roleData.GetAll(ownerKey.Id);
         }
 
         public async Task AddKeyInRole(string roleOwnerPublicKey, string roleId, string keyPublicKey)

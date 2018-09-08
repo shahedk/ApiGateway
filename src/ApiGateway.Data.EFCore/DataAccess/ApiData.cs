@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
@@ -71,6 +73,14 @@ namespace ApiGateway.Data.EFCore.DataAccess
             }
         }
 
+        public async Task<IList<ApiModel>> GetAll(string ownerKeyId)
+        {
+            var ownerKey = int.Parse(ownerKeyId);
+            var list = await _context.Apis.Where(x => x.OwnerKeyId == ownerKey).Select(x=>x.ToModel()).ToListAsync();
+
+            return list;
+        }
+
         private async Task<Api> GetEntity(string ownerKeyId, string id)
         {
             var ownerKey = int.Parse(ownerKeyId);
@@ -90,8 +100,12 @@ namespace ApiGateway.Data.EFCore.DataAccess
                 x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
                 x.Url == url);
 
-            var roles = await _context.ApiInRoles.Where(x => x.ApiId== api.Id).Select(x => x.Role.ToModel()).ToListAsync();
+            if (api == null)
+            {
+                return null;
+            }
 
+            var roles = await _context.ApiInRoles.Where(x => x.ApiId== api.Id).Select(x => x.Role.ToModel()).ToListAsync();
             return api.ToModel(roles);
         }
     }
