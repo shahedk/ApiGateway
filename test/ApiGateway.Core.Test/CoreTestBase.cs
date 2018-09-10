@@ -17,8 +17,9 @@ namespace ApiGateway.Core.Test
             var logger2 = new Mock<ILogger<KeySecretValidator>>();
             var apiManager = await GetApiManager();
             var keyManager = await GetKeyManager();
+            var serviceManager = await GetServiceManager();
             var keyValidator = new KeySecretValidator(keyManager, localizer2.Object, logger2.Object);
-            return new ApiKeyValidator(keyValidator, localizer.Object, logger.Object, apiManager, keyManager);
+            return new ApiKeyValidator(keyValidator, localizer.Object, logger.Object, apiManager, keyManager,serviceManager);
         } 
 
         protected async Task<IKeyValidator> GetKeySecretValidator()

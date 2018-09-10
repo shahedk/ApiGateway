@@ -70,6 +70,12 @@ namespace ApiGateway.Core
             return await _serviceData.GetAll(ownerPublicKey);
         }
 
+        public async Task<ServiceModel> GetByName(string ownerPublicKey, string serviceName)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            return await _serviceData.GetByName(ownerKey.Id, serviceName);
+        }
+
         public async Task<int> Count()
         {
             return await _serviceData.Count();

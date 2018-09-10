@@ -42,11 +42,11 @@ namespace ApiGateway.WebApi
             services.AddDbContext<ApiGatewayContext>(o =>
             {
                 o.EnableSensitiveDataLogging();
-                o.UseSqlite(new SqliteConnection("DataSource=ApiGateway.db"));
+                o.UseSqlite(new SqliteConnection(Configuration.GetConnectionString("DefaultConnection")));
             });
 
             services.AddMvc();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddSingleton<HttpClient, HttpClient>();
             
             services.AddTransient<IAppEnvironment, AppEnvironment>();
@@ -94,12 +94,7 @@ namespace ApiGateway.WebApi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                
-                // For dev environment only: Check if database is created
-                //var dbContext = app.ApplicationServices.GetService<ApiGatewayContext>();
-                //dbContext.Database.EnsureCreated();
-                
+                app.UseDeveloperExceptionPage();                
             }
 
             app.UseMiddleware(typeof(InternalClientApiKeyValidationMiddleware));

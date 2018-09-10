@@ -21,18 +21,20 @@ namespace ApiGateway.Core
         private readonly ILogger<ApiKeyValidator> _logger;
         private readonly IApiManager _apiManager;
         private readonly IKeyManager _keyManager;
+        private readonly IServiceManager _serviceManager;
 
-        public ApiKeyValidator(KeySecretValidator keySecretValidator, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiManager apiManager, IKeyManager keyManager)
+        public ApiKeyValidator(KeySecretValidator keySecretValidator, IStringLocalizer<ApiKeyValidator> localizer, ILogger<ApiKeyValidator> logger, IApiManager apiManager, IKeyManager keyManager, IServiceManager serviceManager)
         {
             _keySecretValidator = keySecretValidator;
             _localizer = localizer;
             _logger = logger;
             _apiManager = apiManager;
             _keyManager = keyManager;
+            _serviceManager = serviceManager;
         }
 
         public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod,
-            string serviceId, string apiUrl)
+            string serviceName, string apiUrl)
         {
 
             // For non-local api (eg. "/sys/...") service key is required 
@@ -67,8 +69,10 @@ namespace ApiGateway.Core
             // Key validation passed. Now check if client has the right permission to access the api/url
             
             var result = new KeyValidationResult();
+
+            var service = await _serviceManager.GetByName(serviceKey.PublicKey, serviceName);
             
-            var api = await _apiManager.Get(serviceKey.PublicKey, serviceId, httpMethod, apiUrl);
+            var api = await _apiManager.Get(serviceKey.PublicKey, service.Id, httpMethod, apiUrl);
             if (api == null)
             {
                 result.Message = _localizer["Api not found"];

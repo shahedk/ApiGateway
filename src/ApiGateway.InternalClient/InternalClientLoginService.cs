@@ -21,25 +21,25 @@ namespace ApiGateway.InternalClient
         }
         
         public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret, string serviceApiKey, string serviceApiSecret,
-            string serviceId, string apiUrl, string httpMethod)
+            string serviceName, string apiUrl, string httpMethod)
         {
             var validationResult = new KeyValidationResult();
 
             var clientKey = new KeyModel
             {
                 Type = _apiRequestHelper.GetApiKeyType(),
-                PublicKey = _apiRequestHelper.GetApiKey(),
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = _apiRequestHelper.GetApiSecret()}
+                PublicKey = apiKey,
+                Properties = {[ApiKeyPropertyNames.ClientSecret] = apiSecret}
             };
 
             var serviceKey = new KeyModel
             {
                 Type = _apiRequestHelper.GetApiKeyType(),
-                PublicKey = _apiRequestHelper.GetServiceApiKey(),
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = _apiRequestHelper.GetServiceApiSecret()}
+                PublicKey = serviceApiKey,
+                Properties = {[ApiKeyPropertyNames.ClientSecret] = serviceApiSecret}
             };
 
-            validationResult = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceId, apiUrl);
+            validationResult = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceName, apiUrl);
 
             
             return validationResult;

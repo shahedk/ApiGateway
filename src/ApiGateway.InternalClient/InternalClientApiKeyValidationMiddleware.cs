@@ -11,23 +11,22 @@ namespace ApiGateway.InternalClient
 {
     public class InternalClientApiKeyValidationMiddleware
     {
-    private readonly RequestDelegate _next;
-        private readonly IClientLoginService _clientLoginService;
-        private readonly ApiGatewaySettings _settings;
+        private readonly RequestDelegate _next;
+        private  IClientLoginService _clientLoginService;        
 
-        public InternalClientApiKeyValidationMiddleware(RequestDelegate next, IClientLoginService clientLoginService, IOptions<ApiGatewaySettings> settings)
+        public InternalClientApiKeyValidationMiddleware(RequestDelegate next)
         {
             _next = next;
-            _clientLoginService = clientLoginService;
-            _settings = settings.Value;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IClientLoginService clientLoginService)
         {
+            _clientLoginService = clientLoginService;
+
+            var path = context.Request.Path.Value.ToLower();
             if (context.Request.Path.HasValue)
             {
-                var path = context.Request.Path.Value.ToLower();
-                if (path.ToLower().StartsWith("/sys/appenv/") || path.ToLower().StartsWith("/sys/isvalid/"))
+                if (path.StartsWith("/sys/appenv/") || path.StartsWith("/sys/isvalid/"))
                 {
                     // These two special paths don't need api-key validation
                     await _next.Invoke(context);
@@ -50,9 +49,19 @@ namespace ApiGateway.InternalClient
                 string action = context.Request.Method;
                 string apiUrl = context.Request.Path;
 
-                var serviceId = "1";
+                string serviceName = GetServiceNameFromPath(path);
                 
-                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceKey, serviceSecret, serviceId, apiUrl, action);
+                if (path.StartsWith(AppConstants.LocalApiUrlPrefix))
+                {
+                    // Local API, client api is the owner. 
+                    serviceKey = apiKey;
+                    serviceSecret = apiSecret;
+                    serviceName = AppConstants.LocalApiServiceName;
+                }
+                
+                
+                
+                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceKey, serviceSecret, serviceName, apiUrl, action);
 
                 if (result.IsValid)
                 {
@@ -66,6 +75,18 @@ namespace ApiGateway.InternalClient
                     await context.Response.WriteAsync(result.ToJson());
                 }
             }
+        }
+
+        private string GetServiceNameFromPath(string path)
+        {
+            var serviceName = "";
+            var tokens = path.Split("/");
+            if (tokens.Length > 2)
+            {
+                serviceName = tokens[2];
+            }
+
+            return serviceName;
         }
     }
 

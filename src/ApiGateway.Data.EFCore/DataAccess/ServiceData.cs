@@ -81,6 +81,14 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return list;
         }
 
+        public async Task<ServiceModel> GetByName(string ownerKeyId, string serviceName)
+        {
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+
+            var result = await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId2 && x.Name == serviceName);
+            return result.ToModel();
+        }
+
         public async Task<int> Count()
         {
             return await _context.Services.CountAsync();
