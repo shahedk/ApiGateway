@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using ApiGateway.Client;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Api")]
+    [Route("sys/Api")]
     public class ApiController : ApiControllerBase
     {
         private readonly IApiManager _manager;
@@ -17,6 +20,23 @@ namespace ApiGateway.WebApi.Controllers
             _manager = manager;
         }
 
+        [HttpGet]
+        public async Task<IList<ApiModel>> Get()
+        {
+            try
+            {
+                return await _manager.GetAll(ApiKey);
+            }
+            catch (ApiGatewayException e)
+            {
+                if (e.ErrorCode == HttpStatusCode.NotFound)
+                {
+                    Response.StatusCode = (int)e.ErrorCode;
+                    
+                }
+            }
+            return null;
+        }
 
         // GET: api/Api/5
         [HttpGet("{id}")]

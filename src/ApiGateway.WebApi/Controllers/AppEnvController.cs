@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/AppEnv")]
+    [Route("sys/AppEnv")]
     public class AppEnvController : ApiControllerBase
     {
         private readonly IAppEnvironment _appEnvironment;

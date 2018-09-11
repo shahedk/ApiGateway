@@ -24,8 +24,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp" />
     <Folder Include="Resources" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="ClientApp\**" />
   </ItemGroup>
 
 

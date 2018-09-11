@@ -21,7 +21,7 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<KeyValidationResult> Get(string id, string apiUrl, string httpMethod)
         {
-            var serviceId = id;
+            var serviceName = id;
          
             var clientKey = new KeyModel
             {
@@ -37,7 +37,7 @@ namespace ApiGateway.WebApi.Controllers
                 Properties = {[ApiKeyPropertyNames.ClientSecret] = ServiceApiSecret}
             };
 
-            var result = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceId, apiUrl);
+            var result = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceName, apiUrl);
 
             return result;
         }

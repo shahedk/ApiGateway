@@ -48,7 +48,7 @@ namespace ApiGateway.Client
                 string action = context.Request.Method;
                 string apiUrl = context.Request.Path;
 
-                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ApiKey, _settings.ApiSecret, _settings.ServiceId, apiUrl, action);
+                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ApiKey, _settings.ApiSecret, _settings.ServiceName, apiUrl, action);
 
                 if (result.IsValid)
                 {

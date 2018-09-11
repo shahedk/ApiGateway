@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Client;
+using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core;
 using ApiGateway.Data;
@@ -10,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiGateway.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Key")]
+    [Route("sys/Key")]
     public class KeyController : ApiControllerBase
     {
         private readonly IKeyManager _manager;
@@ -20,6 +22,24 @@ namespace ApiGateway.WebApi.Controllers
             _manager = manager;
         }
 
+        [HttpGet]
+        public async Task<IList<KeyModel>> Get()
+        {
+            try
+            {
+                return await _manager.GetAll(ApiKey);
+            }
+            catch (ApiGatewayException e)
+            {
+                if (e.ErrorCode == HttpStatusCode.NotFound)
+                {
+                    Response.StatusCode = (int)e.ErrorCode;
+                    
+                }
+            }
+            return null;
+        }
+        
         // GET: api/Key/5
         [HttpGet("{id}")]
         public async Task<KeyModel> Get(string id)

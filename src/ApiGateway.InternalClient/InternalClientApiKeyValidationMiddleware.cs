@@ -12,7 +12,6 @@ namespace ApiGateway.InternalClient
     public class InternalClientApiKeyValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private  IClientLoginService _clientLoginService;        
 
         public InternalClientApiKeyValidationMiddleware(RequestDelegate next)
         {
@@ -21,12 +20,11 @@ namespace ApiGateway.InternalClient
 
         public async Task Invoke(HttpContext context, IClientLoginService clientLoginService)
         {
-            _clientLoginService = clientLoginService;
 
             var path = context.Request.Path.Value.ToLower();
             if (context.Request.Path.HasValue)
             {
-                if (path.StartsWith("/sys/appenv/") || path.StartsWith("/sys/isvalid/"))
+                if (path.StartsWith("/sys/appenv/") || path.StartsWith("/api/isvalid/"))
                 {
                     // These two special paths don't need api-key validation
                     await _next.Invoke(context);
@@ -61,7 +59,7 @@ namespace ApiGateway.InternalClient
                 
                 
                 
-                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceKey, serviceSecret, serviceName, apiUrl, action);
+                var result = await clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceKey, serviceSecret, serviceName, apiUrl, action);
 
                 if (result.IsValid)
                 {
