@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Core;
 using ApiGateway.Core.KeyValidators;
@@ -17,11 +13,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 
 namespace ApiGateway.WebApi
 {
@@ -39,10 +34,21 @@ namespace ApiGateway.WebApi
         {
             services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
 
+            var db = Configuration.GetValue<string>("Database").ToLower();
+           
             services.AddDbContext<ApiGatewayContext>(o =>
             {
                 o.EnableSensitiveDataLogging();
-                o.UseSqlite(new SqliteConnection(Configuration.GetConnectionString("DefaultConnection")));
+                if (db == "mysql")
+                {
+                    o.UseMySql(Configuration.GetConnectionString("DefaultConnection"));    
+                }
+                else
+                {
+                    o.UseSqlite(new SqliteConnection(Configuration.GetConnectionString("DefaultConnection")));    
+                }
+                
+                
             });
 
             services.AddMvc();
