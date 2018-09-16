@@ -83,7 +83,7 @@ namespace ApiGateway.Core
             var clientKeyWithRoles = await _keyManager.GetByPublicKey(clientKey.PublicKey);
             foreach (var role in api.Roles)
             {
-                result.IsValid = clientKeyWithRoles.Roles.SingleOrDefault(x => x.Id == role.Id) != null;
+                result.IsValid = clientKeyWithRoles.Roles.SingleOrDefault(x => x.Id == role.Id && !role.IsDisabled) != null;
                 if (result.IsValid)
                 {
                     break;
