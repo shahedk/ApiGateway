@@ -12,6 +12,7 @@ namespace ApiGateway.Data.EFCore.Test
 {
     public class DbContextTest : TestBase
     {
+        /*
         [Fact]
         public async Task CheckDatabaseCreation()
         {
@@ -32,5 +33,6 @@ namespace ApiGateway.Data.EFCore.Test
 
             File.WriteAllText(@"D:\Tmp\createdb.sql", dbScript);
         }
+        */
     }
 }

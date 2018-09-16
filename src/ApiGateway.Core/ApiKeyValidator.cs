@@ -71,6 +71,13 @@ namespace ApiGateway.Core
             var result = new KeyValidationResult();
 
             var service = await _serviceManager.GetByName(serviceKey.PublicKey, serviceName);
+
+            if (service == null)
+            {
+                result.Message = _localizer["Service not found"];
+                result.IsValid = false;
+                return result;
+            }
             
             var api = await _apiManager.Get(serviceKey.PublicKey, service.Id, httpMethod, apiUrl);
             if (api == null)

@@ -15,12 +15,29 @@ namespace ApiGateway.Core.Test
             var serviceManager = await GetServiceManager();
             var roleManager = await GetRoleManager();
             var apiManager = await GetApiManager();
-            var localizer = new Mock<IStringLocalizer<IAppEnvironment>>();
-            
-            var env = new AppEnvironment(keyManager, serviceManager, roleManager, apiManager, localizer.Object);
+            var mock = new Mock<IStringLocalizer<IAppEnvironment>>();
 
-            await env.Initialize();
-            
+            AddKey(mock, "There are {0} active service(s). System can not be re-initialized.");
+            AddKey(mock, "No service found. Please configure application environment.");
+            AddKey(mock, "Total {0} services registered.");
+
+            var env = new AppEnvironment(keyManager, serviceManager, roleManager, apiManager, mock.Object);
+
+            var state = await env.GetApplicationState();
+
+            if (!state.IsConfigured)
+            {
+                await env.Initialize();
+            }
+
+            Assert.True(state.IsConfigured);
+        }
+
+        private void AddKey(Mock<IStringLocalizer<IAppEnvironment>> mock, string key)
+        {
+            var localizedString = new LocalizedString(key, key);
+            mock.Setup(_ => _[key]).Returns(localizedString);
+
         }
     }
 }
