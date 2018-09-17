@@ -43,6 +43,10 @@ namespace ApiGateway.WebApi
                 {
                     o.UseMySql(Configuration.GetConnectionString("DefaultConnection"));    
                 }
+                else if (db == "mssql")
+                {
+                    o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));    
+                }
                 else
                 {
                     o.UseSqlite(new SqliteConnection(Configuration.GetConnectionString("DefaultConnection")));    
