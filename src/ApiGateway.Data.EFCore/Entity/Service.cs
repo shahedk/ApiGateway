@@ -10,5 +10,7 @@ namespace ApiGateway.Data.EFCore.Entity
         public string Name { get; set; }
 
         public List<Role> Roles { get; set; }
+        public List<Api> Apis { get; set; }
+
     }
 }

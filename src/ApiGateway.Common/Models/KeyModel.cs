@@ -9,7 +9,7 @@ namespace ApiGateway.Common.Models
 {
     public class KeyModel : ModelBase
     {
-        public bool IsDisabled { get; set; } = false;
+        public bool IsDisabled { get; set; }
 
         [Key]
         public string PublicKey { get; set; }

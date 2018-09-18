@@ -13,7 +13,8 @@ namespace ApiGateway.Data.EFCore.Entity
         public string AcccessRuleId { get; set; }
         
         [Required]
-        [StringLength(20)]
-        public string RoleId { get; set; }
+        public int RoleId { get; set; }
+        
+        public Role Role { get; set; }
     }
 }
