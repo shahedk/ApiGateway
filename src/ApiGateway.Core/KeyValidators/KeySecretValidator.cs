@@ -33,10 +33,10 @@ namespace ApiGateway.Core.KeyValidators
             {
                 var key = await _keyManager.GetByPublicKey(pubKey);
 
-                if (key == null || key.GetSecret() != secret)
+                if (key == null || key.IsDisabled || key.GetSecret() != secret)
                 {
                     result.IsValid = false;
-                    result.Message = _localizer["Key and secrect does not match"];
+                    result.Message = _localizer["Key and/or secret is not valid"];
                 }
                 else
                 {
