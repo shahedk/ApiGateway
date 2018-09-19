@@ -17,7 +17,7 @@ namespace ApiGateway.Core
         private readonly IStringLocalizer<IKeyManager> _localizer;
         private readonly ILogger<IKeyManager> _logger;
 
-        public KeyManager( IKeyData keyData,IStringLocalizer<IKeyManager> localizer,ILogger<IKeyManager> logger)
+        public KeyManager(IKeyData keyData,IStringLocalizer<IKeyManager> localizer,ILogger<IKeyManager> logger)
         {
             _keyData = keyData;
             _localizer = localizer;
@@ -68,7 +68,8 @@ namespace ApiGateway.Core
 
         public async Task<IList<KeyModel>> GetAll(string ownerPublicKey)
         {
-            return await _keyData.GetAll(ownerPublicKey);
+            var ownerKey = await GetByPublicKey(ownerPublicKey);
+            return await _keyData.GetAll(ownerKey.Id);
         }
 
         public async Task<KeyModel> GetByPublicKey(string publicKey)

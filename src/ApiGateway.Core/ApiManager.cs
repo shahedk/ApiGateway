@@ -66,7 +66,8 @@ namespace ApiGateway.Core
 
         public async Task<IList<ApiModel>> GetAll(string ownerPublicKey)
         {
-            return await _apiData.GetAll(ownerPublicKey);
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            return await _apiData.GetAll(ownerKey.Id);
         }
 
         public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
