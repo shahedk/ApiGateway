@@ -2,7 +2,7 @@
 
 namespace ApiGateway.Data.EFCore.Entity
 {
-    public class ApiInRole : EntityBase
+    public class ApiInRole : ManyToManyBase
     {
         [Required]
         [StringLength(20)]

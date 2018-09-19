@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiGateway.Common.Models;
@@ -78,33 +79,31 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<bool> IsKeyInRole(string ownerKeyId, string roleId, string keyId)
         {
-            var role = await Get(ownerKeyId, roleId);
+            var role = await GetEntity(ownerKeyId, roleId);
+            if(role == null) throw new InvalidDataException();
+            
             var keyId2 = int.Parse(keyId);
-            var roleId2 = int.Parse(role.Id);
-            var ownerKeyId2 = int.Parse(ownerKeyId);
+            
+            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == role.Id);
 
-            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
-
-            return (exists != null);
+            return exists != null;
         }
 
         public async Task AddKeyInRole(string ownerKeyId, string roleId, string keyId)
         {
-            var role = await Get(ownerKeyId, roleId);
-
-            var ownerKeyId2 = int.Parse(ownerKeyId);
+            var role = await GetEntity(ownerKeyId, roleId);
+            if(role == null) throw new InvalidDataException();
+            
             var keyId2 = int.Parse(keyId);
-            var roleId2 = int.Parse(role.Id);
-
-            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+            
+            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == role.Id);
 
             if (exists == null)
             {
-                var map = new KeyInRole()
+                var map = new KeyInRole
                 {
-                    OwnerKeyId = int.Parse(role.OwnerKeyId),
                     KeyId = keyId2,
-                    RoleId = roleId2
+                    RoleId = role.Id
                 };
 
                 _context.KeyInRoles.Add(map);
@@ -114,11 +113,11 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task RemoveKeyFromRole(string ownerKeyId, string roleId, string keyId)
         {
-            var ownerKeyId2 = int.Parse(ownerKeyId);
             var keyId2 = int.Parse(keyId);
-            var roleId2 = int.Parse(roleId);
+            var role = await GetEntity(ownerKeyId, roleId);
+            if(role == null) throw new InvalidDataException();
 
-            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+            var exists = await _context.KeyInRoles.SingleOrDefaultAsync(x => x.KeyId == keyId2 && x.RoleId == role.Id);
 
             if (exists != null)
             {
@@ -129,31 +128,31 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<bool> IsApiInRole(string ownerKeyId, string roleId, string apiId)
         {
-            var role = await Get(ownerKeyId, roleId);
             var apiId2 = int.Parse(apiId);
-            var roleId2 = int.Parse(role.Id);
-            var ownerKeyId2 = int.Parse(ownerKeyId);
+            var role = await GetEntity(ownerKeyId, roleId);
+            if(role == null) throw new InvalidDataException();
 
-            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == role.Id);
 
-            return (exists != null);
+            return exists != null;
         }
 
         public async Task AddApiInRole(string ownerKeyId, string roleId, string apiId)
         {
             var apiId2 = int.Parse(apiId);
-            var roleId2 = int.Parse(roleId);
+            var role = await GetEntity(ownerKeyId, roleId);
+            if(role == null) throw new InvalidDataException();
+
             var ownerKeyId2 = int.Parse(ownerKeyId);
 
-            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == role.Id);
 
             if (exists == null)
             {
-                var map = new ApiInRole()
+                var map = new ApiInRole
                 {
-                    OwnerKeyId =  ownerKeyId2,
                     ApiId = apiId2,
-                    RoleId = roleId2
+                    RoleId = role.Id
                 };
 
                 _context.ApiInRoles.Add(map);
@@ -164,10 +163,11 @@ namespace ApiGateway.Data.EFCore.DataAccess
         public async Task RemoveApiFromRole(string ownerKeyId, string roleId, string apiId)
         {
             var apiId2 = int.Parse(apiId);
-            var roleId2 = int.Parse(roleId);
-            var ownerKeyId2 = int.Parse(ownerKeyId);
+            
+            var role = await GetEntity(ownerKeyId, roleId);
+            if(role == null) throw new InvalidDataException();
 
-            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == roleId2 && x.OwnerKeyId == ownerKeyId2);
+            var exists = await _context.ApiInRoles.SingleOrDefaultAsync(x => x.ApiId == apiId2 && x.RoleId == role.Id);
 
             if (exists != null)
             {

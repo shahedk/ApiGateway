@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiGateway.Data.EFCore.Entity
 {
-    public class KeyInRole : EntityBase
+    public class KeyInRole : ManyToManyBase
     {
         [Required]
         public int RoleId { get; set; }
