@@ -80,6 +80,13 @@ namespace ApiGateway.Core
             }
             
             var api = await _apiManager.Get(serviceKey.PublicKey, service.Id, httpMethod, apiUrl);
+
+            if (api == null && !string.IsNullOrEmpty(apiUrl))
+            {
+                var url = apiUrl.Substring(0, apiUrl.LastIndexOf("/"));
+                api = await _apiManager.Get(serviceKey.PublicKey, service.Id, httpMethod, url);
+            }
+            
             if (api == null)
             {
                 result.Message = _localizer["Api not found"];

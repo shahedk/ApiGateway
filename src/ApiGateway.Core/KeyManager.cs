@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
@@ -70,6 +71,24 @@ namespace ApiGateway.Core
         {
             var ownerKey = await GetByPublicKey(ownerPublicKey);
             return await _keyData.GetAll(ownerKey.Id);
+        }
+
+        public async Task<KeyModel> ReGenerateSecret(string ownerPublicKey, string keyPublicKey)
+        {
+            var ownerKey = await GetByPublicKey(ownerPublicKey);
+            var key = await GetByPublicKey(keyPublicKey);
+
+            if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
+            {
+                // owner can reset its secret. And also can reset secret for keys created by it
+                key.Properties[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret();
+                return await _keyData.Update(key);
+            }
+            else
+            {
+                var msg = _localizer["No key found for the specified owner and Id"];
+                throw new InvalidKeyException(msg, HttpStatusCode.NotFound);
+            }
         }
 
         public async Task<KeyModel> GetByPublicKey(string publicKey)
