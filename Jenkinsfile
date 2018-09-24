@@ -1,5 +1,4 @@
 node {
-   def mvnHome
    stage('clone repo') { 
       sh 'rm -r ApiGateway'
       sh 'git clone git@github.com:shahedk/ApiGateway'
