@@ -29,6 +29,20 @@ namespace ApiGateway.Core
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
             model.OwnerKeyId = ownerKey.Id;
 
+            // Check if same name or url is already used by other api in the same service
+            if (await _apiData.ExistsByName(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Name))
+            {
+                var msg = _localizer["Another api with the same name and http method already exists"];
+                throw new DataValidationException(msg, HttpStatusCode.Conflict);       
+            }
+                
+                
+            if (await _apiData.ExistsByUrl(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Url))
+            {
+                var msg = _localizer["Another api with the same url and http method already exists"];
+                throw new DataValidationException(msg, HttpStatusCode.Conflict);
+            }
+            
             return await _apiData.Create(model);
         }
 
@@ -37,6 +51,25 @@ namespace ApiGateway.Core
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
             model.OwnerKeyId = ownerKey.Id;
 
+            // Check if name and/or url is updated
+            var existing = await _apiData.Get(ownerKey.Id, model.Id);
+            if (existing.Name != model.Name || existing.Url != model.Url)
+            {
+                // Check if same name or url is already used by other api in the same service
+                if (await _apiData.ExistsByName(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Name))
+                {
+                    var msg = _localizer["Another api with the same name and http method already exists"];
+                    throw new DataValidationException(msg, HttpStatusCode.Conflict);       
+                }
+                
+                
+                if (await _apiData.ExistsByUrl(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Url))
+                {
+                    var msg = _localizer["Another api with the same url and http method already exists"];
+                    throw new DataValidationException(msg, HttpStatusCode.Conflict);
+                }
+            }
+            
             return await _apiData.Update(model);
         }
 
@@ -73,7 +106,7 @@ namespace ApiGateway.Core
         public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            var api = await _apiData.Get(ownerKey.Id, serviceId, httpMethod, apiUrl);
+            var api = await _apiData.GetByUrl(ownerKey.Id, serviceId, httpMethod, apiUrl);
 
             return api;
         }

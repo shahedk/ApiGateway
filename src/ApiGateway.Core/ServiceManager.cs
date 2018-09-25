@@ -29,6 +29,13 @@ namespace ApiGateway.Core
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
             model.OwnerKeyId = ownerKey.Id;
 
+            // Service name must be unique
+            if (await _serviceData.Exists(model.Name))
+            {
+                var msg = _localizer["Another service with the same name already exists"];
+                throw new DataValidationException(msg, HttpStatusCode.Conflict);
+            }
+            
             return await _serviceData.Create(model);
         }
 
@@ -40,6 +47,14 @@ namespace ApiGateway.Core
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
             model.OwnerKeyId = ownerKey.Id;
 
+            // Check if name changed and whether another service exists with the same name
+            var existing = await _serviceData.GetByName(model.Name);
+            if (existing.Id != model.Id)
+            {
+                var msg = _localizer["Another service with the same name already exists"];
+                throw new DataValidationException(msg, HttpStatusCode.Conflict);
+            }
+            
             return await _serviceData.Update(model);
         }
 

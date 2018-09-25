@@ -81,6 +81,12 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return list;
         }
 
+        public async Task<ServiceModel> GetByName(string serviceName)
+        {
+            var result = await _context.Services.SingleOrDefaultAsync(x => x.Name == serviceName);
+            return result.ToModel();
+        }
+
         public async Task<ServiceModel> GetByName(string ownerKeyId, string serviceName)
         {
             var ownerKeyId2 = int.Parse(ownerKeyId);
@@ -92,6 +98,13 @@ namespace ApiGateway.Data.EFCore.DataAccess
         public async Task<int> Count()
         {
             return await _context.Services.CountAsync();
+        }
+
+        public async Task<bool> Exists(string serviceName)
+        {
+            var existing = await _context.Services.SingleOrDefaultAsync(x => x.Name == serviceName);
+
+            return existing == null;
         }
     }
 }

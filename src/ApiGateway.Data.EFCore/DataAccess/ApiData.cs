@@ -90,7 +90,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
             return entity;
         }
 
-        public async Task<ApiModel> Get(string ownerKeyId, string serviceId, string httpMethod, string apiUrl)
+        public async Task<ApiModel> GetByUrl(string ownerKeyId, string serviceId, string httpMethod, string apiUrl)
         {
             var ownerKey = int.Parse(ownerKeyId);
             var serviceId2 = int.Parse(serviceId);
@@ -107,6 +107,52 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
             var roles = await _context.ApiInRoles.Where(x => x.ApiId== api.Id).Select(x => x.Role.ToModel()).ToListAsync();
             return api.ToModel(roles);
+        }
+
+        public async Task<ApiModel> GetByName(string ownerKeyId, string serviceId, string httpMethod, string name)
+        {
+            var ownerKey = int.Parse(ownerKeyId);
+            var serviceId2 = int.Parse(serviceId);
+            var apiName = string.IsNullOrEmpty(name) ? string.Empty : name.ToLower();
+
+            var api = await _context.Apis.SingleOrDefaultAsync(x =>
+                x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
+                x.Name == apiName);
+
+            if (api == null)
+            {
+                return null;
+            }
+
+            var roles = await _context.ApiInRoles.Where(x => x.ApiId== api.Id).Select(x => x.Role.ToModel()).ToListAsync();
+            return api.ToModel(roles);
+        }
+
+        public async Task<bool> ExistsByName(string ownerKeyId, string serviceId, string httpMethod, string name)
+        {
+            var ownerKey = int.Parse(ownerKeyId);
+            var serviceId2 = int.Parse(serviceId);
+            var apiName = string.IsNullOrEmpty(name) ? string.Empty : name.ToLower();
+
+            var api = await _context.Apis.SingleOrDefaultAsync(x =>
+                x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
+                x.Name == apiName);
+
+            return api == null;
+        }
+
+        public async Task<bool> ExistsByUrl(string ownerKeyId, string serviceId, string httpMethod, string url)
+        {
+            
+            var ownerKey = int.Parse(ownerKeyId);
+            var serviceId2 = int.Parse(serviceId);
+            var apiUrl = string.IsNullOrEmpty(url) ? string.Empty : url.ToLower();
+
+            var api = await _context.Apis.SingleOrDefaultAsync(x =>
+                x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
+                x.Url == apiUrl);
+
+            return api == null;
         }
     }
 }

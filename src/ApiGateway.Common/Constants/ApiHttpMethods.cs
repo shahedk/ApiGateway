@@ -10,7 +10,7 @@ namespace ApiGateway.Common.Constants
         public const string Delete = "DELETE";
         public const string Put = "PUT";
     
-        private static List<string> _listCache = null;
+        private static List<string> _listCache;
 
         public static List<string> ToList()
         {
@@ -22,7 +22,7 @@ namespace ApiGateway.Common.Constants
             if (_listCache == null)
                 _listCache = ToList();
 
-            return _listCache.Contains(type);
+            return _listCache.Contains(type.ToUpper());
         }
     }
 }

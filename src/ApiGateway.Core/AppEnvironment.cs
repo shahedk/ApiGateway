@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using Microsoft.Extensions.Localization;
 
@@ -283,12 +284,14 @@ namespace ApiGateway.Core
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiDel.Id);
 
+            #endregion
+            
             state.IsConfigured = true;
-            state.Message = _stringLocalizer["System successfully initialized"];
+            var successMessage = _stringLocalizer["System initialized. Please save the root key in secured place. Root key >> ApiKey: [{0}] and ApiSecret: [{1}]"];
 
+            state.Message = string.Format(successMessage, rootKey.PublicKey, rootKey.GetSecret());
             return state;
 
-            #endregion
         }
     }
 }

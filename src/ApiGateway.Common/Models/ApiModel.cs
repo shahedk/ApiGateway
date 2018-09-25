@@ -12,8 +12,12 @@ namespace ApiGateway.Common.Models
         public string ServiceId { get; set; }
 
         [Required]
-        public string Name { get; set; }
-        
+        public string Name
+        {
+            get => _name;
+            set => _name = value.ToLower();
+        }
+
         [Required]
         private string _httpMethod = string.Empty;
         
@@ -25,7 +29,7 @@ namespace ApiGateway.Common.Models
             {
                 if (ApiHttpMethods.IsValid(value))
                 {
-                    _httpMethod= value;
+                    _httpMethod= value.ToUpper();
                 }
                 else
                 {
@@ -36,9 +40,15 @@ namespace ApiGateway.Common.Models
         }
 
         [Required]
-        public string Url { get; set; }
+        public string Url
+        {
+            get => _url;
+            set => _url = value.ToLower();
+        }
 
         public ReadOnlyCollection<RoleModel> Roles;
+        private string _name;
+        private string _url;
 
         public ApiModel(){}
 
