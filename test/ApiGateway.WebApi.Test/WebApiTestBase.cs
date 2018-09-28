@@ -11,7 +11,7 @@ namespace ApiGateway.WebApi.Test
         private async Task<IApiRequestHelper> GetApiRequestHelperWithRootKey()
         {
             var rootKey = await GetRootKey();
-            return new MockApiRequestHelper(rootKey.PublicKey, rootKey.GetSecret());
+            return new MockApiRequestHelper(rootKey.PublicKey, rootKey.GetSecret1());
         }
 
         private async Task<IApiRequestHelper> GetApiRequestHelperWithUserKeyAndServiceKey()
@@ -19,7 +19,7 @@ namespace ApiGateway.WebApi.Test
             var userKey = await GetUserKey();
             var serviceKey = await GetRootKey();
 
-            return new MockApiRequestHelper(userKey.PublicKey, userKey.GetSecret(), serviceKey.PublicKey, serviceKey.GetSecret());
+            return new MockApiRequestHelper(userKey.PublicKey, userKey.GetSecret1(), serviceKey.PublicKey, serviceKey.GetSecret1());
         }
 
         protected async Task<KeyController> GetKeyController()

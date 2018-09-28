@@ -9,11 +9,23 @@ namespace ApiGateway.Common.Extensions
 {
     public static class KeyModelExtensions
     {
-        public static string GetSecret(this KeyModel key)
+        public static string GetSecret1(this KeyModel key)
         {
-            if(key.Properties.Keys.Contains(ApiKeyPropertyNames.ClientSecret))
+            if(key.Properties.Keys.Contains(ApiKeyPropertyNames.ClientSecret1))
             {
-                return key.Properties[ApiKeyPropertyNames.ClientSecret];
+                return key.Properties[ApiKeyPropertyNames.ClientSecret1];
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        
+        public static string GetSecret2(this KeyModel key)
+        {
+            if(key.Properties.Keys.Contains(ApiKeyPropertyNames.ClientSecret2))
+            {
+                return key.Properties[ApiKeyPropertyNames.ClientSecret2];
             }
             else
             {

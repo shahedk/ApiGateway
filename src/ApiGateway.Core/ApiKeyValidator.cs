@@ -113,7 +113,12 @@ namespace ApiGateway.Core
             KeyValidationResult result;
             if (key.Type == ApiKeyTypes.ClientSecret)
             {
-                result = await _keySecretValidator.IsValid(key.PublicKey, key.GetSecret());
+                result = await _keySecretValidator.IsValid(key.PublicKey, key.GetSecret1());
+
+                if (!result.IsValid)
+                {
+                    result = await _keySecretValidator.IsValid(key.PublicKey, key.GetSecret2());
+                }
             }
             else
             {

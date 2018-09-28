@@ -73,7 +73,7 @@ namespace ApiGateway.Core
             return await _keyData.GetAll(ownerKey.Id);
         }
 
-        public async Task<KeyModel> ReGenerateSecret(string ownerPublicKey, string keyPublicKey)
+        public async Task<KeyModel> ReGenerateSecret1(string ownerPublicKey, string keyPublicKey)
         {
             var ownerKey = await GetByPublicKey(ownerPublicKey);
             var key = await GetByPublicKey(keyPublicKey);
@@ -81,7 +81,25 @@ namespace ApiGateway.Core
             if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
             {
                 // owner can reset its secret. And also can reset secret for keys created by it
-                key.Properties[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret();
+                key.Properties[ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret();
+                return await _keyData.Update(key);
+            }
+            else
+            {
+                var msg = _localizer["No key found for the specified owner and Id"];
+                throw new InvalidKeyException(msg, HttpStatusCode.NotFound);
+            }
+        }
+        
+        public async Task<KeyModel> ReGenerateSecret2(string ownerPublicKey, string keyPublicKey)
+        {
+            var ownerKey = await GetByPublicKey(ownerPublicKey);
+            var key = await GetByPublicKey(keyPublicKey);
+
+            if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
+            {
+                // owner can reset its secret. And also can reset secret for keys created by it
+                key.Properties[ApiKeyPropertyNames.ClientSecret2] = ModelHelper.GenerateSecret();
                 return await _keyData.Update(key);
             }
             else
@@ -110,7 +128,11 @@ namespace ApiGateway.Core
             {
                 Type = ApiKeyTypes.ClientSecret,
                 PublicKey = ModelHelper.GeneratePublicKey(),
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret()}
+                Properties =
+                {
+                    [ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret(),
+                    [ApiKeyPropertyNames.ClientSecret2] = ModelHelper.GenerateSecret()
+                }
             };
 
 

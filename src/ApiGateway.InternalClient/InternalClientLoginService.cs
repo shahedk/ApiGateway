@@ -29,14 +29,14 @@ namespace ApiGateway.InternalClient
             {
                 Type = _apiRequestHelper.GetApiKeyType(),
                 PublicKey = apiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = apiSecret}
+                Properties = {[ApiKeyPropertyNames.ClientSecret1] = apiSecret}
             };
 
             var serviceKey = new KeyModel
             {
                 Type = _apiRequestHelper.GetApiKeyType(),
                 PublicKey = serviceApiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = serviceApiSecret}
+                Properties = {[ApiKeyPropertyNames.ClientSecret1] = serviceApiSecret}
             };
 
             validationResult = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceName, apiUrl);

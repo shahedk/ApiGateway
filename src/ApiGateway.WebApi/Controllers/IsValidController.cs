@@ -27,14 +27,14 @@ namespace ApiGateway.WebApi.Controllers
             {
                 Type = ApiKeyType,
                 PublicKey = ApiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = ApiSecret}
+                Properties = {[ApiKeyPropertyNames.ClientSecret1] = ApiSecret}
             };
 
             var serviceKey = new KeyModel
             {
                 Type = ServiceKeyType,
                 PublicKey = ServiceApiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret] = ServiceApiSecret}
+                Properties = {[ApiKeyPropertyNames.ClientSecret1] = ServiceApiSecret}
             };
 
             var result = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceName, apiUrl);

@@ -26,7 +26,7 @@ namespace ApiGateway.Core.Test
 
             var secret = "Supper secret string";
 
-            key.Properties.Add(ApiKeyPropertyNames.ClientSecret, secret);
+            key.Properties.Add(ApiKeyPropertyNames.ClientSecret1, secret);
 
             // Save key
             await keyData.Create(key);

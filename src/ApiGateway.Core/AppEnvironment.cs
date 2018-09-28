@@ -287,9 +287,9 @@ namespace ApiGateway.Core
             #endregion
             
             state.IsConfigured = true;
-            var successMessage = _stringLocalizer["System initialized. Please save the root key in secured place. Root key >> ApiKey: [{0}] and ApiSecret: [{1}]"];
+            var successMessage = _stringLocalizer["System initialized. Please save the root key in secured place. Root key >> ApiKey: [{0}] | ApiSecret1: [{1}] |  ApiSecret2: [{2}] "];
 
-            state.Message = string.Format(successMessage, rootKey.PublicKey, rootKey.GetSecret());
+            state.Message = string.Format(successMessage, rootKey.PublicKey, rootKey.GetSecret1(), rootKey.GetSecret2());
             return state;
 
         }

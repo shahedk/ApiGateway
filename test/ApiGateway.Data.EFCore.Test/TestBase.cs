@@ -96,7 +96,7 @@ namespace ApiGateway.Data.EFCore.Test
                     OwnerKeyId = "0",
                     PublicKey = ModelHelper.GeneratePublicKey(),
                     Type = ApiKeyTypes.ClientSecret,
-                    Properties = {[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret()}
+                    Properties = {[ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret()}
                 };
 
 
@@ -118,7 +118,7 @@ namespace ApiGateway.Data.EFCore.Test
                     OwnerKeyId = rootKey.Id,
                     PublicKey = ModelHelper.GeneratePublicKey(),
                     Type = ApiKeyTypes.ClientSecret,
-                    Properties = {[ApiKeyPropertyNames.ClientSecret] = ModelHelper.GenerateSecret()}
+                    Properties = {[ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret()}
                 };
 
 
