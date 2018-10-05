@@ -57,14 +57,22 @@ namespace ApiGateway.WebApi.Controllers
         }
         
         
-        [HttpPost("/sys/key/regenerate-secret/{publicKey}")]
-        public async Task<KeyModel> ReGenerateSecret(string publicKey)
+        [HttpPost("/sys/key/regenerate-secret1/{publicKey}")]
+        public async Task<KeyModel> ReGenerateSecret1(string publicKey)
         {
             var keyModel = await _manager.ReGenerateSecret1(ApiKey, publicKey);
 
             return keyModel;
         }
         
+        
+        [HttpPost("/sys/key/regenerate-secret2/{publicKey}")]
+        public async Task<KeyModel> ReGenerateSecret2(string publicKey)
+        {
+            var keyModel = await _manager.ReGenerateSecret2(ApiKey, publicKey);
+
+            return keyModel;
+        }
         
         // PUT: api/Key/5
         [HttpPut("{id}")]
