@@ -104,7 +104,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
         {
             var existing = await _context.Services.SingleOrDefaultAsync(x => x.Name == serviceName);
 
-            return existing == null;
+            return existing != null;
         }
     }
 }

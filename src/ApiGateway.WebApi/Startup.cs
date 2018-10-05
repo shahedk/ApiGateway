@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 
 namespace ApiGateway.WebApi
@@ -51,8 +52,6 @@ namespace ApiGateway.WebApi
                 {
                     o.UseSqlite(new SqliteConnection(Configuration.GetConnectionString("DefaultConnection")));    
                 }
-                
-                
             });
 
             services.AddMvc();
@@ -97,6 +96,18 @@ namespace ApiGateway.WebApi
                     opts.SupportedUICultures = supportedCultures;
                 });
             
+            // Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.OperationFilter<SwaggerSecurityRequirementsDocumentFilter>();
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Api Gateway"
+                });
+                
+                
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -113,6 +124,13 @@ namespace ApiGateway.WebApi
             var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(options.Value);
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint(Configuration["AppSettings:VirtualDirectory"] +"/swagger/v1/swagger.json", "My API V1");
+                
+            });
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute("SystemApi", "sys/{controller}/{action}");

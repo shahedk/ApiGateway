@@ -138,7 +138,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
                 x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
                 x.Name == apiName);
 
-            return api == null;
+            return api != null;
         }
 
         public async Task<bool> ExistsByUrl(string ownerKeyId, string serviceId, string httpMethod, string url)
@@ -152,7 +152,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
                 x.OwnerKeyId == ownerKey && x.ServiceId == serviceId2 && x.HttpMethod == httpMethod &&
                 x.Url == apiUrl);
 
-            return api == null;
+            return api != null;
         }
     }
 }
