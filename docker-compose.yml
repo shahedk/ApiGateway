@@ -1,0 +1,8 @@
+version: "2"
+services:
+
+apigateway:
+    image: shahedk/apigateway:latest
+    restart: always
+    volumes:
+      - "/home/shahedk/docker/data/apigateway/appsettings.json:/app/appsettings.json"
