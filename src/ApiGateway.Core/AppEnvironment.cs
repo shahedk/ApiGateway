@@ -114,7 +114,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.ReGenerateSecret",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "key/regenerate-secret",
+                Url = AppConstants.LocalApiUrlPrefix + "key/regenerate-secret1",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiReGenerateSecret.Id);

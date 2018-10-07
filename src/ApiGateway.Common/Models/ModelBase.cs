@@ -9,7 +9,7 @@ namespace ApiGateway.Common.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        [Required] [StringLength(32)] public string OwnerKeyId { get; set; } = "";
+        [StringLength(32)] public string OwnerKeyId { get; set; } = "";
 
 
         public DateTime CreateDate { get; set; } = DateTime.Now;
