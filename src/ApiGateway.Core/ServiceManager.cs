@@ -89,6 +89,9 @@ namespace ApiGateway.Core
         public async Task<ServiceModel> GetByName(string ownerPublicKey, string serviceName)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+
+            if (ownerKey == null) return null;
+            
             return await _serviceData.GetByName(ownerKey.Id, serviceName);
         }
 

@@ -74,7 +74,7 @@ namespace ApiGateway.Core
 
             if (service == null)
             {
-                result.Message = _localizer["Service not found"];
+                result.Message = _localizer["Service not found. Service name or api key is invalid."];
                 result.IsValid = false;
                 return result;
             }

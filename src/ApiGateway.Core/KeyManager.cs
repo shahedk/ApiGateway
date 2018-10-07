@@ -120,7 +120,7 @@ namespace ApiGateway.Core
 
             if (existingKeyCount > 0)
             {
-                var msg = _localizer["Master key can only be created for empty database"];
+                var msg = _localizer["Root key can only be created for empty database"];
                 throw new InvalidOperationException(msg);
             }
 
