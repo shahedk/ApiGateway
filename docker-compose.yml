@@ -5,3 +5,8 @@ services:
         restart: always
         volumes:
           - "/home/shahedk/docker/data/apigateway/appsettings.json:/app/appsettings.json"
+
+networks:
+  default:
+    external:
+      name: elcnet
