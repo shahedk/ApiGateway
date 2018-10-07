@@ -110,15 +110,26 @@ namespace ApiGateway.Core
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiPost.Id);
 
             
-            var keyApiReGenerateSecret = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            var keyApiReGenerateSecret1 = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.ReGenerateSecret",
+                Name = "Key.ReGenerateSecret1",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.LocalApiUrlPrefix + "key/regenerate-secret1",
                 ServiceId = service.Id
             });
-            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiReGenerateSecret.Id);
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiReGenerateSecret1.Id);
 
+            
+            var keyApiReGenerateSecret2 = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Key.ReGenerateSecret2",
+                HttpMethod = ApiHttpMethods.Post,
+                Url = AppConstants.LocalApiUrlPrefix + "key/regenerate-secret2",
+                ServiceId = service.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiReGenerateSecret2.Id);
+
+            
             var keyApiDel = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Key.Delete",
