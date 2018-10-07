@@ -29,24 +29,6 @@ namespace ApiGateway.WebApi
                 Required = true,
                 Default = ""
             });
-            
-            operation.Parameters.Add(new NonBodyParameter
-            {
-                Name = "servicekey",
-                In = "header",
-                Type = "string",
-                Required = true,
-                Default = ""
-            });
-            
-            operation.Parameters.Add(new NonBodyParameter
-            {
-                Name = "servicesecret",
-                In = "header",
-                Type = "string",
-                Required = true,
-                Default = ""
-            });
         }
     }
 }
