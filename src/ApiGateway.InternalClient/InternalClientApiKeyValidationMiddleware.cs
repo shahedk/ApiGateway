@@ -5,6 +5,7 @@ using ApiGateway.Common;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ApiGateway.InternalClient
@@ -12,15 +13,16 @@ namespace ApiGateway.InternalClient
     public class InternalClientApiKeyValidationMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<InternalClientApiKeyValidationMiddleware> _logger;
 
-        public InternalClientApiKeyValidationMiddleware(RequestDelegate next)
+        public InternalClientApiKeyValidationMiddleware(RequestDelegate next, ILogger<InternalClientApiKeyValidationMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context, IClientLoginService clientLoginService)
         {
-
             var path = context.Request.Path.Value.ToLower();
             if (context.Request.Path.HasValue)
             {
@@ -63,12 +65,16 @@ namespace ApiGateway.InternalClient
 
                 if (result.IsValid)
                 {
+                    _logger.LogInformation(LogEvents.ApiKeyValidationPassed, path, serviceKey, apiKey, serviceName, apiUrl);
+                    
                     context.Items.Add(ApiHttpHeaders.ApiKey, apiKey);
                     await _next.Invoke(context);
                 }
                 else
                 {
                     // Validation failed
+                    _logger.LogInformation(LogEvents.ApiKeyValidationFailed, path, serviceKey, apiKey, serviceName, apiUrl);
+                    
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     await context.Response.WriteAsync(result.ToJson());
                 }
