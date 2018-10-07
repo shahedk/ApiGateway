@@ -15,6 +15,7 @@ namespace ApiGateway.Data.EFCore
         
         public DbSet<AccessRule> AccessRules { get; set; }
         public DbSet<AccessRuleForRole> AccessRuleForRoles { get; set; }
+        public DbSet<AccessLog> AccessLogs { get; set; }
         
         public ApiGatewayContext(DbContextOptions<ApiGatewayContext> options) : base(options)
         {
@@ -68,6 +69,11 @@ namespace ApiGateway.Data.EFCore
             modelBuilder.Entity<AccessRuleForRole>().HasIndex(x => new { x.RoleId, x.AcccessRuleId }).IsUnique();
             modelBuilder.Entity<AccessRuleForRole>().HasOne(x => x.Role).WithMany(x => x.AccessRuleForRoles)
                 .HasForeignKey(x => x.RoleId).HasConstraintName("ForeignKey_Role_AccessRuleForRole").OnDelete(DeleteBehavior.Restrict);
+            
+            //AccessLogs
+            modelBuilder.Entity<AccessLog>().HasIndex(x => new { x.OwnerKeyId, x.ServiceId, x.LogTime}).IsUnique(false);
+            modelBuilder.Entity<AccessLog>().HasIndex(x => new { x.OwnerKeyId, x.ServiceId, x.ApiId}).IsUnique(false);
+            modelBuilder.Entity<AccessLog>().HasIndex(x => new { x.OwnerKeyId, x.ServiceId, x.ApiId, x.LogTime}).IsUnique(false);
         }
     }
 }

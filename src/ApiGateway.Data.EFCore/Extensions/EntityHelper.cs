@@ -247,5 +247,51 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
         }
+
+        public static AccessLog ToEntity(this AccessLogModel model)
+        {
+            if (model == null) return null;
+
+            return new AccessLog
+            {
+                ServiceId = string.IsNullOrEmpty(model.ServiceId) ? 0 : int.Parse(model.ServiceId),
+                Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
+                IsValid = model.IsValid,
+                KeyId =  model.KeyId,
+                ApiId = string.IsNullOrEmpty(model.ApiId) ? 0 : int.Parse(model.ApiId),
+                LogTime = model.LogTime,
+                Url = model.Url,
+                CreateDate = model.CreateDate,
+                ModifiedDate = model.ModifiedDate,
+                HttpMethod = model.HttpMethod,
+                OwnerKeyId = string.IsNullOrEmpty(model.OwnerKeyId) ? 0 : int.Parse(model.OwnerKeyId),
+                PublicKey = model.PublicKey,
+                RequestInfo =  model.RequestInfo,
+                ValidationResult = model.ValidationResult
+            };
+        }
+        
+        public static AccessLogModel ToModel(this AccessLog entity)
+        {
+            if (entity == null) return null;
+
+            return new AccessLogModel
+            {
+                ServiceId = entity.ServiceId.ToString(),
+                Id = entity.Id.ToString(),
+                IsValid = entity.IsValid,
+                KeyId =  entity.KeyId,
+                ApiId = entity.ApiId.ToString(),
+                LogTime = entity.LogTime,
+                Url = entity.Url,
+                CreateDate = entity.CreateDate,
+                ModifiedDate = entity.ModifiedDate,
+                HttpMethod = entity.HttpMethod,
+                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                PublicKey = entity.PublicKey,
+                RequestInfo =  entity.RequestInfo,
+                ValidationResult = entity.ValidationResult
+            };
+        }
     }
 }
