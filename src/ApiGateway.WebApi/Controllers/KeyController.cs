@@ -49,8 +49,10 @@ namespace ApiGateway.WebApi.Controllers
         
         // POST: api/Key
         [HttpPost]
-        public async Task<KeyModel> Post([FromBody]KeyModel model)
+        public async Task<KeyModel> Post([FromBody]KeyModelLite liteModel)
         {
+            var model = new KeyModel{ Type =  liteModel.Type, PublicKey =  liteModel.PublicKey};
+            
             var keyModel = await _manager.Create(ApiKey, model);
 
             return keyModel;
@@ -70,6 +72,14 @@ namespace ApiGateway.WebApi.Controllers
         public async Task<KeyModel> ReGenerateSecret2(string publicKey)
         {
             var keyModel = await _manager.ReGenerateSecret2(ApiKey, publicKey);
+
+            return keyModel;
+        }
+        
+        [HttpPost("/sys/key/regenerate-secret3/{publicKey}")]
+        public async Task<KeyModel> ReGenerateSecret3(string publicKey)
+        {
+            var keyModel = await _manager.ReGenerateSecret3(ApiKey, publicKey);
 
             return keyModel;
         }

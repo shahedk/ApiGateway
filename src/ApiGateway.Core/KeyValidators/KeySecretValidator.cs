@@ -33,7 +33,7 @@ namespace ApiGateway.Core.KeyValidators
             {
                 var key = await _keyManager.GetByPublicKey(pubKey);
 
-                if (key == null || key.IsDisabled || !(key.GetSecret1() == secret || key.GetSecret2() == secret))
+                if (key == null || key.IsDisabled || !(key.GetSecret1() == secret|| key.GetSecret3() == secret || key.GetSecret3() == secret))
                 {
                     result.IsValid = false;
                     result.Message = _localizer["Key and/or secret is not valid"];
@@ -43,6 +43,7 @@ namespace ApiGateway.Core.KeyValidators
                     var log = _localizer["Login successful for: "] + pubKey;
                     _logger.LogInformation(LogEvents.LoginSuccess, log);
 
+                    result.KeyId = key.Id;
                     result.IsValid = true;
                 }
             }

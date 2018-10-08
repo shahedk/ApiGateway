@@ -104,6 +104,13 @@ namespace ApiGateway.Core
                 }
             }
 
+            if (result.IsValid == false)
+            {
+                result.Message = _localizer["Access denied."];
+            }
+
+            result.KeyId = clientKeyResult.KeyId;
+            
             return result;
 
         }

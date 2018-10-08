@@ -16,9 +16,8 @@ namespace ApiGateway.WebApi.Test
             var rootKey = await GetRootKey();
             var keyController = await GetKeyController();
 
-            var key = new KeyModel()
+            var key = new KeyModelLite
             {
-                OwnerKeyId = rootKey.Id,
                 PublicKey = ModelHelper.GeneratePublicKey(),
                 Type = ApiKeyTypes.ClientSecret
             };

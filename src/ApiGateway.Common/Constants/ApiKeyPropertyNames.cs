@@ -8,5 +8,6 @@ namespace ApiGateway.Common.Constants
     {
         public const string ClientSecret1 = "ClientSecret1";
         public const string ClientSecret2 = "ClientSecret2";
+        public const string ClientSecret3 = "ClientSecret3";
     }
 }

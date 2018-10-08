@@ -32,5 +32,17 @@ namespace ApiGateway.Common.Extensions
                 return string.Empty;
             }
         }
+        
+        public static string GetSecret3(this KeyModel key)
+        {
+            if(key.Properties.Keys.Contains(ApiKeyPropertyNames.ClientSecret3))
+            {
+                return key.Properties[ApiKeyPropertyNames.ClientSecret3];
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
     }
 }
