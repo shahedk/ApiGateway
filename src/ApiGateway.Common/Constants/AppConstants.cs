@@ -2,7 +2,7 @@ namespace ApiGateway.Common.Constants
 {
     public class AppConstants
     {
-        public const string LocalApiServiceName = "SYSADMIN";
-        public const string LocalApiUrlPrefix = "/sys/";
+        public const string SysApiName = "SYSADMIN";
+        public const string SysApiUrlPrefix = "/sys/";
     }
 }

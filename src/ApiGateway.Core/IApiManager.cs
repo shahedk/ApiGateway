@@ -5,6 +5,6 @@ namespace ApiGateway.Core
 {
     public interface IApiManager : IManager<ApiModel>
     {
-        Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl);        
+        Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiName);        
     }
 }

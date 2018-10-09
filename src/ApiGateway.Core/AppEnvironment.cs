@@ -69,7 +69,7 @@ namespace ApiGateway.Core
             // Create ApiGateway service definitions
             var service = await _serviceManager.Create(rootKey.PublicKey, new ServiceModel
             {
-                Name = AppConstants.LocalApiServiceName
+                Name = AppConstants.SysApiName
             });
 
             // Create Role definitions
@@ -86,7 +86,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.Get",
                 HttpMethod = ApiHttpMethods.Get,
-                Url = AppConstants.LocalApiUrlPrefix + "key/",
+                Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiGet.Id);
@@ -95,7 +95,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.Put",
                 HttpMethod = ApiHttpMethods.Put,
-                Url = AppConstants.LocalApiUrlPrefix + "key/",
+                Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiPut.Id);
@@ -104,7 +104,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.Post",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "key/",
+                Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiPost.Id);
@@ -114,7 +114,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.ReGenerateSecret1",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "key/regenerate-secret1",
+                Url = AppConstants.SysApiUrlPrefix + "key/regenerate-secret1",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiReGenerateSecret1.Id);
@@ -124,7 +124,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.ReGenerateSecret2",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "key/regenerate-secret2",
+                Url = AppConstants.SysApiUrlPrefix + "key/regenerate-secret2",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiReGenerateSecret2.Id);
@@ -134,7 +134,7 @@ namespace ApiGateway.Core
             {
                 Name = "Key.Delete",
                 HttpMethod = ApiHttpMethods.Delete,
-                Url = AppConstants.LocalApiUrlPrefix + "key/",
+                Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiDel.Id);
@@ -147,7 +147,7 @@ namespace ApiGateway.Core
             {
                 Name = "Service.Get",
                 HttpMethod = ApiHttpMethods.Get,
-                Url = AppConstants.LocalApiUrlPrefix + "service/",
+                Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, serviceApiGet.Id);
@@ -156,7 +156,7 @@ namespace ApiGateway.Core
             {
                 Name = "Service.Put",
                 HttpMethod = ApiHttpMethods.Put,
-                Url = AppConstants.LocalApiUrlPrefix + "service/",
+                Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, serviceApiPut.Id);
@@ -165,7 +165,7 @@ namespace ApiGateway.Core
             {
                 Name = "Service.Post",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "service/",
+                Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, serviceApiPost.Id);
@@ -174,7 +174,7 @@ namespace ApiGateway.Core
             {
                 Name = "Service.Delete",
                 HttpMethod = ApiHttpMethods.Delete,
-                Url = AppConstants.LocalApiUrlPrefix + "service/",
+                Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, serviceApiDel.Id);
@@ -187,7 +187,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Get",
                 HttpMethod = ApiHttpMethods.Get,
-                Url = AppConstants.LocalApiUrlPrefix + "role/",
+                Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiGet.Id);
@@ -196,7 +196,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Post",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "role/",
+                Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiPost.Id);
@@ -205,7 +205,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Put",
                 HttpMethod = ApiHttpMethods.Put,
-                Url = AppConstants.LocalApiUrlPrefix + "role/",
+                Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiPut.Id);
@@ -214,7 +214,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Delete",
                 HttpMethod = ApiHttpMethods.Delete,
-                Url = AppConstants.LocalApiUrlPrefix + "role/",
+                Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiDel.Id);
@@ -223,7 +223,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Post.AddKeyInRole",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "role/AddKeyInRole/",
+                Url = AppConstants.SysApiUrlPrefix + "role/AddKeyInRole/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiPost_AddKeyInRole.Id);
@@ -232,7 +232,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Post.RemoveKeyInRole",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "role/RemoveKeyInRole/",
+                Url = AppConstants.SysApiUrlPrefix + "role/RemoveKeyInRole/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiPost_RemoveKeyInRole.Id);
@@ -241,7 +241,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Post.AddApiInRole",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "role/AddApiInRole/",
+                Url = AppConstants.SysApiUrlPrefix + "role/AddApiInRole/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiPost_AddApiInRole.Id);
@@ -250,7 +250,7 @@ namespace ApiGateway.Core
             {
                 Name = "Role.Post.RemoveApiInRole",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "role/RemoveApiInRole/",
+                Url = AppConstants.SysApiUrlPrefix + "role/RemoveApiInRole/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiPost_RemoveApiInRole.Id);
@@ -263,7 +263,7 @@ namespace ApiGateway.Core
             {
                 Name = "Api.Get",
                 HttpMethod = ApiHttpMethods.Get,
-                Url = AppConstants.LocalApiUrlPrefix + "api/",
+                Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiGet.Id);
@@ -272,7 +272,7 @@ namespace ApiGateway.Core
             {
                 Name = "Api.Put",
                 HttpMethod = ApiHttpMethods.Put,
-                Url = AppConstants.LocalApiUrlPrefix + "api/",
+                Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiPut.Id);
@@ -281,7 +281,7 @@ namespace ApiGateway.Core
             {
                 Name = "Api.Post",
                 HttpMethod = ApiHttpMethods.Post,
-                Url = AppConstants.LocalApiUrlPrefix + "api/",
+                Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiPost.Id);
@@ -290,7 +290,7 @@ namespace ApiGateway.Core
             {
                 Name = "Api.Delete",
                 HttpMethod = ApiHttpMethods.Delete,
-                Url = AppConstants.LocalApiUrlPrefix + "api/",
+                Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiDel.Id);

@@ -34,11 +34,11 @@ namespace ApiGateway.Core
         }
 
         public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod,
-            string serviceName, string apiUrl)
+            string serviceName, string apiName)
         {
 
             // For non-local api (eg. "/sys/...") service key is required 
-            if (!apiUrl.StartsWith(AppConstants.LocalApiUrlPrefix))
+            if (!apiName.StartsWith(AppConstants.SysApiUrlPrefix))
             {
                 var serviceKeyResult = await IsKeyValid(clientKey);
                 if (!serviceKeyResult.IsValid)
@@ -70,7 +70,7 @@ namespace ApiGateway.Core
             
             var result = new KeyValidationResult();
 
-            var service = await _serviceManager.GetByName(serviceKey.PublicKey, serviceName);
+            var service = await _serviceManager.GetByName(clientKey.PublicKey, serviceName);
 
             if (service == null)
             {
@@ -79,12 +79,12 @@ namespace ApiGateway.Core
                 return result;
             }
             
-            var api = await _apiManager.Get(serviceKey.PublicKey, service.Id, httpMethod, apiUrl);
+            var api = await _apiManager.Get(clientKey.PublicKey, service.Id, httpMethod, apiName);
 
-            if (api == null && !string.IsNullOrEmpty(apiUrl))
+            if (api == null && !string.IsNullOrEmpty(apiName))
             {
-                var url = apiUrl.Substring(0, apiUrl.LastIndexOf("/"));
-                api = await _apiManager.Get(serviceKey.PublicKey, service.Id, httpMethod, url);
+                var url = apiName.Substring(0, apiName.LastIndexOf("/"));
+                api = await _apiManager.Get(clientKey.PublicKey, service.Id, httpMethod, url);
             }
             
             if (api == null)
@@ -109,6 +109,7 @@ namespace ApiGateway.Core
                 result.Message = _localizer["Access denied."];
             }
 
+            result.ApiId = api.Id;
             result.KeyId = clientKeyResult.KeyId;
             
             return result;

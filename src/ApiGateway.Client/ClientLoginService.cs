@@ -22,7 +22,7 @@ namespace ApiGateway.Client
 
         public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret,
             string serviceApiKey, string serviceApiSecret,
-            string serviceName, string apiUrl, string httpAction)
+            string serviceName, string apiName, string httpAction)
         {
             var validationResult = new KeyValidationResult();
 
@@ -42,7 +42,7 @@ namespace ApiGateway.Client
                     url += "/";
                 }
 
-                url += $"{serviceName}?apiurl={apiUrl}&httpMethod={httpAction}";
+                url += $"{serviceName}?apiurl={apiName}&httpMethod={httpAction}";
 
                 var responseMessage =
                     await client.GetAsync(url);

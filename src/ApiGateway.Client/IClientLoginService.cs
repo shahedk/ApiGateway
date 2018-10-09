@@ -7,6 +7,6 @@ namespace ApiGateway.Client
     {
         Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret, 
             string serviceApiKey, string serviceApiSecret, 
-            string serviceName, string apiUrl, string httpAction);
+            string serviceName, string apiName, string httpAction);
     }
 }

@@ -13,12 +13,10 @@ namespace ApiGateway.WebApi.Controllers
     [Route("api/{*url}")]
     public class AppServiceController : ApiControllerBase
     {
-        private readonly HttpClient _httpClient;
         private readonly IApiManager _apiManager;
 
-        public AppServiceController(IApiRequestHelper apiRequestHelper, HttpClient httpClient, IApiManager apiManager) : base(apiRequestHelper)
+        public AppServiceController(IApiRequestHelper apiRequestHelper, IApiManager apiManager) : base(apiRequestHelper)
         {
-            _httpClient = httpClient;
             _apiManager = apiManager;
         }
 
@@ -30,10 +28,10 @@ namespace ApiGateway.WebApi.Controllers
 
             var api = await _apiManager.Get(apiKey, apiId);
 
-            _httpClient.BaseAddress = new Uri(api.Url);
-            _httpClient.DefaultRequestHeaders.Add("clientId", clientId);
+            var client = new HttpClient {BaseAddress = new Uri(api.Url)};
+            client.DefaultRequestHeaders.Add("clientId", clientId);
 
-            return _httpClient;
+            return client;
         }
         
         [HttpGet]

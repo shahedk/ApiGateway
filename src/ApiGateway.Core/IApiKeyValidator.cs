@@ -6,6 +6,6 @@ namespace ApiGateway.Core
     public interface IApiKeyValidator
     {
         Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod, string serviceName,
-            string apiUrl);
+            string apiName);
     }
 }

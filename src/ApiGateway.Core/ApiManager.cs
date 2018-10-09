@@ -103,10 +103,10 @@ namespace ApiGateway.Core
             return await _apiData.GetAll(ownerKey.Id);
         }
 
-        public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
+        public async Task<ApiModel> Get(string ownerPublicKey, string serviceId, string httpMethod, string apiName)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            var api = await _apiData.GetByUrl(ownerKey.Id, serviceId, httpMethod, apiUrl);
+            var api = await _apiData.GetByName(ownerKey.Id, serviceId, httpMethod, apiName);
 
             return api;
         }
