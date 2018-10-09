@@ -4,13 +4,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.Common;
 using ApiGateway.Common.Constants;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace ApiGateway.Client
 {
-    public class ClientLoginService:IClientLoginService
+    public class ClientLoginService : IClientLoginService
     {
         private readonly ApiGatewaySettings _settings;
 
@@ -19,7 +20,8 @@ namespace ApiGateway.Client
             _settings = settings.Value;
         }
 
-        public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret, string serviceApiKey, string serviceApiSecret,
+        public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret,
+            string serviceApiKey, string serviceApiSecret,
             string serviceName, string apiUrl, string httpAction)
         {
             var validationResult = new KeyValidationResult();
@@ -32,7 +34,7 @@ namespace ApiGateway.Client
                 client.DefaultRequestHeaders.Add(ApiHttpHeaders.ApiSecret, apiSecret);
                 client.DefaultRequestHeaders.Add(ApiHttpHeaders.ServiceApiKey, serviceApiKey);
                 client.DefaultRequestHeaders.Add(ApiHttpHeaders.ServiceApiSecret, serviceApiSecret);
-                
+
                 var url = _settings.AuthApiEndPoint;
 
                 if (!url.EndsWith("/"))
@@ -41,7 +43,7 @@ namespace ApiGateway.Client
                 }
 
                 url += $"{serviceName}?apiurl={apiUrl}&httpMethod={httpAction}";
-                
+
                 var responseMessage =
                     await client.GetAsync(url);
 
@@ -63,7 +65,5 @@ namespace ApiGateway.Client
 
             return validationResult;
         }
-
-
     }
 }

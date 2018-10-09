@@ -7,5 +7,9 @@
         public const string ServiceApiKey = "servicekey";
         public const string ServiceApiSecret = "servicesecret";
         public const string KeyType = "keytype";
+        
+        // For internal services
+        public const string KeyId = "keyId";
+        public const string ApiId = "apiid";
     }
 }

@@ -1,6 +1,9 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.Client;
+using ApiGateway.Common.Constants;
+using ApiGateway.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,19 +14,35 @@ namespace ApiGateway.WebApi.Controllers
     public class AppServiceController : ApiControllerBase
     {
         private readonly HttpClient _httpClient;
+        private readonly IApiManager _apiManager;
 
-        public AppServiceController(IApiRequestHelper apiRequestHelper, HttpClient httpClient) : base(apiRequestHelper)
+        public AppServiceController(IApiRequestHelper apiRequestHelper, HttpClient httpClient, IApiManager apiManager) : base(apiRequestHelper)
         {
             _httpClient = httpClient;
+            _apiManager = apiManager;
         }
-       
+
+        private async Task<HttpClient> GetHttpClient()
+        {
+            var apiKey = HttpContext.Items[ApiHttpHeaders.ApiKey].ToString();
+            var apiId = HttpContext.Items[ApiHttpHeaders.ApiId].ToString();
+            var clientId = HttpContext.Items[ApiHttpHeaders.KeyId].ToString();
+
+            var api = await _apiManager.Get(apiKey, apiId);
+
+            _httpClient.BaseAddress = new Uri(api.Url);
+            _httpClient.DefaultRequestHeaders.Add("clientId", clientId);
+
+            return _httpClient;
+        }
+        
         [HttpGet]
         public async Task Get()
         {
-            var path = Request.Path;
+            var client = await GetHttpClient();
             
             var queryString = Request.QueryString;
-            var response = await _httpClient.GetAsync(queryString.Value);
+            var response = await client.GetAsync(queryString.Value);
             var content = await response.Content.ReadAsStringAsync();
 
             Response.StatusCode = (int)response.StatusCode;
@@ -37,9 +56,11 @@ namespace ApiGateway.WebApi.Controllers
         [HttpPut]
         public async Task Put()
         {
+            var client = await GetHttpClient();
+            
             using (var streamContent = new StreamContent(Request.Body))
             {
-                var response = await _httpClient.PutAsync(string.Empty, streamContent);
+                var response = await client.PutAsync(string.Empty, streamContent);
                 var content = await response.Content.ReadAsStringAsync();
 
                 Response.StatusCode = (int)response.StatusCode;
@@ -54,9 +75,11 @@ namespace ApiGateway.WebApi.Controllers
         [HttpPost]
         public async Task Post()
         {
+            var client = await GetHttpClient();
+            
             using (var streamContent = new StreamContent(Request.Body))
             {
-                var response = await _httpClient.PostAsync(string.Empty, streamContent);
+                var response = await client.PostAsync(string.Empty, streamContent);
                 var content = await response.Content.ReadAsStringAsync();
 
                 Response.StatusCode = (int)response.StatusCode;
@@ -71,8 +94,10 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete]
         public  async Task  Delete()
         {
+            var client = await GetHttpClient();
+            
             var queryString = Request.QueryString;
-            var response = await _httpClient.DeleteAsync(queryString.Value);
+            var response = await client.DeleteAsync(queryString.Value);
             var content = await response.Content.ReadAsStringAsync();
 
             Response.StatusCode = (int)response.StatusCode;

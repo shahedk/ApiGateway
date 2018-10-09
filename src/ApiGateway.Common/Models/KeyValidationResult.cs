@@ -1,11 +1,8 @@
 ﻿namespace ApiGateway.Common.Models
 {
-    public class KeyValidationResult
+    public class KeyValidationResult : KeyValidationResultLite
     {
-        public string KeyId = string.Empty;
-        public bool IsValid = false;
-        public string Message = string.Empty;
-
-        public KeyValidationResult InnerValidationResult = null;
+        public string ApiId { get; set; }
+        public string ServiceId { get; set; }
     }
 }

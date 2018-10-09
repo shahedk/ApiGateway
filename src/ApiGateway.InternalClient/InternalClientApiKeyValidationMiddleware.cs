@@ -67,7 +67,11 @@ namespace ApiGateway.InternalClient
                 {
                     _logger.LogInformation(LogEvents.ApiKeyValidationPassed, path, serviceKey, apiKey, serviceName, apiUrl);
                     
+                    // Add IDs into context to forward to actual API for client identification
                     context.Items.Add(ApiHttpHeaders.ApiKey, apiKey);
+                    context.Items.Add(ApiHttpHeaders.KeyId, result.KeyId);
+                    
+                    
                     await _next.Invoke(context);
                 }
                 else

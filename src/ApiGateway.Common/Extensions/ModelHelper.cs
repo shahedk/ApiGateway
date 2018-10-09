@@ -41,6 +41,18 @@ namespace ApiGateway.Common.Extensions
         {
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
+
+        public static KeyValidationResultLite ToLite(this KeyValidationResult val)
+        {
+            var result = new KeyValidationResultLite()
+            {
+                KeyId = val.KeyId,
+                IsValid =     val.IsValid,
+                InnerValidationResult =  val.InnerValidationResult
+            };
+
+            return result;
+        }
         
     }
 }
