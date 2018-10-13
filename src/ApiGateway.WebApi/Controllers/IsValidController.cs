@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Common.Constants;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace ApiGateway.WebApi.Controllers
 
             var result = await _keyValidator.IsValid(clientKey, httpMethod, serviceName, api);
 
-            return Ok(result);
+            return Ok(result.ToLite());
         }
 
     }
