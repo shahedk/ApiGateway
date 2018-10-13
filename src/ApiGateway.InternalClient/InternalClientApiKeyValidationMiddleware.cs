@@ -44,30 +44,18 @@ namespace ApiGateway.InternalClient
             {
                 string apiKey = context.Request.Headers[ApiHttpHeaders.ApiKey];
                 string apiSecret = context.Request.Headers[ApiHttpHeaders.ApiSecret];
-                string serviceKey = context.Request.Headers[ApiHttpHeaders.ServiceApiKey];
-                string serviceSecret = context.Request.Headers[ApiHttpHeaders.ServiceApiSecret];
                 string action = context.Request.Method;
                 
                 string serviceName = GetServiceNameFromPath(path);
                 
                 var apiName = GetApiNameFromPath(path);
                 
-                // TODO: Review: Do we need Service Key/Secret??
-                if (path.StartsWith(AppConstants.SysApiUrlPrefix))
-                {
-                    // Local System API, client api is the owner. 
-                    serviceKey = apiKey;
-                    serviceSecret = apiSecret;
-                    serviceName = AppConstants.SysApiName;
-                }
-
                 
-                
-                var result = await clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceKey, serviceSecret, serviceName, apiName, action);
+                var result = await clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceName, apiName, action);
 
                 if (result.IsValid)
                 {
-                    _logger.LogInformation(LogEvents.ApiKeyValidationPassed, path, serviceKey, apiKey, serviceName, apiName);
+                    _logger.LogInformation(LogEvents.ApiKeyValidationPassed, path, apiKey, serviceName, apiName);
                     
                     // Add IDs into context to forward to actual API for client identification
                     context.Items.Add(ApiHttpHeaders.ApiKey, apiKey);
@@ -79,7 +67,7 @@ namespace ApiGateway.InternalClient
                 else
                 {
                     // Validation failed
-                    _logger.LogInformation(LogEvents.ApiKeyValidationFailed, path, serviceKey, apiKey, serviceName, apiName);
+                    _logger.LogInformation(LogEvents.ApiKeyValidationFailed, path, apiKey, serviceName, apiName);
                     
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     await context.Response.WriteAsync(result.ToJson());

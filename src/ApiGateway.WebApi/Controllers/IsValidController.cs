@@ -19,8 +19,17 @@ namespace ApiGateway.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<KeyValidationResult> Get(string id, string apiUrl, string httpMethod)
+        [ProducesResponseType(200, Type = typeof(KeyValidationResult))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(string id, string api, string httpMethod)
         {
+            if (string.IsNullOrWhiteSpace(id) ||
+                string.IsNullOrWhiteSpace(api) ||
+                string.IsNullOrWhiteSpace(httpMethod))
+            {
+                return BadRequest();
+            }
+            
             var serviceName = id;
          
             var clientKey = new KeyModel
@@ -30,16 +39,9 @@ namespace ApiGateway.WebApi.Controllers
                 Properties = {[ApiKeyPropertyNames.ClientSecret1] = ApiSecret}
             };
 
-            var serviceKey = new KeyModel
-            {
-                Type = ServiceKeyType,
-                PublicKey = ServiceApiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret1] = ServiceApiSecret}
-            };
+            var result = await _keyValidator.IsValid(clientKey, httpMethod, serviceName, api);
 
-            var result = await _keyValidator.IsValid(clientKey, serviceKey, httpMethod, serviceName, apiUrl);
-
-            return result;
+            return Ok(result);
         }
 
     }

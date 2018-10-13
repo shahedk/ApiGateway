@@ -26,7 +26,7 @@ namespace ApiGateway.WebApi.Test
 
             var result = await controller.Get(service.Name, api.Url, ApiHttpMethods.Get);
 
-            Assert.True(result.IsValid);
+            
 
         }
 

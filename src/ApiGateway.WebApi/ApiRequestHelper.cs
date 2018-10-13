@@ -31,16 +31,6 @@ namespace ApiGateway.WebApi
             return GetValue(ApiHttpHeaders.ApiSecret);
         }
         
-        public string GetServiceApiKey()
-        {
-            return GetValue(ApiHttpHeaders.ServiceApiKey);
-        }
-
-        public string GetServiceApiSecret()
-        {
-            return GetValue(ApiHttpHeaders.ServiceApiSecret);
-        }
-
         public string GetApiKeyType()
         {
             var type= GetValue(ApiHttpHeaders.KeyType);

@@ -33,12 +33,12 @@ namespace ApiGateway.Core
             _serviceManager = serviceManager;
         }
 
-        public async Task<KeyValidationResult> IsValid(KeyModel clientKey, KeyModel serviceKey, string httpMethod,
-            string serviceName, string apiName)
+        public async Task<KeyValidationResult> IsValid(KeyModel clientKey, string httpMethod,
+            string serviceName, string apiNameOrUrl)
         {
 
             // For non-local api (eg. "/sys/...") service key is required 
-            if (!apiName.StartsWith(AppConstants.SysApiUrlPrefix))
+            if (!apiNameOrUrl.StartsWith(AppConstants.SysApiUrlPrefix))
             {
                 var serviceKeyResult = await IsKeyValid(clientKey);
                 if (!serviceKeyResult.IsValid)
@@ -79,12 +79,11 @@ namespace ApiGateway.Core
                 return result;
             }
             
-            var api = await _apiManager.Get(clientKey.PublicKey, service.Id, httpMethod, apiName);
+            var api = await _apiManager.GetByApiName(clientKey.PublicKey, service.Id, httpMethod, apiNameOrUrl);
 
-            if (api == null && !string.IsNullOrEmpty(apiName))
+            if (api == null && !string.IsNullOrEmpty(apiNameOrUrl))
             {
-                var url = apiName.Substring(0, apiName.LastIndexOf("/"));
-                api = await _apiManager.Get(clientKey.PublicKey, service.Id, httpMethod, url);
+                api = await _apiManager.GetByApiUrl(clientKey.PublicKey, service.Id, httpMethod, apiNameOrUrl);
             }
             
             if (api == null)

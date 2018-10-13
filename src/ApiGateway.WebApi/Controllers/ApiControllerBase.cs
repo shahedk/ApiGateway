@@ -20,14 +20,8 @@ namespace ApiGateway.WebApi.Controllers
 
         protected string ApiKeyType => _apiRequestHelper.GetApiKeyType();
 
-        protected string ServiceKeyType => _apiRequestHelper.GetServiceApiKeyType();
-
         protected string ApiKey => _apiRequestHelper.GetApiKey();
 
         protected string ApiSecret => _apiRequestHelper.GetApiSecret();
-
-        protected string ServiceApiKey => _apiRequestHelper.GetServiceApiKey();
-
-        protected string ServiceApiSecret => _apiRequestHelper.GetServiceApiSecret();
     }
 }

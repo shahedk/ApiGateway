@@ -21,7 +21,6 @@ namespace ApiGateway.Client
         }
 
         public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret,
-            string serviceApiKey, string serviceApiSecret,
             string serviceName, string apiName, string httpAction)
         {
             var validationResult = new KeyValidationResult();
@@ -32,8 +31,6 @@ namespace ApiGateway.Client
 
                 client.DefaultRequestHeaders.Add(ApiHttpHeaders.ApiKey, apiKey);
                 client.DefaultRequestHeaders.Add(ApiHttpHeaders.ApiSecret, apiSecret);
-                client.DefaultRequestHeaders.Add(ApiHttpHeaders.ServiceApiKey, serviceApiKey);
-                client.DefaultRequestHeaders.Add(ApiHttpHeaders.ServiceApiSecret, serviceApiSecret);
 
                 var url = _settings.AuthApiEndPoint;
 
