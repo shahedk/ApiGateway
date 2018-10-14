@@ -25,10 +25,13 @@ namespace ApiGateway.Data.EFCore.Entity
         [StringLength(500)]
         public string Url { get; set; }
 
+        [StringLength(500)]
+        public string CustomHeaders { get; set; }
+        
         public Service Service { get; set; }
         
         public List<ApiInRole> ApiInRoles { get; set; }
 
-
+        
     }
 }

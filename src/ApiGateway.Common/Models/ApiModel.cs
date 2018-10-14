@@ -46,6 +46,8 @@ namespace ApiGateway.Common.Models
             set => _url = value.ToLower();
         }
 
+        public Dictionary<string, string> CustomHeaders { get; set; } = new Dictionary<string, string>();
+
         public ReadOnlyCollection<RoleModel> Roles;
         private string _name;
         private string _url;

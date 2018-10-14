@@ -30,7 +30,14 @@ namespace ApiGateway.WebApi.Controllers
 
             var client = new HttpClient {BaseAddress = new Uri(api.Url)};
             client.DefaultRequestHeaders.Add("clientId", clientId);
-
+            if (api.CustomHeaders.Keys.Count > 0)
+            {
+                foreach (var key in api.CustomHeaders.Keys)
+                {
+                    client.DefaultRequestHeaders.Add(key, api.CustomHeaders[key]);  
+                }
+            }
+            
             return client;
         }
         

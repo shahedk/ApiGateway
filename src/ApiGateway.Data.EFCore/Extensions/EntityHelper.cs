@@ -82,6 +82,8 @@ namespace ApiGateway.Data.EFCore.Extensions
                 
                 Url = model.Url,
                 OwnerKeyId = int.Parse( model.OwnerKeyId),
+                
+                CustomHeaders = model.CustomHeaders.ToJson(),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -98,6 +100,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Name = entity.Name,
                 ServiceId = entity.ServiceId.ToString(),
                 Url = entity.Url,
+                CustomHeaders = entity.CustomHeaders.ToProperties(),
                 OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
