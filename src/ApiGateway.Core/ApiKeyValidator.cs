@@ -36,23 +36,6 @@ namespace ApiGateway.Core
         public async Task<KeyValidationResult> IsValid(KeyModel clientKey, string httpMethod,
             string serviceName, string apiNameOrUrl)
         {
-
-            // For non-local api (eg. "/sys/...") service key is required 
-            if (!apiNameOrUrl.StartsWith(AppConstants.SysApiUrlPrefix))
-            {
-                var serviceKeyResult = await IsKeyValid(clientKey);
-                if (!serviceKeyResult.IsValid)
-                {
-                    // Service key validation failed
-                    return new KeyValidationResult
-                    {
-                        InnerValidationResult = serviceKeyResult,
-                        IsValid = false,
-                        Message = _localizer["Service key validation failed"]
-                    };
-                }
-            }
-
             // Validate client key
             var clientKeyResult = await IsKeyValid(clientKey);
             if (!clientKeyResult.IsValid)
