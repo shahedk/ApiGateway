@@ -46,10 +46,8 @@ namespace ApiGateway.InternalClient
                 string apiSecret = context.Request.Headers[ApiHttpHeaders.ApiSecret];
                 string action = context.Request.Method;
                 
-                string serviceName = GetServiceNameFromPath(path);
-                
-                var apiName = GetApiNameFromPath(path);
-                
+                var serviceName = context.Request.GetServiceName();
+                var apiName = context.Request.GetApiName();
                 
                 var result = await clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceName, apiName, action);
 
@@ -75,29 +73,6 @@ namespace ApiGateway.InternalClient
             }
         }
 
-        private string GetApiNameFromPath(string path)
-        {
-            var apiNameFromPath = "";
-            var tokens = path.Split("/");
-            if (tokens.Length > 3)
-            {
-                apiNameFromPath = tokens[3];
-            }
-
-            return apiNameFromPath;
-        }
-
-        private string GetServiceNameFromPath(string path)
-        {
-            var serviceName = "";
-            var tokens = path.Split("/");
-            if (tokens.Length > 2)
-            {
-                serviceName = tokens[2];
-            }
-
-            return serviceName;
-        }
     }
 
 }

@@ -10,5 +10,10 @@ namespace ApiGateway.Client
 
         string GetApiKeyType();
 
+        string GetServiceApiKeyType();
+
+        string GetApiName();
+
+        string GetServiceName();
     }
 }

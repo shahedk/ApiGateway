@@ -71,6 +71,11 @@ namespace ApiGateway.Core
             
             if (api == null)
             {
+                api = await _apiManager.GetByApiName(clientKey.PublicKey, service.Id, httpMethod, string.Empty);
+            }
+            
+            if (api == null)
+            {
                 result.Message = _localizer["Api not found"];
                 result.IsValid = false;
                 return result;
@@ -91,6 +96,7 @@ namespace ApiGateway.Core
                 result.Message = _localizer["Access denied."];
             }
 
+            
             result.ApiId = api.Id;
             result.KeyId = clientKeyResult.KeyId;
             

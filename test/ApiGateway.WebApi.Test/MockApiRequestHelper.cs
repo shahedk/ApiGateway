@@ -31,5 +31,19 @@ namespace ApiGateway.WebApi.Test
             return ApiKeyTypes.ClientSecret;
         }
 
+        public string GetServiceApiKeyType()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetApiName()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetServiceName()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
