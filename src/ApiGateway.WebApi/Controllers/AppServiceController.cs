@@ -17,51 +17,61 @@ namespace ApiGateway.WebApi.Controllers
     {
         private readonly IApiRequestHelper _apiRequestHelper;
         private readonly IApiManager _apiManager;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public AppServiceController(IApiRequestHelper apiRequestHelper, IApiManager apiManager) : base(apiRequestHelper)
+        public AppServiceController(IApiRequestHelper apiRequestHelper, IApiManager apiManager, IHttpClientFactory clientFactory) : base(apiRequestHelper)
         {
             _apiRequestHelper = apiRequestHelper;
             _apiManager = apiManager;
+            _clientFactory = clientFactory;
         }
 
-        private async Task<HttpWebClient> GetHttpWebClient()
+
+        private async Task<HttpRequestMessage> GetRequestMessage(HttpMethod method)
         {
-            var result = new HttpWebClient();
-            
             var apiKey = HttpContext.Items[ApiHttpHeaders.ApiKey].ToString();
             var apiId = HttpContext.Items[ApiHttpHeaders.ApiId].ToString();
             var clientId = HttpContext.Items[ApiHttpHeaders.KeyId].ToString();
 
             var api = await _apiManager.Get(apiKey, apiId);
 
-            var client = new HttpClient {BaseAddress = new Uri(api.Url)};
-            client.DefaultRequestHeaders.Add("clientId", clientId);
+            var queryString = GetQueryString(api.Name);
+            var fullUrl = api.Url;
+            if (!string.IsNullOrWhiteSpace(queryString))
+            {
+                if (fullUrl.EndsWith("/") || queryString.StartsWith("/"))
+                {
+                    fullUrl += queryString;
+                }
+                else
+                {
+                    fullUrl += "/" + queryString;
+                }
+            }
+            var request = new HttpRequestMessage(method, fullUrl);
+            
+            request.Headers.Add("clientid", clientId);
+            request.Headers.Add("apiid", apiId);
+            request.Headers.Add("apikey", apiKey);
+            
             if (api.CustomHeaders.Keys.Count > 0)
             {
                 foreach (var key in api.CustomHeaders.Keys)
                 {
-                    if (string.Equals(key, "Content-Type",StringComparison.OrdinalIgnoreCase) )
-                    {
-                        // Skip, it will be added in request message
-                    }
-                    else
-                    {
-                        client.DefaultRequestHeaders.Add(key, api.CustomHeaders[key]);    
-                    }
+                    request.Headers.Add(key, api.CustomHeaders[key]);
                 }
             }
 
-            result.HttpClient = client;
-            result.QueryString = GetQueryString(api.Name);
-            return result;
+            return request;
         }
         
         [HttpGet]
         public async Task Get()
         {
-            var webClient = await GetHttpWebClient();
+            var client = _clientFactory.CreateClient();
+            var request = await GetRequestMessage(HttpMethod.Get);
 
-            var response = await webClient.HttpClient.GetAsync(webClient.QueryString);
+            var response = await client.SendAsync(request);            
             var content = await response.Content.ReadAsStringAsync();
 
             Response.StatusCode = (int)response.StatusCode;
@@ -71,50 +81,50 @@ namespace ApiGateway.WebApi.Controllers
             await Response.WriteAsync(content);
         }
 
-
-
-        [HttpPut]
-        public async Task Put()
-        {
-            var webClient = await GetHttpWebClient();
-            
-            using (var streamContent = new StreamContent(Request.Body))
-            {
-                var response = await webClient.HttpClient.PutAsync(webClient.QueryString, streamContent);
-                var content = await response.Content.ReadAsStringAsync();
-
-                Response.StatusCode = (int)response.StatusCode;
-
-                Response.ContentType = response.Content.Headers.ContentType?.ToString();
-                Response.ContentLength = response.Content.Headers.ContentLength;
-
-                await Response.WriteAsync(content);
-            }
-        }
-
+        
 
         [HttpPost]
         public async Task Post()
         {
-            var webClient = await GetHttpWebClient();
+            var client = _clientFactory.CreateClient();
+            var request = await GetRequestMessage(HttpMethod.Post);
 
             var reqStream = new StreamContent(Request.Body);
             var reqBody = await reqStream.ReadAsStringAsync();
-            var reqContent = new StringContent(reqBody,Encoding.UTF8,"application/json");
+            request.Content = new StringContent(reqBody,Encoding.UTF8,"application/json");
             
-            var request = new HttpRequestMessage(HttpMethod.Post, webClient.QueryString ) {Content = reqContent};
-
-            var response = await webClient.HttpClient.SendAsync(request);
+            
+            var response = await client.SendAsync(request);
 
             Response.StatusCode = (int) response.StatusCode;
-
             Response.ContentType = response.Content.Headers.ContentType?.ToString();
             Response.ContentLength = response.Content.Headers.ContentLength;
 
-            var responseStream = await response.Content.ReadAsStreamAsync();
-            var x = new StreamContent(responseStream);
-            var strRes = await x.ReadAsStringAsync();
-            await Response.WriteAsync(strRes);
+            var content = await response.Content.ReadAsStringAsync();
+            await Response.WriteAsync(content);
+
+        }
+
+        
+        [HttpPut]
+        public async Task Put()
+        {
+            var client = _clientFactory.CreateClient();
+            var request = await GetRequestMessage(HttpMethod.Put);
+
+            var reqStream = new StreamContent(Request.Body);
+            var reqBody = await reqStream.ReadAsStringAsync();
+            request.Content = new StringContent(reqBody,Encoding.UTF8,"application/json");
+            
+            
+            var response = await client.SendAsync(request);
+
+            Response.StatusCode = (int) response.StatusCode;
+            Response.ContentType = response.Content.Headers.ContentType?.ToString();
+            Response.ContentLength = response.Content.Headers.ContentLength;
+
+            var content = await response.Content.ReadAsStringAsync();
+            await Response.WriteAsync(content);
 
         }
 
@@ -122,16 +132,18 @@ namespace ApiGateway.WebApi.Controllers
         [HttpDelete]
         public  async Task  Delete()
         {
-            var webClient = await GetHttpWebClient();
-            
-            var response = await webClient.HttpClient.DeleteAsync(webClient.QueryString);
-            var content = await response.Content.ReadAsStringAsync();
+            var client = _clientFactory.CreateClient();
+            var request = await GetRequestMessage(HttpMethod.Delete);
 
-            Response.StatusCode = (int)response.StatusCode;
-            Response.ContentType = response.Content.Headers.ContentType.ToString();
+            var response = await client.SendAsync(request);
+
+            Response.StatusCode = (int) response.StatusCode;
+            Response.ContentType = response.Content.Headers.ContentType?.ToString();
             Response.ContentLength = response.Content.Headers.ContentLength;
 
+            var content = await response.Content.ReadAsStringAsync();
             await Response.WriteAsync(content);
+
         }
         
         
@@ -147,10 +159,5 @@ namespace ApiGateway.WebApi.Controllers
             return Request.QueryString.HasValue ? Request.QueryString.Value: "";
         }
 
-        private struct HttpWebClient
-        {
-            public HttpClient HttpClient;
-            public string QueryString;
-        }
     }
 }

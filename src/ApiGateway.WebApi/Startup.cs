@@ -56,6 +56,7 @@ namespace ApiGateway.WebApi
                 }
             });
 
+            services.AddHttpClient();
             services.AddMvc();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddSingleton<HttpClient, HttpClient>();
