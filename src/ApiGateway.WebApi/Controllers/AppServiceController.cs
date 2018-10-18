@@ -7,6 +7,7 @@ using ApiGateway.Client;
 using ApiGateway.Common.Constants;
 using ApiGateway.Core;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
@@ -52,7 +53,7 @@ namespace ApiGateway.WebApi.Controllers
             
             request.Headers.Add("clientid", clientId);
             request.Headers.Add("apiid", apiId);
-            
+            request.Headers.Add("endpoint", Request.GetDisplayUrl());
             
             if (api.CustomHeaders.Keys.Count > 0)
             {
