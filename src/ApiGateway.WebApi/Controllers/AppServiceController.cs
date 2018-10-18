@@ -52,7 +52,7 @@ namespace ApiGateway.WebApi.Controllers
             
             request.Headers.Add("clientid", clientId);
             request.Headers.Add("apiid", apiId);
-            request.Headers.Add("apikey", apiKey);
+            
             
             if (api.CustomHeaders.Keys.Count > 0)
             {
