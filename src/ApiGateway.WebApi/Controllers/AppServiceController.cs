@@ -150,14 +150,9 @@ namespace ApiGateway.WebApi.Controllers
         
         private string GetQueryString(string apiName)
         {
-            if (string.IsNullOrWhiteSpace(apiName))
-            {
-                var idVal = _apiRequestHelper.GetApiName();
-
-                return idVal + (Request.QueryString.HasValue ? Request.QueryString.Value: "");
-            }
-
-            return Request.QueryString.HasValue ? Request.QueryString.Value: "";
+            var url = Request.GetDisplayUrl();
+            var lastIndexOf = url.LastIndexOf("/");
+            return url.Substring(lastIndexOf);
         }
 
     }

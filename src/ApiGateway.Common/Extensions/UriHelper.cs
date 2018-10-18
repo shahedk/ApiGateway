@@ -4,7 +4,6 @@ namespace ApiGateway.Common.Extensions
 {
     public static class UriHelper
     {
-        
         public static string GetApiName(this HttpRequest request) 
         {
             var apiNameFromPath = "";

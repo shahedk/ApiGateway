@@ -45,5 +45,10 @@ namespace ApiGateway.WebApi.Test
         {
             throw new System.NotImplementedException();
         }
+
+        public string GetQueryPart()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

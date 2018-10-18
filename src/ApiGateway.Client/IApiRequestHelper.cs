@@ -15,5 +15,6 @@ namespace ApiGateway.Client
         string GetApiName();
 
         string GetServiceName();
+
     }
 }
