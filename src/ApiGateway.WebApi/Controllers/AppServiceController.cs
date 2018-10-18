@@ -53,7 +53,7 @@ namespace ApiGateway.WebApi.Controllers
             
             request.Headers.Add("clientid", clientId);
             request.Headers.Add("apiid", apiId);
-            request.Headers.Add("endpoint", Request.GetDisplayUrl());
+            request.Headers.Add("apigateway-url", Request.GetDisplayUrl());
             
             if (api.CustomHeaders.Keys.Count > 0)
             {
