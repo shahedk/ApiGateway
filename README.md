@@ -1,4 +1,4 @@
 # ApiGateway
 
 
-**Docker image:** docker pull shahedk/apigateway
+**Docker image:** `docker pull shahedk/apigateway`
