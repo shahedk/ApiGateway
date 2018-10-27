@@ -51,25 +51,28 @@ namespace ApiGateway.Core
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
             model.OwnerKeyId = ownerKey.Id;
 
-            // Check if name and/or url is updated
+            // Check if name is being updated then is the new name & http-method is unique
             var existing = await _apiData.Get(ownerKey.Id, model.Id);
-            if (existing.Name != model.Name || existing.Url != model.Url)
+            if (existing.Name != model.Name)
             {
                 // Check if same name or url is already used by other api in the same service
                 if (await _apiData.ExistsByName(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Name))
                 {
                     var msg = _localizer["Another api with the same name and http method already exists"];
-                    throw new DataValidationException(msg, HttpStatusCode.Conflict);       
+                    throw new DataValidationException(msg, HttpStatusCode.Conflict);
                 }
-                
-                
+            }
+
+            // Check if url is being updated then is the new url & http-method is unique
+            if (existing.Url != model.Url)
+            {
                 if (await _apiData.ExistsByUrl(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Url))
                 {
                     var msg = _localizer["Another api with the same url and http method already exists"];
                     throw new DataValidationException(msg, HttpStatusCode.Conflict);
                 }
             }
-            
+
             return await _apiData.Update(model);
         }
 

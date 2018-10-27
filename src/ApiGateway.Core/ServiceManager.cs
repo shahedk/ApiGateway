@@ -49,7 +49,7 @@ namespace ApiGateway.Core
 
             // Check if name changed and whether another service exists with the same name
             var existing = await _serviceData.GetByName(model.Name);
-            if (existing.Id != model.Id)
+            if ( existing != null && existing.Id != model.Id)
             {
                 var msg = _localizer["Another service with the same name already exists"];
                 throw new DataValidationException(msg, HttpStatusCode.Conflict);
