@@ -38,7 +38,7 @@ namespace ApiGateway.Core.Test
             var model = await CreateService();
             var rootKey = await GetRootKey();
 
-            model.Name = "New Service Name " + DateTime.Now.Ticks;
+            model.Name = "New Service Name " + ModelHelper.GenerateNewId();
 
             var service  = await serviceManager.Update(rootKey.PublicKey, model);
 

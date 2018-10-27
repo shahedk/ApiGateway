@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
+using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace ApiGateway.Core.Test
 
             var serviceModel = new ServiceModel
             {
-                Name = "Test service " + DateTime.Now, 
+                Name = "Test service " + Guid.NewGuid(), 
                 OwnerKeyId = rootKey.Id
             };
             
@@ -28,10 +29,10 @@ namespace ApiGateway.Core.Test
             var apiModel = new ApiModel
             {
                 OwnerKeyId = savedService.OwnerKeyId,
-                Name = "Test Api " + DateTime.Now,
+                Name = "Test Api " + ModelHelper.GenerateNewId(),
                 ServiceId = savedService.Id,
                 HttpMethod = ApiHttpMethods.Get,
-                Url = "http://testapi.com/" + DateTime.Now + "/"
+                Url = "http://testapi.com/" + ModelHelper.GenerateNewId() + "/"
             };
             var savedApi = await apiManager.Create(rootKey.PublicKey, apiModel);
 
@@ -49,7 +50,7 @@ namespace ApiGateway.Core.Test
 
             var existingApi = await CreateApi();
 
-            existingApi.Name = "Updated Api Name " + DateTime.Now;
+            existingApi.Name = "Updated Api Name " + ModelHelper.GenerateNewId();
             var updatedApi = await apiData.Update(rootKey.PublicKey, existingApi);
 
             Assert.Equal(existingApi.Name, updatedApi.Name);
