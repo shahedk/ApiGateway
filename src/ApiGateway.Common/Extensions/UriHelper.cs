@@ -9,10 +9,10 @@ namespace ApiGateway.Common.Extensions
             var apiNameFromPath = "";
             var tokens = request.Path.Value.Split("/");
         
-            if (tokens.Length > 3)
+            if (tokens.Length > 2)
             {
                 // http://url/service-name/api-name/id
-                apiNameFromPath = tokens[3];
+                apiNameFromPath = tokens[2];
             }
             
             return apiNameFromPath;
@@ -22,11 +22,11 @@ namespace ApiGateway.Common.Extensions
         {
             var serviceName = "";
             var tokens = request.Path.Value.Split("/");
-            if (tokens.Length > 2)
+            if (tokens.Length > 1)
             {
                 // http://url/service-name/api-name/id
                 
-                serviceName = tokens[2];
+                serviceName = tokens[1];
             }
 
             return serviceName;
