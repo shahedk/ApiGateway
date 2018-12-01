@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
@@ -11,15 +12,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiGateway.Core.Test
 {
-    public class TestBase
+    public class TestBase : IDisposable
     {
         private KeyModel _rootKeyModel;
         
-        private ApiGatewayContext _context;
+        private  ApiGatewayContext _context;
 
-        protected DbContextOptions<ApiGatewayContext> GetSqliteDbOptions()
+        private static int _threadCounter = 1;
+        private string _dbFileName;
+        protected TestBase()
         {
-            var connection = new SqliteConnection("DataSource=ApiGateway.db");
+            _dbFileName = "ApiGateway_" + _threadCounter++ + ".db";
+
+            if (File.Exists(_dbFileName))
+            {
+                File.Delete(_dbFileName);
+            }
+            
+            _context = new ApiGatewayContext(GetSqliteDbOptions());
+            _context.Database.EnsureCreated();
+        }
+
+        public void Dispose()
+        {
+            File.Delete(_dbFileName);
+        }
+
+        private DbContextOptions<ApiGatewayContext> GetSqliteDbOptions()
+        {
+            var conStr = "DataSource=" + _dbFileName;
+            var connection = new SqliteConnection(conStr);
             connection.Open();
             var options = new DbContextOptionsBuilder<ApiGatewayContext>()
                 .UseSqlite(connection) // Set the connection explicitly, so it won't be closed automatically by EF
@@ -29,22 +51,11 @@ namespace ApiGateway.Core.Test
             return options;
         }
 
-        protected async Task<ApiGatewayContext> GetContext()
+        private async Task<ApiGatewayContext> GetContext()
         {
-            if (_context == null)
-            {
-                // Clean up: Delete any existing database 
-                File.Delete("ApiGateway.db");
-                
-                _context = new ApiGatewayContext(GetSqliteDbOptions());
-
-                // Create new database
-                await _context.Database.EnsureCreatedAsync();
-            }
-            
             return _context;
         }
-        
+
         protected  async Task <IKeyData> GetKeyData()
         {
             var context = await GetContext();
