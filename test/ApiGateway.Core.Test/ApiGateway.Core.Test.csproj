@@ -23,7 +23,6 @@
     <ProjectReference Include="..\..\src\ApiGateway.Core\ApiGateway.Core.csproj" />
     <ProjectReference Include="..\..\src\ApiGateway.Data.EFCore\ApiGateway.Data.EFCore.csproj" />
     <ProjectReference Include="..\..\src\ApiGateway.Data\ApiGateway.Data.csproj" />
-    <ProjectReference Include="..\ApiGateway.Data.EFCore.Test\ApiGateway.Data.EFCore.Test.csproj" />
   </ItemGroup>
 
 </Project>
