@@ -20,6 +20,8 @@ namespace ApiGateway.Core.Test
             AddKey(mock, "There are {0} active service(s). System can not be re-initialized.");
             AddKey(mock, "No service found. Please configure application environment.");
             AddKey(mock, "Total {0} services registered.");
+            AddKey(mock,
+                "System initialized. Please save the key in secured place. ApiKey: {0} | ApiSecret1: {1} |  ApiSecret2: {2}");
 
             var env = new AppEnvironment(keyManager, serviceManager, roleManager, apiManager, mock.Object);
 
@@ -28,6 +30,9 @@ namespace ApiGateway.Core.Test
             if (!state.IsConfigured)
             {
                 await env.Initialize();
+                
+                // Check current state after initialization
+                state = await env.GetApplicationState();
             }
 
             Assert.True(state.IsConfigured);
