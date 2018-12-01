@@ -15,8 +15,8 @@ namespace ApiGateway.Core.Test
         {
             var rootKey = await GetRootKey();
 
-            var serviceManager = await GetServiceManager();
-            var apiManager = await GetApiManager();
+            var serviceManager =  GetServiceManager();
+            var apiManager = GetApiManager();
 
             var serviceModel = new ServiceModel
             {
@@ -46,7 +46,7 @@ namespace ApiGateway.Core.Test
         {
             var rootKey = await GetRootKey();
 
-            var apiData = await GetApiManager();
+            var apiData = GetApiManager();
 
             var existingApi = await CreateApi();
 
@@ -61,7 +61,7 @@ namespace ApiGateway.Core.Test
         {
             var rootKey = await GetRootKey();
 
-            var apiData = await GetApiManager();
+            var apiData = GetApiManager();
 
             var existingApi1 = await CreateApi();
             var existingApi2 = await CreateApi();

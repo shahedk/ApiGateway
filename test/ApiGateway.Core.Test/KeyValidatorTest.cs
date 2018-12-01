@@ -13,8 +13,8 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task ClientSecretKeyTest()
         {
-            var validator = await GetKeySecretValidator();
-            var keyData = await GetKeyData();
+            var validator =  GetKeySecretValidator();
+            var keyData =  GetKeyData();
             var ownerKey = await GetRootKey();
 
             var key = new KeyModel

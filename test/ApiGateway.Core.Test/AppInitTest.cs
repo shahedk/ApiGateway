@@ -11,10 +11,10 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task RunInit()
         {
-            var keyManager = await GetKeyManager();
-            var serviceManager = await GetServiceManager();
-            var roleManager = await GetRoleManager();
-            var apiManager = await GetApiManager();
+            var keyManager =  GetKeyManager();
+            var serviceManager =  GetServiceManager();
+            var roleManager =  GetRoleManager();
+            var apiManager = GetApiManager();
             var mock = new Mock<IStringLocalizer<IAppEnvironment>>();
 
             AddKey(mock, "There are {0} active service(s). System can not be re-initialized.");

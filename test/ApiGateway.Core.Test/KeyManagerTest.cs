@@ -15,7 +15,7 @@ namespace ApiGateway.Core.Test
         public async Task<KeyModel> CreateKey()
         {
             var rootKey = await GetRootKey();
-            var manager = await GetKeyManager();
+            var manager =  GetKeyManager();
 
             var key = new KeyModel
             {
@@ -34,7 +34,7 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task UpdateKey()
         {
-            var manager = await GetKeyManager();
+            var manager =  GetKeyManager();
             var savedKey = await CreateKey();
             var rootKey = await GetRootKey();
 
@@ -50,7 +50,7 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task DeleteKey()
         {
-            var data = await GetKeyManager();
+            var data =  GetKeyManager();
             var rootKey = await GetRootKey();
 
             // Create new key

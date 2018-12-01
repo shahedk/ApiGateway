@@ -13,9 +13,9 @@ namespace ApiGateway.Core.Test
         public async Task AddKeyInRole()
         {
             var rootKey = await GetRootKey();
-            var serviceManager = await GetServiceManager();
-            var keyManager = await GetKeyManager();
-            var roleManager = await GetRoleManager();
+            var serviceManager =  GetServiceManager();
+            var keyManager =  GetKeyManager();
+            var roleManager =  GetRoleManager();
 
             // # 1. Create key
 
@@ -61,9 +61,9 @@ namespace ApiGateway.Core.Test
         public async Task RemoveKeyFromRole()
         {
             var rootKey = await GetRootKey();
-            var serviceManager = await GetServiceManager();
-            var keyManager = await GetKeyManager();
-            var roleManager = await GetRoleManager();
+            var serviceManager =  GetServiceManager();
+            var keyManager =  GetKeyManager();
+            var roleManager =  GetRoleManager();
 
             // # 1. Create key
 
@@ -118,9 +118,9 @@ namespace ApiGateway.Core.Test
         public async Task AddApiInRole()
         {
             var rootKey = await GetRootKey();
-            var serviceData = await GetServiceData();
-            var roleData = await GetRoleData();
-            var apiData = await GetApiData();
+            var serviceData =  GetServiceData();
+            var roleData =  GetRoleData();
+            var apiData =  GetApiData();
 
             // # 1. Create service
             var serviceModel = new ServiceModel
@@ -163,9 +163,9 @@ namespace ApiGateway.Core.Test
         public async Task RemoveApiFromRole()
         {
             var rootKey = await GetRootKey();
-            var serviceData = await GetServiceData();
-            var roleData = await GetRoleData();
-            var apiData = await GetApiData();
+            var serviceData =  GetServiceData();
+            var roleData =  GetRoleData();
+            var apiData =  GetApiData();
 
             // # 1. Create service
             var serviceModel = new ServiceModel

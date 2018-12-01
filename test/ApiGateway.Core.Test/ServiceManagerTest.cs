@@ -12,7 +12,7 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task<ServiceModel> CreateService()
         {
-            var serviceManager = await GetServiceManager();
+            var serviceManager = GetServiceManager();
             var rootKey = await GetRootKey();
 
             // Insert new Service
@@ -34,7 +34,7 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task UpdateService()
         {
-            var serviceManager = await GetServiceManager();
+            var serviceManager =  GetServiceManager();
             var model = await CreateService();
             var rootKey = await GetRootKey();
 
@@ -48,7 +48,7 @@ namespace ApiGateway.Core.Test
         [Fact]
         public async Task DeleteService()
         {
-            var serviceData = await GetServiceManager();
+            var serviceData = GetServiceManager();
             var model = await CreateService();
             var rootKey = await GetRootKey();
 

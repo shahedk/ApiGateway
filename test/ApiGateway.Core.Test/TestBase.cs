@@ -51,40 +51,31 @@ namespace ApiGateway.Core.Test
             return options;
         }
 
-        private async Task<ApiGatewayContext> GetContext()
+        protected  IKeyData GetKeyData()
         {
-            return _context;
+            return new KeyData(_context);
         }
 
-        protected  async Task <IKeyData> GetKeyData()
+        protected IRoleData GetRoleData()
         {
-            var context = await GetContext();
-            return new KeyData(context);
-        }
-
-        protected  async Task <IRoleData> GetRoleData()
-        {
-            var context = await GetContext();
-            return new RoleData(context);
+            return new RoleData(_context);
         }
         
-        protected  async Task <IServiceData> GetServiceData()
+        protected IServiceData GetServiceData()
         {
-            var context = await GetContext();
-            return new ServiceData(context);
+            return new ServiceData(_context);
         }
         
-        protected  async Task <IApiData> GetApiData()
+        protected IApiData GetApiData()
         {
-            var context = await GetContext();
-            return new ApiData(context);
+            return new ApiData(_context);
         }
 
         protected async Task<KeyModel> GetRootKey()
         {
             if (_rootKeyModel == null)
             {
-                var keyData = await GetKeyData();
+                var keyData = GetKeyData();
 
                 var keyModel = new KeyModel
                 {
