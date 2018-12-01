@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using ApiGateway.Core.KeyValidators;
-using ApiGateway.Data.EFCore.Test;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Moq;

@@ -84,7 +84,7 @@ namespace ApiGateway.Core
 
             var keyApiGet = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.Get",
+                Name = "Key",
                 HttpMethod = ApiHttpMethods.Get,
                 Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
@@ -93,7 +93,7 @@ namespace ApiGateway.Core
 
             var keyApiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.Put",
+                Name = "Key",
                 HttpMethod = ApiHttpMethods.Put,
                 Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
@@ -102,7 +102,7 @@ namespace ApiGateway.Core
 
             var keyApiPost = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.Post",
+                Name = "Key",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
@@ -112,7 +112,7 @@ namespace ApiGateway.Core
             
             var keyApiReGenerateSecret1 = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.ReGenerateSecret1",
+                Name = "ReGenerateSecret1",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "key/regenerate-secret1",
                 ServiceId = service.Id
@@ -122,7 +122,7 @@ namespace ApiGateway.Core
             
             var keyApiReGenerateSecret2 = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.ReGenerateSecret2",
+                Name = "ReGenerateSecret2",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "key/regenerate-secret2",
                 ServiceId = service.Id
@@ -132,7 +132,7 @@ namespace ApiGateway.Core
             
             var keyApiDel = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Key.Delete",
+                Name = "Key",
                 HttpMethod = ApiHttpMethods.Delete,
                 Url = AppConstants.SysApiUrlPrefix + "key/",
                 ServiceId = service.Id
@@ -145,7 +145,7 @@ namespace ApiGateway.Core
 
             var serviceApiGet = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Service.Get",
+                Name = "Service",
                 HttpMethod = ApiHttpMethods.Get,
                 Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
@@ -154,7 +154,7 @@ namespace ApiGateway.Core
 
             var serviceApiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Service.Put",
+                Name = "Service",
                 HttpMethod = ApiHttpMethods.Put,
                 Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
@@ -163,7 +163,7 @@ namespace ApiGateway.Core
 
             var serviceApiPost = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Service.Post",
+                Name = "Service",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
@@ -172,7 +172,7 @@ namespace ApiGateway.Core
 
             var serviceApiDel = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Service.Delete",
+                Name = "Service",
                 HttpMethod = ApiHttpMethods.Delete,
                 Url = AppConstants.SysApiUrlPrefix + "service/",
                 ServiceId = service.Id
@@ -185,7 +185,7 @@ namespace ApiGateway.Core
 
             var roleApiGet = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Get",
+                Name = "Role",
                 HttpMethod = ApiHttpMethods.Get,
                 Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
@@ -194,7 +194,7 @@ namespace ApiGateway.Core
 
             var roleApiPost = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Post",
+                Name = "Role",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
@@ -203,7 +203,7 @@ namespace ApiGateway.Core
 
             var roleApiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Put",
+                Name = "Role",
                 HttpMethod = ApiHttpMethods.Put,
                 Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
@@ -212,7 +212,7 @@ namespace ApiGateway.Core
 
             var roleApiDel = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Delete",
+                Name = "Role",
                 HttpMethod = ApiHttpMethods.Delete,
                 Url = AppConstants.SysApiUrlPrefix + "role/",
                 ServiceId = service.Id
@@ -230,7 +230,7 @@ namespace ApiGateway.Core
 
             var roleApiPost_RemoveKeyInRole = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Post.RemoveKeyInRole",
+                Name = "RemoveKeyInRole",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "role/RemoveKeyInRole/",
                 ServiceId = service.Id
@@ -239,7 +239,7 @@ namespace ApiGateway.Core
 
             var roleApiPost_AddApiInRole = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Post.AddApiInRole",
+                Name = "AddApiInRole",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "role/AddApiInRole/",
                 ServiceId = service.Id
@@ -248,7 +248,7 @@ namespace ApiGateway.Core
 
             var roleApiPost_RemoveApiInRole = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Role.Post.RemoveApiInRole",
+                Name = "RemoveApiInRole",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "role/RemoveApiInRole/",
                 ServiceId = service.Id
@@ -261,7 +261,7 @@ namespace ApiGateway.Core
 
             var apiGet = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Api.Get",
+                Name = "Api",
                 HttpMethod = ApiHttpMethods.Get,
                 Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
@@ -270,7 +270,7 @@ namespace ApiGateway.Core
 
             var apiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Api.Put",
+                Name = "Api",
                 HttpMethod = ApiHttpMethods.Put,
                 Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
@@ -279,7 +279,7 @@ namespace ApiGateway.Core
 
             var apiPost = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Api.Post",
+                Name = "Api",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id
@@ -288,7 +288,7 @@ namespace ApiGateway.Core
 
             var apiDel = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "Api.Delete",
+                Name = "Api",
                 HttpMethod = ApiHttpMethods.Delete,
                 Url = AppConstants.SysApiUrlPrefix + "api/",
                 ServiceId = service.Id

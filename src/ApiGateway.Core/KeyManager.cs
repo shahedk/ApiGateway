@@ -145,7 +145,7 @@ namespace ApiGateway.Core
             var model = new KeyModel
             {
                 Type = ApiKeyTypes.ClientSecret,
-                PublicKey = ModelHelper.GeneratePublicKey(),
+                PublicKey = "rootkey",
                 Properties =
                 {
                     [ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret(),

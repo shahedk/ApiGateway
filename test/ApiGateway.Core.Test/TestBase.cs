@@ -1,12 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
+using ApiGateway.Data;
+using ApiGateway.Data.EFCore;
 using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiGateway.Data.EFCore.Test
+namespace ApiGateway.Core.Test
 {
     public class TestBase
     {
@@ -52,6 +55,9 @@ namespace ApiGateway.Data.EFCore.Test
         {
             if (_context == null)
             {
+                // Clean up: Delete any existing database 
+                File.Delete("ApiGateway.db");
+                
                 _context = new ApiGatewayContext(GetSqliteDbOptions());
 
                 // Create new database
