@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Common.Models;
@@ -25,9 +26,17 @@ namespace ApiGateway.WebApi.Controllers
         }
 
         [HttpPost("Initialize")]
-        public async Task<AppState> Post()
+        public async Task<IActionResult> Post()
         {
-            return await _appEnvironment.Initialize();
+            try
+            {
+                var result = await _appEnvironment.Initialize();
+                return Json(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
