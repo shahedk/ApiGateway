@@ -18,6 +18,7 @@ namespace ApiGateway.Data.EFCore
         
         public ApiGatewayContext(DbContextOptions<ApiGatewayContext> options) : base(options)
         {
+            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

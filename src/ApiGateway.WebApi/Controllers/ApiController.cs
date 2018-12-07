@@ -47,11 +47,28 @@ namespace ApiGateway.WebApi.Controllers
         
         // POST: api/Api
         [HttpPost]
-        public async Task<ApiModel> Post([FromBody]ApiModel model)
+        public async Task<IActionResult> Post([FromBody]ApiInsertModel insertModel)
         {
-            var apiModel = await _manager.Create(ApiKey, model);
+            var model = new ApiModel
+            {
+                ServiceId = insertModel.ServiceId,
+                HttpMethod = insertModel.HttpMethod,
+                Name = insertModel.Name, 
+                Url = insertModel.Url, 
+                CustomHeaders = insertModel.CustomHeaders
 
-            return apiModel;
+            };
+
+            if (ModelState.IsValid)
+            {
+                var apiModel = await _manager.Create(ApiKey, model);
+                return Ok( apiModel);    
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            
         }
         
         // PUT: api/Api/5

@@ -53,28 +53,28 @@ namespace ApiGateway.WebApi.Controllers
             return await _manager.Create(ApiKey, model);
         }
 
-        [Route("/sys/Role/AddKeyInRole")]
+        [Route("/sys/AddKeyInRole")]
         [HttpPost]
         public async Task AddKeyInRole(string key, string roleId)
         {
             await _manager.AddKeyInRole(ApiKey, roleId, key);
         }
 
-        [Route("/sys/Role/RemoveKeyFromRole")]
+        [Route("/sys/RemoveKeyFromRole")]
         [HttpPost]
         public async Task RemoveKeyFromRole(string key, string roleId)
         {
             await _manager.RemoveKeyFromRole(ApiKey, roleId, key);
         }
         
-        [Route("/sys/Role/AddApiInRole")]
+        [Route("/sys/AddApiInRole")]
         [HttpPost]
         public async Task AddApiInRole(string apiId, string roleId)
         {
             await _manager.AddApiInRole(ApiKey, roleId, apiId);
         }
 
-        [Route("/sys/Role/RemoveApiFromRole")]
+        [Route("/sys/RemoveApiFromRole")]
         [HttpPost]
         public async Task RemoveApiFromRole(string apiId, string roleId)
         {

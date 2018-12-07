@@ -30,8 +30,8 @@ namespace ApiGateway.WebApi.Controllers
         {
             try
             {
-                var result = await _appEnvironment.Initialize();
-                return Json(result);
+                var state = await _appEnvironment.Initialize();
+                return Ok(state);
             }
             catch (InvalidOperationException ex)
             {

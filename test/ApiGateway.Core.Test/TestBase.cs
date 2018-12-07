@@ -30,7 +30,7 @@ namespace ApiGateway.Core.Test
             }
             
             _context = new ApiGatewayContext(GetSqliteDbOptions());
-            _context.Database.EnsureCreated();
+            //_context.Database.EnsureCreated();
         }
 
         public void Dispose()

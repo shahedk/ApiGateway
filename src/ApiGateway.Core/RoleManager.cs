@@ -102,6 +102,12 @@ namespace ApiGateway.Core
         {
             var ownerKey = await _keyManager.GetByPublicKey(roleOwnerPublicKey);
 
+            if (string.IsNullOrEmpty(roleId) || string.IsNullOrEmpty(apiId))
+            {
+                var msg = _localizer["RoleId or ApiId can not be null"];
+                throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
+            }
+            
             if (await _roleData.IsApiInRole(ownerKey.Id, roleId, apiId))
             {
                 var msg = _localizer["Api already in role"];
