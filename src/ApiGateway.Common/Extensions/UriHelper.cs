@@ -40,12 +40,7 @@ namespace ApiGateway.Common.Extensions
             else if (tokens[0] == AppConstants.SysApiServiceName)
             {
                 // System API
-                if (tokens.Length > 2)
-                {
-                    // eg. http://sys/api-name/action/{id}
-                    apiNameFromPath = tokens[1] + "/" + tokens[2];
-                }
-                else if (tokens.Length > 1)
+                if (tokens.Length > 1)
                 {
                     // eg. http://sys/api-name/{id}
                     apiNameFromPath = tokens[1];

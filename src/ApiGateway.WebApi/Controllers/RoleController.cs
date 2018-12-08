@@ -40,7 +40,7 @@ namespace ApiGateway.WebApi.Controllers
         }
         
         // GET: api/Role/5
-        [HttpGet("{id}")]
+        [HttpGet("/sys/role-detail/{id}")]
         public async Task<RoleModel> Get(string id)
         {
             return await _manager.Get(ApiKey, id);

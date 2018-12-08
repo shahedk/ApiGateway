@@ -39,7 +39,7 @@ namespace ApiGateway.WebApi.Controllers
         }
 
         // GET: api/Api/5
-        [HttpGet("{id}")]
+        [HttpGet("/sys/api-detail/{id}")]
         public async Task<ApiModel> Get(string id)
         {
             return await _manager.Get(ApiKey, id);

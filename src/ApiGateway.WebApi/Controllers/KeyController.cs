@@ -41,7 +41,7 @@ namespace ApiGateway.WebApi.Controllers
         }
         
         // GET: api/Key/5
-        [HttpGet("{id}")]
+        [HttpGet("/sys/key-detail/{id}")]
         public async Task<KeyModel> Get(string id)
         {
             return await _manager.Get(ApiKey, id);
@@ -59,7 +59,7 @@ namespace ApiGateway.WebApi.Controllers
         }
         
         
-        [HttpPost("/sys/key/regenerate-secret1/{publicKey}")]
+        [HttpPost("/sys/regenerate-secret1/{publicKey}")]
         public async Task<KeyModel> ReGenerateSecret1(string publicKey)
         {
             var keyModel = await _manager.ReGenerateSecret1(ApiKey, publicKey);
@@ -68,7 +68,7 @@ namespace ApiGateway.WebApi.Controllers
         }
         
         
-        [HttpPost("/sys/key/regenerate-secret2/{publicKey}")]
+        [HttpPost("/sys/regenerate-secret2/{publicKey}")]
         public async Task<KeyModel> ReGenerateSecret2(string publicKey)
         {
             var keyModel = await _manager.ReGenerateSecret2(ApiKey, publicKey);

@@ -97,6 +97,15 @@ namespace ApiGateway.Core
                 ServiceId = sysService.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiGet.Id);
+            
+            var keyApiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Key-Detail",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "key-detail/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiGetDetail.Id);
 
             var keyApiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
@@ -119,7 +128,7 @@ namespace ApiGateway.Core
             
             var keyApiReGenerateSecret1 = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "ReGenerateSecret1",
+                Name = "ReGenerate-Secret1",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "key/regenerate-secret1",
                 ServiceId = sysService.Id
@@ -129,7 +138,7 @@ namespace ApiGateway.Core
             
             var keyApiReGenerateSecret2 = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
-                Name = "ReGenerateSecret2",
+                Name = "ReGenerate-Secret2",
                 HttpMethod = ApiHttpMethods.Post,
                 Url = AppConstants.SysApiUrlPrefix + "key/regenerate-secret2",
                 ServiceId = sysService.Id
@@ -198,6 +207,16 @@ namespace ApiGateway.Core
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, serviceApiGet.Id);
 
+            var serviceApiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Service-Detail",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "service-detail/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, serviceApiGetDetail.Id);
+
+            
             var serviceApiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Service",
@@ -238,6 +257,16 @@ namespace ApiGateway.Core
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiGet.Id);
 
+            var roleApiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Role-Detail",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "role-detail/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiGetDetail.Id);
+
+            
             var roleApiPost = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Role",
@@ -314,6 +343,16 @@ namespace ApiGateway.Core
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiGet.Id);
 
+            var apiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Api-Detail",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "api-detail/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiGetDetail.Id);
+
+           
             var apiPut = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Api",
