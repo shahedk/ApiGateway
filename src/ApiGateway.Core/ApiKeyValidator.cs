@@ -99,6 +99,7 @@ namespace ApiGateway.Core
             
             result.ApiId = api.Id;
             result.KeyId = clientKeyResult.KeyId;
+            result.ServiceId = api.ServiceId;
             
             return result;
 

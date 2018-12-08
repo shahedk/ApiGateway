@@ -9,5 +9,6 @@
         // For internal services
         public const string KeyId = "keyId";
         public const string ApiId = "apiId";
+        public const string ServiceId = "serviceId";
     }
 }

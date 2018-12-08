@@ -18,12 +18,14 @@ namespace ApiGateway.WebApi.Controllers
     {
         private readonly IApiRequestHelper _apiRequestHelper;
         private readonly IApiManager _apiManager;
+        private readonly IServiceManager _serviceManager;
         private readonly IHttpClientFactory _clientFactory;
 
-        public AppServiceController(IApiRequestHelper apiRequestHelper, IApiManager apiManager, IHttpClientFactory clientFactory) : base(apiRequestHelper)
+        public AppServiceController(IApiRequestHelper apiRequestHelper, IApiManager apiManager, IServiceManager serviceManager, IHttpClientFactory clientFactory) : base(apiRequestHelper)
         {
             _apiRequestHelper = apiRequestHelper;
             _apiManager = apiManager;
+            _serviceManager = serviceManager;
             _clientFactory = clientFactory;
         }
 
@@ -32,11 +34,13 @@ namespace ApiGateway.WebApi.Controllers
         {
             var apiKey = HttpContext.Items[ApiHttpHeaders.ApiKey].ToString();
             var apiId = HttpContext.Items[ApiHttpHeaders.ApiId].ToString();
+            var serviceId = HttpContext.Items[ApiHttpHeaders.ServiceId].ToString();
             var clientId = HttpContext.Items[ApiHttpHeaders.KeyId].ToString();
 
             var api = await _apiManager.Get(apiKey, apiId);
+            var service = await _serviceManager.Get(apiKey, serviceId);
 
-            var queryString = GetQueryString(api.Name);
+            var queryString = GetQueryString(api.Name, service.Name);
             var fullUrl = api.Url;
             if (!string.IsNullOrWhiteSpace(queryString))
             {
@@ -148,11 +152,31 @@ namespace ApiGateway.WebApi.Controllers
         }
         
         
-        private string GetQueryString(string apiName)
+        private string GetQueryString(string apiName, string serviceName)
         {
+            var apiUrl = serviceName;
+            if (!string.IsNullOrEmpty(apiName))
+            {
+                apiUrl += "/" + apiName;
+            }
+            
             var url = Request.GetDisplayUrl();
-            var lastIndexOf = url.LastIndexOf("/");
-            return url.Substring(lastIndexOf);
+            var lastIndexOf = url.LastIndexOf(apiUrl) + apiUrl.Length;
+            
+            if (url.Length == lastIndexOf)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                var queryString = url.Substring(lastIndexOf);
+                if (queryString.StartsWith("/"))
+                {
+                    queryString = queryString.Substring(1);
+                }
+
+                return queryString;
+            }
         }
 
     }

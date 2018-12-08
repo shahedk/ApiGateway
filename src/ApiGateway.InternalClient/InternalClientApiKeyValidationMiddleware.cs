@@ -59,7 +59,8 @@ namespace ApiGateway.InternalClient
                     context.Items.Add(ApiHttpHeaders.ApiKey, apiKey);
                     context.Items.Add(ApiHttpHeaders.KeyId, result.KeyId);
                     context.Items.Add(ApiHttpHeaders.ApiId, result.ApiId);
-                    
+                    context.Items.Add(ApiHttpHeaders.ServiceId, result.ServiceId);
+
                     await _next.Invoke(context);
                 }
                 else
