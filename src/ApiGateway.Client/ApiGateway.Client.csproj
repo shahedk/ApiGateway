@@ -8,8 +8,10 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/shahedk/ApiGateway</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageTags>ApiGateway, Api</PackageTags>
+    <PackageTags>Api Gateway</PackageTags>
     <Version>0.5.1</Version>
+    <Description>A library to add ApiGateway authentication in external API services</Description>
+    <RepositoryType>GIT</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
