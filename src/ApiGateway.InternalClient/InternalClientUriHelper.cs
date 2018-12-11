@@ -3,9 +3,9 @@ using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace ApiGateway.Common.Extensions
+namespace ApiGateway.InternalClient
 {
-    public static class UriHelper
+    public static class InternalClientUriHelper
     {
         private static string GetPath(HttpRequest request)
         {

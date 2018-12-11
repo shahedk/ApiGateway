@@ -23,19 +23,7 @@ namespace ApiGateway.Client
         }
 
         public async Task Invoke(HttpContext context)
-        {
-            if (context.Request.Path.HasValue)
-            {
-                var path = context.Request.Path.Value.ToLower();
-                if (path.ToLower().StartsWith("/api/appenv/") || path.ToLower().StartsWith("/api/isvalid/"))
-                {
-                    // These two special paths don't need api-key validation
-                    await _next.Invoke(context);
-                    return;
-                }
-            }
-            
-            
+        {   
             if (!context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiKey) || !context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiSecret))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -46,9 +34,9 @@ namespace ApiGateway.Client
                 string apiKey = context.Request.Headers[ApiHttpHeaders.ApiKey];
                 string apiSecret = context.Request.Headers[ApiHttpHeaders.ApiSecret];
                 string action = context.Request.Method;
-                string apiUrl = context.Request.Path;
+                string apiName = context.Request.GetApiName();
 
-                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ServiceName, apiUrl, action);
+                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ServiceName,  apiName, action);
 
                 if (result.IsValid)
                 {

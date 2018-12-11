@@ -1,8 +1,6 @@
 ﻿using ApiGateway.Client;
 using ApiGateway.Common.Constants;
-using ApiGateway.Common.Extensions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 
 namespace ApiGateway.WebApi
 {
@@ -44,21 +42,6 @@ namespace ApiGateway.WebApi
             {
                 return type;
             }
-        }
-
-        public string GetServiceApiKeyType()
-        {
-            return GetValue(ApiHttpHeaders.KeyType) ?? ApiKeyTypes.ClientSecret;
-        }
-        
-        public  string GetApiName() 
-        {
-            return _accessor.HttpContext.Request.GetApiName();
-        }
-
-        public  string GetServiceName()
-        {
-            return _accessor.HttpContext.Request.GetServiceName();
         }
 
     }

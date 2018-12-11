@@ -39,7 +39,7 @@ namespace ApiGateway.Client
                     url += "/";
                 }
 
-                url += $"{serviceName}?apiurl={apiName}&httpMethod={httpAction}";
+                url += $"{serviceName}?api={apiName}&httpMethod={httpAction}";
 
                 var responseMessage =
                     await client.GetAsync(url);

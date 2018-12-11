@@ -31,7 +31,7 @@ namespace ApiGateway.WebApi.Controllers
                 return BadRequest();
             }
             
-            var serviceName = id;
+            var serviceName = id.ToLower();
          
             var clientKey = new KeyModel
             {
