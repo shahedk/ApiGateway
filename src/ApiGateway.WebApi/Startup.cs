@@ -62,7 +62,7 @@ namespace ApiGateway.WebApi
             //services.AddSingleton<HttpClient, HttpClient>();
             
             services.AddTransient<IAppEnvironment, AppEnvironment>();
-            services.AddTransient<IClientLoginService, InternalClientLoginService>();
+            services.AddTransient<IClientApiService, InternalClientApiService>();
             services.AddTransient<IApiRequestHelper, ApiRequestHelper>();
             services.AddTransient<KeySecretValidator, KeySecretValidator>();
             services.AddTransient<IApiKeyValidator, ApiKeyValidator>();

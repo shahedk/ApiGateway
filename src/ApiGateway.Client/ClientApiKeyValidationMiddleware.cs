@@ -12,13 +12,13 @@ namespace ApiGateway.Client
     public class ClientApiKeyValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IClientLoginService _clientLoginService;
+        private readonly IClientApiService _clientApiService;
         private readonly ApiGatewaySettings _settings;
 
-        public ClientApiKeyValidationMiddleware(RequestDelegate next, IClientLoginService clientLoginService, IOptions<ApiGatewaySettings> settings)
+        public ClientApiKeyValidationMiddleware(RequestDelegate next, IClientApiService clientApiService, IOptions<ApiGatewaySettings> settings)
         {
             _next = next;
-            _clientLoginService = clientLoginService;
+            _clientApiService = clientApiService;
             _settings = settings.Value;
         }
 
@@ -36,7 +36,7 @@ namespace ApiGateway.Client
                 string action = context.Request.Method;
                 string apiName = context.Request.GetApiName();
 
-                var result = await _clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ServiceName,  apiName, action);
+                var result = await _clientApiService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ServiceName,  apiName, action);
 
                 if (result.IsValid)
                 {

@@ -7,12 +7,12 @@ using ApiGateway.Core;
 
 namespace ApiGateway.InternalClient
 {
-    public class InternalClientLoginService : IClientLoginService
+    public class InternalClientApiService : IClientApiService
     {
         private readonly IApiKeyValidator _keyValidator;
         private readonly IApiRequestHelper _apiRequestHelper;
 
-        public InternalClientLoginService(IApiKeyValidator keyValidator, IApiRequestHelper apiRequestHelper)
+        public InternalClientApiService(IApiKeyValidator keyValidator, IApiRequestHelper apiRequestHelper)
         {
             _keyValidator = keyValidator;
             _apiRequestHelper = apiRequestHelper;

@@ -11,11 +11,11 @@ using Newtonsoft.Json;
 
 namespace ApiGateway.Client
 {
-    public class ClientLoginService : IClientLoginService
+    public class ClientApiService : IClientApiService
     {
         private readonly ApiGatewaySettings _settings;
 
-        public ClientLoginService(IOptions<ApiGatewaySettings> settings)
+        public ClientApiService(IOptions<ApiGatewaySettings> settings)
         {
             _settings = settings.Value;
         }

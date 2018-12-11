@@ -21,7 +21,7 @@ namespace ApiGateway.InternalClient
             _logger = logger;
         }
 
-        public async Task Invoke(HttpContext context, IClientLoginService clientLoginService)
+        public async Task Invoke(HttpContext context, IClientApiService clientApiService)
         {
             var path = context.Request.Path.Value.ToLower();
             if (context.Request.Path.HasValue)
@@ -49,7 +49,7 @@ namespace ApiGateway.InternalClient
                 var serviceName = context.Request.GetServiceName();
                 var apiName = context.Request.GetApiName();
                 
-                var result = await clientLoginService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceName, apiName, action);
+                var result = await clientApiService.IsClientApiKeyValidAsync(apiKey, apiSecret, serviceName, apiName, action);
 
                 if (result.IsValid)
                 {
