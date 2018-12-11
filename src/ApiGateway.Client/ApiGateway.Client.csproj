@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Shahedul Huq Khandkar</Authors>
+    <Company>https://shahed.ca</Company>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shahedk/ApiGateway</RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageTags>ApiGateway, Api</PackageTags>
+    <Version>0.5.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
