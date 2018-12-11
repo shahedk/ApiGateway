@@ -14,10 +14,12 @@ namespace ApiGateway.Client
     public class ClientApiKeyService : IClientApiKeyService
     {
         private readonly ApiGatewaySettings _settings;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public ClientApiKeyService(IOptions<ApiGatewaySettings> settings)
+        public ClientApiKeyService(IOptions<ApiGatewaySettings> settings, IHttpClientFactory clientFactory)
         {
             _settings = settings.Value;
+            _clientFactory = clientFactory;
         }
 
         public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret,
@@ -27,31 +29,29 @@ namespace ApiGateway.Client
 
             try
             {
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Add(ApiHttpHeaders.ApiKey, apiKey);
-                client.DefaultRequestHeaders.Add(ApiHttpHeaders.ApiSecret, apiSecret);
-
                 var url = _settings.AuthApiEndPoint;
 
-                if (!url.EndsWith("/"))
+                if (!url.EndsWith("/", StringComparison.Ordinal))
                 {
                     url += "/";
                 }
 
                 url += $"{serviceName}?api={apiName}&httpMethod={httpAction}";
 
-                var responseMessage =
-                    await client.GetAsync(url);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Add(ApiHttpHeaders.ApiKey, apiKey);
+                request.Headers.Add(ApiHttpHeaders.ApiSecret, apiSecret);
 
-                var content = await responseMessage.Content.ReadAsStringAsync();
+                var client = _clientFactory.CreateClient();
+                var response = await client.SendAsync(request);
+                var content = await response.Content.ReadAsStringAsync();
                 validationResult = JsonConvert.DeserializeObject<KeyValidationResult>(content);
 
-                if (responseMessage.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     validationResult.IsValid = false;
                     validationResult.Message += Environment.NewLine + " Unexpected status code: " +
-                                                responseMessage.StatusCode;
+                                                response.StatusCode;
                 }
             }
             catch (Exception ex)

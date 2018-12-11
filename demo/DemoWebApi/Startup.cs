@@ -30,6 +30,7 @@ namespace DemoWebApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddHttpClient();
             services.AddTransient<IClientApiKeyService, ClientApiKeyService>();
             services.Configure<ApiGatewaySettings>(Configuration.GetSection("ApiGatewaySettings"));
         }    
