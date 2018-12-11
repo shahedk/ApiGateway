@@ -5,6 +5,7 @@ WORKDIR /app
 # Copy everything else and build
 COPY ./src ./src
 COPY ./test ./test
+COPY ./demo ./demo
 COPY ApiGateway.sln ApiGateway.sln
 RUN dotnet restore ApiGateway.sln
 
