@@ -22,10 +22,13 @@ namespace ApiGateway.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(KeyValidationResult))]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> Get(string id, string api, string httpMethod)
+        public async Task<IActionResult> Get(string id,string api, string httpMethod)
         {
-            if (string.IsNullOrWhiteSpace(id) ||
-                string.IsNullOrWhiteSpace(api) ||
+            if (string.IsNullOrWhiteSpace(api))
+            {
+                api = "";
+            }
+            if (string.IsNullOrWhiteSpace(id) ||                
                 string.IsNullOrWhiteSpace(httpMethod))
             {
                 return BadRequest();
