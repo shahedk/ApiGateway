@@ -8,12 +8,11 @@ namespace ApiGateway.Common.Models
 {
     public class ApiModel : ModelBase
     {
-        private string _name;
+        private string _name = string.Empty;
         private string _url;
         [Required]
         public string ServiceId { get; set; }
 
-        [Required]
         public string Name
         {
             get => _name;
