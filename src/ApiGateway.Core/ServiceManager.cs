@@ -92,7 +92,7 @@ namespace ApiGateway.Core
             return await _serviceData.GetAll(ownerKey.Id);
         }
 
-        public async Task<List<ServiceSummaryModel>> GetAllSummary(string ownerPublicKey)
+        public async Task<IList<ServiceSummaryModel>> GetAllSummary(string ownerPublicKey)
         {
             var services = await GetAll(ownerPublicKey);
 
@@ -101,8 +101,8 @@ namespace ApiGateway.Core
             {
                 var summary = new ServiceSummaryModel(s);
 
-                summary.ActiveRoleCount = await _roleManager.Count(s.OwnerKeyId, s.Id, false);
-                summary.DisabledRoleCount = await _roleManager.Count(s.OwnerKeyId, s.Id, true);
+                summary.ActiveRoleCount = await _roleManager.CountByService(s.OwnerKeyId, s.Id, false);
+                summary.DisabledRoleCount = await _roleManager.CountByService(s.OwnerKeyId, s.Id, true);
 
                 summary.ApiCount = await _apiManager.Count(s.OwnerKeyId, s.Id);
                 

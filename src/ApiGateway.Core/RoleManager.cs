@@ -134,9 +134,29 @@ namespace ApiGateway.Core
             }
         }
 
-        public async Task<int> Count(string roleOwnerPublicKey, string serviceId, bool isDisabled)
+        public async Task<int> CountByService(string roleOwnerPublicKey, string serviceId, bool isDisabled)
         {
-            return await _roleData.Count(roleOwnerPublicKey, serviceId, isDisabled);
+            return await _roleData.CountByService(roleOwnerPublicKey, serviceId, isDisabled);
+        }
+
+        public async Task<IList<RoleSummaryModel>> GetAllSummary(string ownerPublicKey)
+        {
+            var list = await GetAll(ownerPublicKey);
+
+            var result = new List<RoleSummaryModel>(list.Count);
+
+            foreach (var r in list)
+            {
+                var role = new RoleSummaryModel(r)
+                {
+                    ApiCount = await _roleData.ApiCountInRole(r.OwnerKeyId, r.Id),
+                    KeyCount = await _roleData.KeyCountInRole(r.OwnerKeyId, r.Id)
+                };
+
+                result.Add(role);
+            }
+
+            return result;
         }
     }
 }

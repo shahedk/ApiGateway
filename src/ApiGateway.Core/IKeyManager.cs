@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 
 namespace ApiGateway.Core
@@ -11,5 +12,6 @@ namespace ApiGateway.Core
         Task<KeyModel> GetByPublicKey(string publicKey);
         Task<KeyModel> CreateRootKey();
 
+        Task<IList<KeySummaryModel>> GetAllSummary(string ownerPublicKey);
     }
 }

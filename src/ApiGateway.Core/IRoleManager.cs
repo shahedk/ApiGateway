@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 
 namespace ApiGateway.Core
@@ -11,6 +12,8 @@ namespace ApiGateway.Core
         Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId);
         Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId);
 
-        Task<int> Count(string roleOwnerPublicKey, string serviceId, bool isDisabled);
+        Task<int> CountByService(string roleOwnerPublicKey, string serviceId, bool isDisabled);
+        
+        Task<IList<RoleSummaryModel>> GetAllSummary(string ownerPublicKey);
     }
 }

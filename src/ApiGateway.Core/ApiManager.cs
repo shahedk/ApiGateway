@@ -15,13 +15,17 @@ namespace ApiGateway.Core
         private readonly IStringLocalizer<IApiManager> _localizer;
         private readonly ILogger<IApiManager> _logger;
         private readonly IKeyManager _keyManager;
+        private readonly IRoleData _roleData;
+        
 
-        public ApiManager(IApiData apiData,IStringLocalizer<IApiManager> localizer,ILogger<IApiManager> logger, IKeyManager keyManager)
+        public ApiManager(IApiData apiData,IStringLocalizer<IApiManager> localizer,ILogger<IApiManager> logger, 
+            IKeyManager keyManager, IRoleData roleData)
         {
             _apiData = apiData;
             _localizer = localizer;
             _logger = logger;
             _keyManager = keyManager;
+            _roleData = roleData;
         }
 
         public async Task<ApiModel> Create(string ownerPublicKey, ApiModel model)
@@ -124,6 +128,27 @@ namespace ApiGateway.Core
         public async Task<int> Count(string ownerKeyId, string serviceId)
         {
             return await _apiData.Count(ownerKeyId, serviceId);
+        }
+
+        public async Task<IList<ApiSummaryModel>> GetAllSummary(string ownerPublicKey)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            var list = await _apiData.GetAll(ownerKey.Id);
+
+            var result = new List<ApiSummaryModel>(list.Count);
+            
+            foreach (var a in list)
+            {
+                var api = new ApiSummaryModel(a)
+                {
+                    ActiveRoleCount = await _roleData.CountByApi(a.OwnerKeyId, a.Id, false),
+                    DisabledRoleCount = await _roleData.CountByApi(a.OwnerKeyId, a.Id, true)
+                };
+
+                result.Add(api);
+            }
+
+            return result;
         }
     }
 }

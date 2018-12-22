@@ -33,8 +33,9 @@ namespace ApiGateway.Core.Test
         {
             var localizer = new Mock<IStringLocalizer<IKeyManager>>();
             var logger = new Mock<ILogger<IKeyManager>>();
-
-            return new KeyManager( GetKeyData(), localizer.Object, logger.Object);
+            var roleData = GetRoleData();
+            
+            return new KeyManager( GetKeyData(), localizer.Object, logger.Object, roleData);
         }
 
         protected IRoleManager GetRoleManager()
@@ -54,7 +55,8 @@ namespace ApiGateway.Core.Test
             var roleManager = GetRoleManager();
             var apiManager = GetApiManager();
 
-            return new ServiceManager( GetServiceData(), localizer.Object, logger.Object, keyManager, roleManager, apiManager);
+            return new ServiceManager(GetServiceData(), localizer.Object, logger.Object, keyManager, roleManager,
+                apiManager);
         }
         
         protected IApiManager GetApiManager()
@@ -62,8 +64,9 @@ namespace ApiGateway.Core.Test
             var localizer = new Mock<IStringLocalizer<IApiManager>>();
             var logger = new Mock<ILogger<IApiManager>>();
             var keyManager =  GetKeyManager();
+            var roleData = GetRoleData();
             
-            return new ApiManager( GetApiData(), localizer.Object, logger.Object, keyManager);
+            return new ApiManager( GetApiData(), localizer.Object, logger.Object, keyManager, roleData);
         }
     }
 }

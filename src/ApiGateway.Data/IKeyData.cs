@@ -8,5 +8,6 @@ namespace ApiGateway.Data
     {
         Task<KeyModel> GetByPublicKey(string publicKey);
         Task<int> Count();
+        
     }
 }

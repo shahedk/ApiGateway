@@ -13,6 +13,14 @@ namespace ApiGateway.Data
         Task AddApiInRole(string ownerKeyId, string roleId, string apiId);
         Task RemoveApiFromRole(string ownerKeyId, string roleId, string apiId);
 
-        Task<int> Count(string ownerKeyId, string serviceId, bool isDisabled);
+        Task<int> CountByService(string ownerKeyId, string serviceId, bool isDisabled);
+        
+        Task<int> CountByKey(string ownerKeyId, string keyId, bool isDisabled);
+        
+        Task<int> CountByApi(string ownerKeyId, string apiId, bool isDisabled);
+
+        Task<int> ApiCountInRole(string ownerKeyId, string roleId);
+
+        Task<int> KeyCountInRole(string ownerKeyId, string roleId);
     }
 }

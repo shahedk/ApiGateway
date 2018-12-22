@@ -6,6 +6,7 @@ using ApiGateway.Common.Models;
 using ApiGateway.Data.EFCore.Entity;
 using ApiGateway.Data.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
 
 namespace ApiGateway.Data.EFCore.DataAccess
 {
@@ -176,13 +177,71 @@ namespace ApiGateway.Data.EFCore.DataAccess
             }
         }
 
-        public async Task<int> Count(string ownerKeyId, string serviceId, bool isDisabled)
+        public async Task<int> CountByService(string ownerKeyId, string serviceId, bool isDisabled)
         {
             var serviceId2 = int.Parse(serviceId);
             var ownerKeyId2 = int.Parse(ownerKeyId);
             
             return await _context.Roles.CountAsync(x =>
                 x.ServiceId == serviceId2 && x.OwnerKeyId == ownerKeyId2 && x.IsDisabled == isDisabled);
+        }
+
+        public async Task<int> CountByKey(string ownerKeyId, string keyId, bool isDisabled)
+        {
+            var keyId2 = int.Parse(keyId);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+
+            var count = await (from m in _context.KeyInRoles
+                join r in _context.Roles on m.RoleId equals r.Id
+                where m.KeyId == keyId2 && 
+                      r.OwnerKeyId== ownerKeyId2 &&
+                      r.IsDisabled == isDisabled
+                select m).CountAsync();
+
+            return count;
+        }
+
+        public async Task<int> CountByApi(string ownerKeyId, string apiId, bool isDisabled)
+        {
+            var apiId2 = int.Parse(apiId);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+
+            var count = await (from m in _context.ApiInRoles
+                join r in _context.Roles on m.RoleId equals r.Id
+                where m.ApiId == apiId2 && 
+                      r.OwnerKeyId== ownerKeyId2 &&
+                      r.IsDisabled == isDisabled
+                select m).CountAsync();
+
+            return count;
+        }
+
+        public async Task<int> ApiCountInRole(string ownerKeyId, string roleId)
+        {
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+            var roleId2 = int.Parse(roleId);
+            
+            var count = await (from m in _context.ApiInRoles
+                join r in _context.Roles on m.RoleId equals r.Id
+                where m.RoleId == roleId2 && 
+                      r.OwnerKeyId== ownerKeyId2
+                select m).CountAsync();
+
+            return count;
+        }
+        
+        public async Task<int> KeyCountInRole(string ownerKeyId, string roleId)
+        {
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+            var roleId2 = int.Parse(roleId);
+            
+            var count = await (from m in _context.KeyInRoles
+                join r in _context.Roles on m.RoleId equals r.Id
+                where m.RoleId == roleId2 && 
+                      r.OwnerKeyId== ownerKeyId2
+                select m).CountAsync();
+
+            return count;
         }
     }
 }

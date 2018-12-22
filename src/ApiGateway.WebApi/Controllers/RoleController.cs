@@ -21,6 +21,24 @@ namespace ApiGateway.WebApi.Controllers
             _manager = manager;
         }
 
+        [HttpGet("/sys/role-summary/")]
+        public async Task<IList<RoleSummaryModel>> GetSummary()
+        {
+            try
+            {
+                return await _manager.GetAllSummary(ApiKey);
+            }
+            catch (ApiGatewayException e)
+            {
+                if (e.ErrorCode == HttpStatusCode.NotFound)
+                {
+                    Response.StatusCode = (int)e.ErrorCode;
+                    
+                }
+            }
+            return null;
+        }
+        
         [HttpGet]
         public async Task<IList<RoleModel>> Get()
         {

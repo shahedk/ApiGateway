@@ -104,5 +104,6 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
             return count;
         }
+
     }
 }

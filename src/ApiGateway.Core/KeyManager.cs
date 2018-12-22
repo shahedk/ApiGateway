@@ -17,12 +17,15 @@ namespace ApiGateway.Core
         private readonly IKeyData _keyData;
         private readonly IStringLocalizer<IKeyManager> _localizer;
         private readonly ILogger<IKeyManager> _logger;
+        private readonly IRoleData _roleData;
 
-        public KeyManager(IKeyData keyData,IStringLocalizer<IKeyManager> localizer,ILogger<IKeyManager> logger)
+        public KeyManager(IKeyData keyData,IStringLocalizer<IKeyManager> localizer,ILogger<IKeyManager> logger,
+            IRoleData roleData)
         {
             _keyData = keyData;
             _localizer = localizer;
             _logger = logger;
+            _roleData = roleData;
         }
 
         public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
@@ -157,6 +160,25 @@ namespace ApiGateway.Core
             var saved = await _keyData.Create(model);
 
             return saved;
+        }
+
+        public async Task<IList<KeySummaryModel>> GetAllSummary(string ownerPublicKey)
+        {
+            var list = await GetAll(ownerPublicKey);
+
+            var result = new List<KeySummaryModel>(list.Count);
+            foreach (var k in list)
+            {
+                var key = new KeySummaryModel(k)
+                {
+                    ActiveRoleCount = await _roleData.CountByKey(k.OwnerKeyId, k.Id, false),
+                    DisabledRoleCount = await _roleData.CountByKey(k.OwnerKeyId, k.Id, true)
+                };
+
+                result.Add(key);
+            }
+
+            return result;
         }
     }
 }

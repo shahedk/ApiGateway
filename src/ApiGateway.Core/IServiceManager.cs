@@ -6,7 +6,7 @@ namespace ApiGateway.Core
 {
     public interface IServiceManager : IManager<ServiceModel>
     {
-        Task<List<ServiceSummaryModel>> GetAllSummary(string ownerPublicKey);
+        Task<IList<ServiceSummaryModel>> GetAllSummary(string ownerPublicKey);
         
         Task<ServiceModel> GetByName(string ownerPublicKey, string serviceName);
         
