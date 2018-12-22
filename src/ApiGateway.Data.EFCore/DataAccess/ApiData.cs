@@ -154,5 +154,13 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
             return api != null;
         }
+
+        public Task<int> Count(string ownerKeyId, string serviceId)
+        {
+            int ownerKeyId2 = int.Parse(ownerKeyId);
+            int serviceId2 = int.Parse(serviceId);
+
+            return _context.Apis.CountAsync(x => x.OwnerKeyId == ownerKeyId2 && x.ServiceId == serviceId2);
+        }
     }
 }

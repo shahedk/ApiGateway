@@ -133,5 +133,10 @@ namespace ApiGateway.Core
                 throw new ApiGatewayException(msg, HttpStatusCode.BadRequest);
             }
         }
+
+        public async Task<int> Count(string roleOwnerPublicKey, string serviceId, bool isDisabled)
+        {
+            return await _roleData.Count(roleOwnerPublicKey, serviceId, isDisabled);
+        }
     }
 }

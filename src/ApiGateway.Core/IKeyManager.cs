@@ -10,5 +10,6 @@ namespace ApiGateway.Core
         Task<KeyModel> ReGenerateSecret3(string ownerPublicKey, string keyPublicKey);
         Task<KeyModel> GetByPublicKey(string publicKey);
         Task<KeyModel> CreateRootKey();
+
     }
 }

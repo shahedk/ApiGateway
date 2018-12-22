@@ -120,5 +120,10 @@ namespace ApiGateway.Core
 
             return api;
         }
+
+        public async Task<int> Count(string ownerKeyId, string serviceId)
+        {
+            return await _apiData.Count(ownerKeyId, serviceId);
+        }
     }
 }

@@ -15,13 +15,19 @@ namespace ApiGateway.Core
         private readonly IStringLocalizer<IServiceManager> _localizer;
         private readonly ILogger<IServiceManager> _logger;
         private readonly IKeyManager _keyManager;
+        private readonly IRoleManager _roleManager;
+        private readonly IApiManager _apiManager;
 
-        public ServiceManager(IServiceData serviceData, IStringLocalizer<IServiceManager> localizer, ILogger<IServiceManager> logger, IKeyManager keyManager)
+        public ServiceManager(IServiceData serviceData, IStringLocalizer<IServiceManager> localizer, ILogger<IServiceManager> logger, 
+            IKeyManager keyManager, IRoleManager roleManager, IApiManager apiManager
+            )
         {
             _serviceData = serviceData;
             _localizer = localizer;
             _logger = logger;
             _keyManager = keyManager;
+            _roleManager = roleManager;
+            _apiManager = apiManager;
         }
 
         public async Task<ServiceModel> Create(string ownerPublicKey, ServiceModel model)
@@ -84,6 +90,26 @@ namespace ApiGateway.Core
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
             return await _serviceData.GetAll(ownerKey.Id);
+        }
+
+        public async Task<List<ServiceSummaryModel>> GetAllSummary(string ownerPublicKey)
+        {
+            var services = await GetAll(ownerPublicKey);
+
+            var result = new List<ServiceSummaryModel>();
+            foreach (var s in services)
+            {
+                var summary = new ServiceSummaryModel(s);
+
+                summary.ActiveRoleCount = await _roleManager.Count(s.OwnerKeyId, s.Id, false);
+                summary.DisabledRoleCount = await _roleManager.Count(s.OwnerKeyId, s.Id, true);
+
+                summary.ApiCount = await _apiManager.Count(s.OwnerKeyId, s.Id);
+                
+                result.Add(summary);
+            }
+
+            return result;
         }
 
         public async Task<ServiceModel> GetByName(string ownerPublicKey, string serviceName)

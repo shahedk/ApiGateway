@@ -175,5 +175,14 @@ namespace ApiGateway.Data.EFCore.DataAccess
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<int> Count(string ownerKeyId, string serviceId, bool isDisabled)
+        {
+            var serviceId2 = int.Parse(serviceId);
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+            
+            return await _context.Roles.CountAsync(x =>
+                x.ServiceId == serviceId2 && x.OwnerKeyId == ownerKeyId2 && x.IsDisabled == isDisabled);
+        }
     }
 }

@@ -51,8 +51,10 @@ namespace ApiGateway.Core.Test
             var localizer = new Mock<IStringLocalizer<IServiceManager>>();
             var logger = new Mock<ILogger<IServiceManager>>();
             var keyManager =  GetKeyManager();
+            var roleManager = GetRoleManager();
+            var apiManager = GetApiManager();
 
-            return new ServiceManager( GetServiceData(), localizer.Object, logger.Object, keyManager);
+            return new ServiceManager( GetServiceData(), localizer.Object, logger.Object, keyManager, roleManager, apiManager);
         }
         
         protected IApiManager GetApiManager()

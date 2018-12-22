@@ -10,5 +10,7 @@ namespace ApiGateway.Core
 
         Task AddApiInRole(string roleOwnerPublicKey, string roleId, string apiId);
         Task RemoveApiFromRole(string roleOwnerPublicKey, string roleId, string apiId);
+
+        Task<int> Count(string roleOwnerPublicKey, string serviceId, bool isDisabled);
     }
 }
