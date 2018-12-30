@@ -150,5 +150,11 @@ namespace ApiGateway.Core
 
             return result;
         }
+
+        public async Task<IList<ApiModel>> GetByService(string ownerPublicKey, string serviceId)
+        {
+            var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
+            return await _apiData.GetByService(ownerKey.Id, serviceId);
+        }
     }
 }

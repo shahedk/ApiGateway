@@ -10,5 +10,7 @@ namespace ApiGateway.Core
         Task<ApiModel> GetByApiUrl(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl);
         Task<int> Count(string sOwnerKeyId, string serviceId);
         Task<IList<ApiSummaryModel>> GetAllSummary(string ownerPublicKey);
+
+        Task<IList<ApiModel>> GetByService(string ownerPublicKey, string serviceId);
     }
 }

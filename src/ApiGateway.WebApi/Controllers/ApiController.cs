@@ -39,11 +39,18 @@ namespace ApiGateway.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IList<ApiModel>> Get()
+        public async Task<IList<ApiModel>> Get(string serviceId)
         {
             try
             {
-                return await _manager.GetAll(ApiKey);
+                if ( !string.IsNullOrEmpty(serviceId))
+                {
+                    return await _manager.GetByService(ApiKey, serviceId);
+                }
+                else
+                {
+                    return await _manager.GetAll(ApiKey);
+                }
             }
             catch (ApiGatewayException e)
             {
@@ -58,7 +65,7 @@ namespace ApiGateway.WebApi.Controllers
 
         // GET: api/Api/5
         [HttpGet("/sys/api-detail/{id}")]
-        public async Task<ApiModel> Get(string id)
+        public async Task<ApiModel> GetById(string id)
         {
             return await _manager.Get(ApiKey, id);
         }

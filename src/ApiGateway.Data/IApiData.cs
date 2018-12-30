@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApiGateway.Common.Models;
 
 namespace ApiGateway.Data
@@ -10,5 +11,6 @@ namespace ApiGateway.Data
         Task<bool> ExistsByName(string ownerKeyId, string serviceId, string httpMethod, string name);
         Task<bool> ExistsByUrl(string ownerKeyId, string serviceId, string httpMethod, string url);
         Task<int> Count(string ownerKeyId, string serviceId);
+        Task<IList<ApiModel>> GetByService(string ownerKeyId, string serviceId);
     }
 }
