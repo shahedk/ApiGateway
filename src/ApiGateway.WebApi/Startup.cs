@@ -74,6 +74,7 @@ namespace ApiGateway.WebApi
             services.AddTransient<IKeyManager, KeyManager>();
             services.AddTransient<IRoleManager, RoleManager>();
             services.AddTransient<IServiceManager, ServiceManager>();
+            services.AddTransient<KeySecretCache>();
             
             // Data
             services.AddTransient<IKeyData, KeyData>();

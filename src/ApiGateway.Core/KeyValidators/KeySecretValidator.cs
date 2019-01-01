@@ -16,17 +16,19 @@ namespace ApiGateway.Core.KeyValidators
         private readonly IKeyManager _keyManager;
         private readonly IStringLocalizer<KeySecretValidator> _localizer;
         private readonly ILogger<KeySecretValidator> _logger;
-        private readonly IDistributedCache _cache;
+        private readonly KeySecretCache _keySecretCache;
+        
 
         public KeySecretValidator(IKeyManager keyManager, 
             IStringLocalizer<KeySecretValidator> localizer, 
             ILogger<KeySecretValidator> logger,
-            IDistributedCache cache)
+            KeySecretCache keySecretCache)
         {
             _keyManager = keyManager;
             _localizer = localizer;
             _logger = logger;
-            _cache = cache;
+            _keySecretCache = keySecretCache;
+            
         }
 
         public async Task<KeyValidationResult> IsValid(string pubKey, string secret)
@@ -40,7 +42,7 @@ namespace ApiGateway.Core.KeyValidators
             }
             else
             {
-                if (IsValidOnCache(pubKey, secret, out var keyId))
+                if (_keySecretCache.IsValidOnCache(pubKey, secret, out var keyId))
                 {
                     var log = _localizer["Login successful based on Cache for: "] + pubKey;
                     _logger.LogInformation(LogEvents.LoginSuccess, log);
@@ -69,7 +71,7 @@ namespace ApiGateway.Core.KeyValidators
                         result.IsValid = true;
 
                         // Store in cache
-                        StoreValidationResultCache(pubKey, key.Id, secret);
+                        _keySecretCache.StoreValidationResultCache(pubKey, key.Id, secret);
                     }
                 }
             }
@@ -77,62 +79,7 @@ namespace ApiGateway.Core.KeyValidators
             return result;
         }
 
-        private bool IsValidOnCache(string pubkey, string secret, out string keyId)
-        {
-            keyId = "";
-            var value =   _cache.Get(pubkey);
-            if (value != null)
-            {
-                var pubKeyOnCache = new ValidationResultCacheItem(value);
 
-                keyId = pubKeyOnCache.KeyId;
-                return pubkey == pubKeyOnCache.PubKey;
-            }
-
-            return false;
-        }
         
-        private async Task StoreValidationResultCache(string pubKey, string keyId, string secret)
-        {
-            var next3minutes = new DateTimeOffset(DateTime.Now.AddMonths(3));
-            var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(next3minutes);
-
-            var value = new ValidationResultCacheItem(pubKey, keyId).ToBytes();
-
-            // Store validation result
-            await _cache.SetAsync(secret, value, options);
-            
-            //
-        }
-
-        class ValidationResultCacheItem
-        {
-            public string PubKey { get; set; }
-            public string KeyId { get; set; }
-
-            public override string ToString()
-            {
-               return JsonConvert.SerializeObject(this);
-            }
-
-            public byte[] ToBytes()
-            {
-                return Encoding.UTF8.GetBytes(this.ToString());
-            }
-
-            public ValidationResultCacheItem(string pubKey, string keyId)
-            {
-                PubKey = pubKey;
-                KeyId = keyId;
-            }
-
-            public ValidationResultCacheItem(byte[] bytes)
-            {
-                var json = Encoding.UTF8.GetString(bytes);
-                var val = JsonConvert.DeserializeObject<ValidationResultCacheItem>(json);
-                PubKey = val.PubKey;
-                KeyId = val.KeyId;
-            }
-        }
     }
 }

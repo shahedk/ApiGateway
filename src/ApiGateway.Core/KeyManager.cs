@@ -6,6 +6,7 @@ using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
+using ApiGateway.Core.KeyValidators;
 using ApiGateway.Data;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -18,14 +19,19 @@ namespace ApiGateway.Core
         private readonly IStringLocalizer<IKeyManager> _localizer;
         private readonly ILogger<IKeyManager> _logger;
         private readonly IRoleData _roleData;
+        private readonly KeySecretCache _keySecretCache;
 
-        public KeyManager(IKeyData keyData,IStringLocalizer<IKeyManager> localizer,ILogger<IKeyManager> logger,
-            IRoleData roleData)
+        public KeyManager(IKeyData keyData,
+            IStringLocalizer<IKeyManager> localizer,
+            ILogger<IKeyManager> logger,
+            IRoleData roleData,
+            KeySecretCache keySecretCache)
         {
             _keyData = keyData;
             _localizer = localizer;
             _logger = logger;
             _roleData = roleData;
+            _keySecretCache = keySecretCache;
         }
 
         public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
@@ -83,6 +89,9 @@ namespace ApiGateway.Core
 
             if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
             {
+                // Remove old key from cache
+                _keySecretCache.RemoveCache(key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret1]);
+                
                 // owner can reset its secret. And also can reset secret for keys created by it
                 key.Properties[ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret();
                 return await _keyData.Update(key);
@@ -101,6 +110,9 @@ namespace ApiGateway.Core
 
             if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
             {
+                // Remove old key from cache
+                _keySecretCache.RemoveCache(key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret2]);
+
                 // owner can reset its secret. And also can reset secret for keys created by it
                 key.Properties[ApiKeyPropertyNames.ClientSecret2] = ModelHelper.GenerateSecret();
                 return await _keyData.Update(key);
@@ -119,6 +131,9 @@ namespace ApiGateway.Core
 
             if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
             {
+                // Remove old key from cache
+                _keySecretCache.RemoveCache(key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret3]);
+
                 // owner can reset its secret. And also can reset secret for keys created by it
                 key.Properties[ApiKeyPropertyNames.ClientSecret3] = ModelHelper.GenerateSecret();
                 return await _keyData.Update(key);

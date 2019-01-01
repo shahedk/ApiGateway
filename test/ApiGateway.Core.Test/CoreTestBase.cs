@@ -17,7 +17,7 @@ namespace ApiGateway.Core.Test
             var apiManager = GetApiManager();
             var keyManager =  GetKeyManager();
             var serviceManager =  GetServiceManager();
-            var keyValidator = new KeySecretValidator(keyManager, localizer2.Object, logger2.Object);
+            var keyValidator = new KeySecretValidator(keyManager, localizer2.Object, logger2.Object, null);
             return new ApiKeyValidator(keyValidator, localizer.Object, logger.Object, apiManager, keyManager,serviceManager);
         } 
 
@@ -26,7 +26,7 @@ namespace ApiGateway.Core.Test
             var localizer = new Mock<IStringLocalizer<KeySecretValidator>>();
             var logger = new Mock<ILogger<KeySecretValidator>>();
             var keyManager =  GetKeyManager();
-            return new KeySecretValidator(keyManager, localizer.Object, logger.Object);
+            return new KeySecretValidator(keyManager, localizer.Object, logger.Object, null);
         }
 
         protected  IKeyManager GetKeyManager()
