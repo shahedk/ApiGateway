@@ -82,6 +82,28 @@ namespace ApiGateway.WebApi
             services.AddTransient<IApiData, ApiData>();
             services.AddTransient<IAccessRuleData, AccessRuleData>();
             
+            // Caching
+            // TODO: This is a dev-env implementation. Configure for prod
+            services.AddDistributedMemoryCache();
+            /*
+             if (_hostContext.IsDevelopment())
+            {
+                services.AddDistributedMemoryCache();
+            }
+            else
+            {
+                services.AddDistributedSqlServerCache(options =>
+                {
+                    options.ConnectionString = 
+                        _config["DistCache_ConnectionString"];
+                    options.SchemaName = "dbo";
+                    options.TableName = "TestCache";
+                });
+            }
+             */
+            
+            
+            // Internationalization
             services.Configure<RequestLocalizationOptions>(
                 opts =>
                 {
