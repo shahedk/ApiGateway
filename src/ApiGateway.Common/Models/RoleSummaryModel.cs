@@ -15,7 +15,7 @@ namespace ApiGateway.Common.Models
             IsDisabled = model.IsDisabled;
 
             Id = model.Id;
-            OwnerKeyId = model.OwnerKeyId;
+            OwnerId = model.OwnerId;
             CreateDate = model.CreateDate;
             ModifiedDate = model.ModifiedDate;
         }

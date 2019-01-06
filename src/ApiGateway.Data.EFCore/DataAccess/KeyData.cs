@@ -32,12 +32,12 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<KeyModel> Update(KeyModel model)
         {
-            var ownerKey = int.Parse(model.OwnerKeyId);
+            var ownerKey = int.Parse(model.OwnerId);
             var entityId = int.Parse(model.Id);
             var existing = await _context.Keys.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKey && x.Id == entityId);
 
             // Update properties
-            existing.OwnerKeyId = int.Parse(model.OwnerKeyId);
+            existing.OwnerKeyId = int.Parse(model.OwnerId);
             existing.PublicKey = model.PublicKey;
             existing.IsDisabled = model.IsDisabled;
             existing.Properties = model.Properties.ToJson();

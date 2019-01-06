@@ -19,7 +19,7 @@ namespace ApiGateway.Core.Test
             var serviceModel = new ServiceModel()
             {
                 Name = "TestService " + ModelHelper.GenerateNewId(),
-                OwnerKeyId = rootKey.Id
+                OwnerId = rootKey.Id
             };
 
             var savedService = await serviceManager.Create(rootKey.PublicKey, serviceModel);

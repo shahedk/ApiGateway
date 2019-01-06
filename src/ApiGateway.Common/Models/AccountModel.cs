@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace ApiGateway.Common.Models
 {
-    public class ModelBase
+    public class AccountModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        [StringLength(32)] public string OwnerId { get; set; } = "";
+        [Required]
+        [StringLength(32)] 
+        public string LoginName { get; set; } = "";
 
 
         public DateTime CreateDate { get; set; } = DateTime.Now;

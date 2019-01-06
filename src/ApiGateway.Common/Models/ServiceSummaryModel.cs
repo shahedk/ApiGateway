@@ -13,7 +13,7 @@ namespace ApiGateway.Common.Models
         public ServiceSummaryModel(ServiceModel model)
         {
             Id = model.Id;
-            OwnerKeyId = model.OwnerKeyId;
+            OwnerId = model.OwnerId;
             CreateDate = model.CreateDate;
             ModifiedDate = model.ModifiedDate;
             

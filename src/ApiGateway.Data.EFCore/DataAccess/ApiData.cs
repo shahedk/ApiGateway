@@ -30,7 +30,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<ApiModel> Update(ApiModel model)
         {
-            var ownerKey = int.Parse(model.OwnerKeyId);
+            var ownerKey = int.Parse(model.OwnerId);
             var apiId = int.Parse(model.Id);
             var existing = await _context.Apis.SingleOrDefaultAsync(x => x.OwnerKeyId ==  ownerKey && x.Id == apiId);
 
@@ -38,7 +38,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
             existing.HttpMethod = model.HttpMethod;
             existing.ServiceId = int.Parse(model.ServiceId);
             existing.Url = model.Url;
-            existing.OwnerKeyId = int.Parse(model.OwnerKeyId);
+            existing.OwnerKeyId = int.Parse(model.OwnerId);
             existing.ModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

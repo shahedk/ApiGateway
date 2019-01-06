@@ -25,7 +25,7 @@ namespace ApiGateway.Data.EFCore.Extensions
             return new Key
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
-                OwnerKeyId = string.IsNullOrEmpty(model.OwnerKeyId) ? 0 : Int32.Parse(model.OwnerKeyId),
+                OwnerKeyId = string.IsNullOrEmpty(model.OwnerId) ? 0 : Int32.Parse(model.OwnerId),
                 Properties = model.Properties.ToJson(),
                 PublicKey = model.PublicKey,
                 Type = model.Type,
@@ -44,7 +44,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
                 Type = entity.Type,
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -60,7 +60,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Properties = entity.Properties.ToProperties(),
                 PublicKey =  entity.PublicKey,
                 Type = entity.Type,
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -81,7 +81,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = int.Parse(model.ServiceId),
                 
                 Url = model.Url,
-                OwnerKeyId = int.Parse( model.OwnerKeyId),
+                OwnerKeyId = int.Parse( model.OwnerId),
                 
                 CustomHeaders = model.CustomHeaders.ToJson(),
                 CreateDate = model.CreateDate.ToDbTime(),
@@ -101,7 +101,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = entity.ServiceId.ToString(),
                 Url = entity.Url,
                 CustomHeaders = entity.CustomHeaders.ToProperties(),
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -120,7 +120,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = entity.ServiceId.ToString(),
                 Url = entity.Url,
                 CustomHeaders = entity.CustomHeaders.ToProperties(),
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -139,7 +139,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Name = model.Name,
                 ServiceId = Int32.Parse( model.ServiceId),
                 
-                OwnerKeyId = int.Parse(model.OwnerKeyId),
+                OwnerKeyId = int.Parse(model.OwnerId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -154,7 +154,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = entity.Id.ToString(),
                 Name = entity.Name,
                 ServiceId = entity.ServiceId.ToString(),
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -172,7 +172,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ApiInRole = apiInRole,
                 Name = entity.Name,
                 ServiceId = entity.ServiceId.ToString(),
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -189,7 +189,7 @@ namespace ApiGateway.Data.EFCore.Extensions
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
-                OwnerKeyId = int.Parse(model.OwnerKeyId),
+                OwnerKeyId = int.Parse(model.OwnerId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -204,7 +204,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Id = entity.Id.ToString(),
                 Name = entity.Name,
                 
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
@@ -227,7 +227,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = model.ServiceId,
                 
                 Type = model.Type,
-                OwnerKeyId = int.Parse(model.OwnerKeyId),
+                OwnerKeyId = int.Parse(model.OwnerId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
             };
@@ -246,7 +246,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 ServiceId = entity.ServiceId,
                 
                 Type = entity.Type,
-                OwnerKeyId = entity.OwnerKeyId.ToString(),
+                OwnerId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };

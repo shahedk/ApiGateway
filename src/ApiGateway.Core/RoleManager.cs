@@ -28,7 +28,7 @@ namespace ApiGateway.Core
         public async Task<RoleModel> Create(string ownerPublicKey, RoleModel model)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             return await _roleData.Create(model);
         }
@@ -36,7 +36,7 @@ namespace ApiGateway.Core
         public async Task<RoleModel> Update(string ownerPublicKey, RoleModel model)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             return await _roleData.Update(model);
         }
@@ -149,8 +149,8 @@ namespace ApiGateway.Core
             {
                 var role = new RoleSummaryModel(r)
                 {
-                    ApiCount = await _roleData.ApiCountInRole(r.OwnerKeyId, r.Id),
-                    KeyCount = await _roleData.KeyCountInRole(r.OwnerKeyId, r.Id)
+                    ApiCount = await _roleData.ApiCountInRole(r.OwnerId, r.Id),
+                    KeyCount = await _roleData.KeyCountInRole(r.OwnerId, r.Id)
                 };
 
                 result.Add(role);

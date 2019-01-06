@@ -33,7 +33,7 @@ namespace ApiGateway.Core
         public async Task<ServiceModel> Create(string ownerPublicKey, ServiceModel model)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             // Service name must be unique
             if (await _serviceData.Exists(model.Name))
@@ -51,7 +51,7 @@ namespace ApiGateway.Core
             await Get(ownerPublicKey, model.Id);
 
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             // Check if name changed and whether another service exists with the same name
             var existing = await _serviceData.GetByName(model.Name);
@@ -101,10 +101,10 @@ namespace ApiGateway.Core
             {
                 var summary = new ServiceSummaryModel(s);
 
-                summary.ActiveRoleCount = await _roleManager.CountByService(s.OwnerKeyId, s.Id, false);
-                summary.DisabledRoleCount = await _roleManager.CountByService(s.OwnerKeyId, s.Id, true);
+                summary.ActiveRoleCount = await _roleManager.CountByService(s.OwnerId, s.Id, false);
+                summary.DisabledRoleCount = await _roleManager.CountByService(s.OwnerId, s.Id, true);
 
-                summary.ApiCount = await _apiManager.Count(s.OwnerKeyId, s.Id);
+                summary.ApiCount = await _apiManager.Count(s.OwnerId, s.Id);
                 
                 result.Add(summary);
             }

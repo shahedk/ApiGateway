@@ -37,7 +37,7 @@ namespace ApiGateway.Core
         public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
         {
             var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             var result = await _keyData.Create(model);
             _logger.LogInformation(LogEvents.NewKeyCreated,string.Empty, ownerPublicKey, model.PublicKey);
@@ -48,7 +48,7 @@ namespace ApiGateway.Core
         public async Task<KeyModel> Update(string ownerPublicKey, KeyModel model)
         {
             var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             var result = await _keyData.Update(model);
             _logger.LogInformation(LogEvents.NewKeyUpdated,string.Empty, ownerPublicKey, model.PublicKey);
@@ -87,7 +87,7 @@ namespace ApiGateway.Core
             var ownerKey = await GetByPublicKey(ownerPublicKey);
             var key = await GetByPublicKey(keyPublicKey);
 
-            if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
+            if ( key != null && ( key.OwnerId == ownerKey.Id || key.Id == ownerKey.Id))
             {
                 // Remove old key from cache
                 _keySecretCache.RemoveCache(key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret1]);
@@ -108,7 +108,7 @@ namespace ApiGateway.Core
             var ownerKey = await GetByPublicKey(ownerPublicKey);
             var key = await GetByPublicKey(keyPublicKey);
 
-            if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
+            if ( key != null && ( key.OwnerId == ownerKey.Id || key.Id == ownerKey.Id))
             {
                 // Remove old key from cache
                 _keySecretCache.RemoveCache(key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret2]);
@@ -129,7 +129,7 @@ namespace ApiGateway.Core
             var ownerKey = await GetByPublicKey(ownerPublicKey);
             var key = await GetByPublicKey(keyPublicKey);
 
-            if ( key != null && ( key.OwnerKeyId == ownerKey.Id || key.Id == ownerKey.Id))
+            if ( key != null && ( key.OwnerId == ownerKey.Id || key.Id == ownerKey.Id))
             {
                 // Remove old key from cache
                 _keySecretCache.RemoveCache(key.PublicKey, key.Properties[ApiKeyPropertyNames.ClientSecret3]);
@@ -186,8 +186,8 @@ namespace ApiGateway.Core
             {
                 var key = new KeySummaryModel(k)
                 {
-                    ActiveRoleCount = await _roleData.CountByKey(k.OwnerKeyId, k.Id, false),
-                    DisabledRoleCount = await _roleData.CountByKey(k.OwnerKeyId, k.Id, true)
+                    ActiveRoleCount = await _roleData.CountByKey(k.OwnerId, k.Id, false),
+                    DisabledRoleCount = await _roleData.CountByKey(k.OwnerId, k.Id, true)
                 };
 
                 result.Add(key);

@@ -21,14 +21,14 @@ namespace ApiGateway.Core.Test
             var serviceModel = new ServiceModel
             {
                 Name = "Test service " + Guid.NewGuid(), 
-                OwnerKeyId = rootKey.Id
+                OwnerId = rootKey.Id
             };
             
             var savedService = await serviceManager.Create(rootKey.PublicKey, serviceModel);
 
             var apiModel = new ApiModel
             {
-                OwnerKeyId = savedService.OwnerKeyId,
+                OwnerId = savedService.OwnerId,
                 Name = "Test Api " + ModelHelper.GenerateNewId(),
                 ServiceId = savedService.Id,
                 HttpMethod = ApiHttpMethods.Get,

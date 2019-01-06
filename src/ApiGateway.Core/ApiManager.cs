@@ -31,7 +31,7 @@ namespace ApiGateway.Core
         public async Task<ApiModel> Create(string ownerPublicKey, ApiModel model)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             // Check if same name or url is already used by other api in the same service
             if (await _apiData.ExistsByName(ownerKey.Id, model.ServiceId, model.HttpMethod, model.Name))
@@ -53,7 +53,7 @@ namespace ApiGateway.Core
         public async Task<ApiModel> Update(string ownerPublicKey, ApiModel model)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
-            model.OwnerKeyId = ownerKey.Id;
+            model.OwnerId = ownerKey.Id;
 
             // Check if name is being updated then is the new name & http-method is unique
             var existing = await _apiData.Get(ownerKey.Id, model.Id);
@@ -141,8 +141,8 @@ namespace ApiGateway.Core
             {
                 var api = new ApiSummaryModel(a)
                 {
-                    ActiveRoleCount = await _roleData.CountByApi(a.OwnerKeyId, a.Id, false),
-                    DisabledRoleCount = await _roleData.CountByApi(a.OwnerKeyId, a.Id, true)
+                    ActiveRoleCount = await _roleData.CountByApi(a.OwnerId, a.Id, false),
+                    DisabledRoleCount = await _roleData.CountByApi(a.OwnerId, a.Id, true)
                 };
 
                 result.Add(api);

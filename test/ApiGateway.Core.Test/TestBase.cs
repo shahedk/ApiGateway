@@ -79,7 +79,7 @@ namespace ApiGateway.Core.Test
 
                 var keyModel = new KeyModel
                 {
-                    OwnerKeyId = "0",
+                    OwnerId = "0",
                     PublicKey = ModelHelper.GeneratePublicKey(),
                     Type = ApiKeyTypes.ClientSecret,
                     Properties = {[ApiKeyPropertyNames.ClientSecret1] = ModelHelper.GenerateSecret()}

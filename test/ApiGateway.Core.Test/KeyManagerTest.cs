@@ -19,7 +19,7 @@ namespace ApiGateway.Core.Test
 
             var key = new KeyModel
             {
-                OwnerKeyId = rootKey.Id,
+                OwnerId = rootKey.Id,
                 PublicKey = ModelHelper.GeneratePublicKey(),
                 Type = ApiKeyTypes.ClientSecret
             };

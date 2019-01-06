@@ -33,7 +33,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
         public async Task<RoleModel> Update(RoleModel model)
         {
             var roleId = int.Parse(model.Id);
-            var ownerKeyId = int.Parse(model.OwnerKeyId);
+            var ownerKeyId = int.Parse(model.OwnerId);
 
             var existing = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == roleId);
 

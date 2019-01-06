@@ -37,7 +37,7 @@ namespace ApiGateway.Data.EFCore.DataAccess
 
         public async Task<ServiceModel> Update(ServiceModel model)
         {
-            var ownerKeyId = int.Parse(model.OwnerKeyId);
+            var ownerKeyId = int.Parse(model.OwnerId);
             var id = int.Parse(model.Id);
             var existing =
                 await _context.Services.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == id);

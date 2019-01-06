@@ -17,7 +17,7 @@ namespace ApiGateway.Common.Models
             // Roles = model.Roles;
             
             Id = model.Id;
-            OwnerKeyId = model.OwnerKeyId;
+            OwnerId = model.OwnerId;
             CreateDate = model.CreateDate;
             ModifiedDate = model.ModifiedDate;
         }
