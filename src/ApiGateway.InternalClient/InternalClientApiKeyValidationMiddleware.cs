@@ -26,7 +26,7 @@ namespace ApiGateway.InternalClient
             var path = context.Request.Path.Value.ToLower();
             if (context.Request.Path.HasValue)
             {
-                if (path.StartsWith("/sys/appenv") || path.StartsWith("/api/isvalid/")|| path.StartsWith("/swagger/"))
+                if (path.StartsWith("/sys/appenv") || path.StartsWith("/api/isvalid/")|| path.StartsWith("/swagger/") || path.EndsWith("/swagger"))
                 {
                     // These two special paths don't need api-key validation
                     await _next.Invoke(context);

@@ -35,7 +35,7 @@ namespace ApiGateway.Core.Test
             var logger = new Mock<ILogger<IKeyManager>>();
             var roleData = GetRoleData();
             
-            return new KeyManager( GetKeyData(), localizer.Object, logger.Object, roleData);
+            return new KeyManager( GetKeyData(), localizer.Object, logger.Object, roleData, null);
         }
 
         protected IRoleManager GetRoleManager()
