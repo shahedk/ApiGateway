@@ -1,12 +1,10 @@
 using System.Net;
 using System.Threading.Tasks;
 using ApiGateway.Client;
-using ApiGateway.Common;
 using ApiGateway.Common.Constants;
 using ApiGateway.Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace ApiGateway.InternalClient
 {
@@ -26,7 +24,9 @@ namespace ApiGateway.InternalClient
             var path = context.Request.Path.Value.ToLower();
             if (context.Request.Path.HasValue)
             {
-                if (path.StartsWith("/sys/appenv") || path.StartsWith("/api/isvalid/")|| path.StartsWith("/swagger/") || path.EndsWith("/swagger"))
+                if (path.StartsWith("/sys/appenv/") || path.EndsWith("/sys/appenv")
+                    || path.StartsWith("/api/isvalid/") || path.EndsWith("/api/isvalid")
+                    || path.StartsWith("/swagger/") || path.EndsWith("/swagger"))
                 {
                     // These two special paths don't need api-key validation
                     await _next.Invoke(context);
