@@ -1,10 +1,11 @@
 ﻿using System;
 using ApiGateway.Data.EFCore.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ApiGateway.Data.EFCore
 {
-    public class ApiGatewayContext : DbContext
+    public sealed class ApiGatewayContext : DbContext
     {
         public DbSet<Service> Services { get; set; }
         public DbSet<Key> Keys { get; set; }
@@ -23,6 +24,12 @@ namespace ApiGateway.Data.EFCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Adding "AG_" prefix to all table names
+            foreach (IMutableEntityType type in modelBuilder.Model.GetEntityTypes())
+            {
+                type.Relational().TableName = "AG_" + type.Relational().TableName;
+            }
+
             // Key
             modelBuilder.Entity<Key>().HasIndex(x => x.PublicKey).IsUnique();
             modelBuilder.Entity<Key>().HasIndex(x => x.OwnerKeyId).IsUnique(false);
