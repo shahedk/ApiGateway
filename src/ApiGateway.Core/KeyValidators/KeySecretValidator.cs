@@ -71,7 +71,7 @@ namespace ApiGateway.Core.KeyValidators
                         result.IsValid = true;
 
                         // Store in cache
-                        _keySecretCache.StoreValidationResultCache(pubKey, key.Id, secret);
+                        await _keySecretCache.StoreValidationResultCache(pubKey, key.Id, secret);
                     }
                 }
             }
