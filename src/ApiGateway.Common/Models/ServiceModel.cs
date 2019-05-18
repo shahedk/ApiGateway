@@ -12,5 +12,7 @@ namespace ApiGateway.Common.Models
             get => _name;
             set => _name = value.ToLower();
         }
+
+        [MaxLength(200)] public string Description { get; set; } = string.Empty;
     }
 }
