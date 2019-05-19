@@ -82,8 +82,7 @@ namespace ApiGateway.Core
             // Create Role definitions
             var role = await _roleManager.Create(rootKey.PublicKey, new RoleModel
             {
-                Name = "ApiGateway.Admin",
-                ServiceId = sysService.Id
+                Name = "ApiGateway.Admin"
             });
             await _roleManager.AddKeyInRole(rootKey.PublicKey, role.Id, rootKey.PublicKey);
 
@@ -257,6 +256,7 @@ namespace ApiGateway.Core
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiGet.Id);
 
+            // URL: /sys/role-detail/{id}
             var roleApiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Role-Detail",
@@ -266,7 +266,17 @@ namespace ApiGateway.Core
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiGetDetail.Id);
 
-            
+            // URL: /sys/role-summary
+            var roleApiGetSummary = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Role-Summary",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "role-summary/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, roleApiGetSummary.Id);
+
+
             var roleApiPost = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Role",
