@@ -38,7 +38,6 @@ namespace ApiGateway.Data.EFCore.DataAccess
             var existing = await _context.Roles.SingleOrDefaultAsync(x => x.OwnerKeyId == ownerKeyId && x.Id == roleId);
 
             existing.Name = model.Name;
-            existing.ServiceId = int.Parse(model.ServiceId);
 
             await _context.SaveChangesAsync();
 
@@ -173,6 +172,44 @@ namespace ApiGateway.Data.EFCore.DataAccess
             if (exists != null)
             {
                 _context.ApiInRoles.Remove(exists);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddServiceInRole(string ownerKeyId, string roleId, string serviceId)
+        {
+            var serviceId2 = int.Parse(serviceId);
+            var role = await GetEntity(ownerKeyId, roleId);
+            if (role == null) throw new InvalidDataException();
+
+            var ownerKeyId2 = int.Parse(ownerKeyId);
+
+            var exists = await _context.ServiceInRoles.SingleOrDefaultAsync(x => x.ServiceId == serviceId2 && x.RoleId == role.Id);
+
+            if (exists == null)
+            {
+                var map = new ServiceInRole
+                {
+                    ServiceId = serviceId2,
+                    RoleId = role.Id
+                };
+
+                _context.ServiceInRoles.Add(map);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task RemoveServiceFromRole(string ownerKeyId, string roleId, string serviceId)
+        {
+            var serviceId2 = int.Parse(serviceId);
+
+            var role = await GetEntity(ownerKeyId, roleId);
+            if (role == null) throw new InvalidDataException();
+
+            var exists = await _context.ServiceInRoles.SingleOrDefaultAsync(x => x.ServiceId == serviceId2 && x.RoleId == role.Id);
+
+            if (exists != null)
+            {
+                _context.ServiceInRoles.Remove(exists);
                 await _context.SaveChangesAsync();
             }
         }

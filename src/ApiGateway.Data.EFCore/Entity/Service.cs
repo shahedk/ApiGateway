@@ -12,5 +12,6 @@ namespace ApiGateway.Data.EFCore.Entity
         public List<Role> Roles { get; set; }
         public List<Api> Apis { get; set; }
 
+        public List<ServiceInRole> ServiceInRoles { get; set; }
     }
 }

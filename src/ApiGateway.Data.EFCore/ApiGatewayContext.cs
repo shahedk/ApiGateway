@@ -13,6 +13,8 @@ namespace ApiGateway.Data.EFCore
         public DbSet<Role> Roles { get; set; }
         public DbSet<ApiInRole> ApiInRoles { get; set; }
         public DbSet<KeyInRole> KeyInRoles { get; set; }
+
+        public DbSet<ServiceInRole> ServiceInRoles { get; set; }
         
         public DbSet<AccessRule> AccessRules { get; set; }
         public DbSet<AccessRuleForRole> AccessRuleForRoles { get; set; }
@@ -47,7 +49,7 @@ namespace ApiGateway.Data.EFCore
             
             // Role
             modelBuilder.Entity<Role>().HasIndex(x => new {x.ServiceId, x.Name}).IsUnique();
-            modelBuilder.Entity<Role>().HasOne(x => x.Service)
+            modelBuilder.Entity<Role>().HasOne(x => x.OwnerKey)
                 .WithMany(x => x.Roles).HasForeignKey(x => x.ServiceId).HasConstraintName("ForeignKey_Role_Service").OnDelete(DeleteBehavior.Restrict);
 
             // ApiInRole (Many to Many)
@@ -56,6 +58,14 @@ namespace ApiGateway.Data.EFCore
                 .HasForeignKey(x => x.ApiId).HasConstraintName("ForeignKey_Api_ApiInRole").OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<ApiInRole>().HasOne(x => x.Role).WithMany(x => x.ApiInRoles)
                 .HasForeignKey(x => x.RoleId).HasConstraintName("ForeignKey_Role_ApiInRole").OnDelete(DeleteBehavior.Restrict);
+
+            // ServiceInRole (Many to Many)
+            modelBuilder.Entity<ServiceInRole>().HasIndex(x => new { x.ServiceId, x.RoleId });
+            modelBuilder.Entity<ServiceInRole>().HasOne(x => x.Service).WithMany(x => x.ServiceInRoles)
+                .HasForeignKey(x => x.ServiceId).HasConstraintName("ForeignKey_Service_ServiceInRole").OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ServiceInRole>().HasOne(x => x.Role).WithMany(x => x.ServiceInRoles)
+                .HasForeignKey(x => x.RoleId).HasConstraintName("ForeignKey_Role_ServiceInRole").OnDelete(DeleteBehavior.Restrict);
+
 
             // KeyInRole (Many to Many)
             modelBuilder.Entity<KeyInRole>().HasIndex(x => x.KeyId).IsUnique(false);

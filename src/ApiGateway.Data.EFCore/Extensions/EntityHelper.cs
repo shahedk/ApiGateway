@@ -137,8 +137,6 @@ namespace ApiGateway.Data.EFCore.Extensions
             {
                 Id = string.IsNullOrEmpty(model.Id) ? 0 : int.Parse(model.Id),
                 Name = model.Name,
-                ServiceId = Int32.Parse( model.ServiceId),
-                
                 OwnerKeyId = int.Parse(model.OwnerKeyId),
                 CreateDate = model.CreateDate.ToDbTime(),
                 ModifiedDate = model.ModifiedDate.ToDbTime()
@@ -153,14 +151,13 @@ namespace ApiGateway.Data.EFCore.Extensions
             {
                 Id = entity.Id.ToString(),
                 Name = entity.Name,
-                ServiceId = entity.ServiceId.ToString(),
                 OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()
             };
         }
 
-        public static RoleModel ToModel(this Role entity, List<AccessRuleModel> accessRules, List<ApiModel> apiInRole)
+        public static RoleModel ToModel(this Role entity, List<AccessRuleModel> accessRules, List<ApiModel> apiInRole, List<ServiceModel> serviceInRole)
         {
             if (entity == null) return null;
 
@@ -171,7 +168,7 @@ namespace ApiGateway.Data.EFCore.Extensions
                 
                 ApiInRole = apiInRole,
                 Name = entity.Name,
-                ServiceId = entity.ServiceId.ToString(),
+                ServiceInRole = serviceInRole,
                 OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),
                 ModifiedDate = entity.ModifiedDate.ToClientLocalTime()

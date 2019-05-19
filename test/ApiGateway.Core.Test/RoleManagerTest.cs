@@ -42,8 +42,7 @@ namespace ApiGateway.Core.Test
             var roleModel = new RoleModel
             {
                 Name = "TestRole " + ModelHelper.GenerateNewId(), 
-                OwnerKeyId = userKey.Id, 
-                ServiceId = savedService.Id
+                OwnerKeyId = userKey.Id
             };
             var savedRole = await roleManager.Create(rootKey.PublicKey, roleModel);
 
@@ -90,8 +89,7 @@ namespace ApiGateway.Core.Test
             var roleModel = new RoleModel
             {
                 Name = "TestRole " + ModelHelper.GenerateNewId(), 
-                OwnerKeyId = userKey.Id, 
-                ServiceId = savedService.Id
+                OwnerKeyId = userKey.Id
             };
             var savedRole = await roleManager.Create(rootKey.PublicKey,roleModel);
 
@@ -144,8 +142,7 @@ namespace ApiGateway.Core.Test
             var roleModel = new RoleModel
             {
                 Name = "TestRole " + ModelHelper.GenerateNewId(),
-                OwnerKeyId = rootKey.Id, 
-                ServiceId = savedService.Id
+                OwnerKeyId = rootKey.Id
             };
             var savedRole = await roleData.Create(roleModel);
 
@@ -189,8 +186,7 @@ namespace ApiGateway.Core.Test
             var roleModel = new RoleModel
             {
                 Name = "TestRole " + ModelHelper.GenerateNewId(),
-                OwnerKeyId = rootKey.Id, 
-                ServiceId = savedService.Id
+                OwnerKeyId = rootKey.Id
             };
             var savedRole = await roleData.Create(roleModel);
             

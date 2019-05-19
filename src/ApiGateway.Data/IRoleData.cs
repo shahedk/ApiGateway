@@ -13,6 +13,9 @@ namespace ApiGateway.Data
         Task AddApiInRole(string ownerKeyId, string roleId, string apiId);
         Task RemoveApiFromRole(string ownerKeyId, string roleId, string apiId);
 
+        Task AddServiceInRole(string ownerKeyId, string roleId, string serviceId);
+        Task RemoveServiceFromRole(string ownerKeyId, string roleId, string serviceId);
+
         Task<int> CountByService(string ownerKeyId, string serviceId, bool isDisabled);
         
         Task<int> CountByKey(string ownerKeyId, string keyId, bool isDisabled);

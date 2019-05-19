@@ -6,11 +6,12 @@ namespace ApiGateway.Common.Models
         public int ApiCount { get; set; }
         public int AccessRuleCount { get; set; }
 
+        public int ServiceCount { get; set; }
+
         public RoleSummaryModel(){}
         
         public RoleSummaryModel(RoleModel model)
         {
-            ServiceId = model.ServiceId;
             Name = model.Name;
             IsDisabled = model.IsDisabled;
 

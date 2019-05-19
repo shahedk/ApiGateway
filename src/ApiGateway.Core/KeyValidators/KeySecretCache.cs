@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiGateway.Core.KeyValidators
 {
@@ -36,8 +35,8 @@ namespace ApiGateway.Core.KeyValidators
         
         public async Task StoreValidationResultCache(string pubKey, string keyId, string secret)
         {
-            var next3minutes = new DateTimeOffset(DateTime.Now.AddMonths(3));
-            var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(next3minutes);
+            var next3Minutes = new DateTimeOffset(DateTime.Now.AddMonths(3));
+            var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(next3Minutes);
 
             var value = new KeySecretValidationResultCacheItem(pubKey, keyId).ToBytes();
 
