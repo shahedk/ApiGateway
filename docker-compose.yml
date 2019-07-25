@@ -4,7 +4,7 @@ services:
         image: shahedk/apigateway:latest
         restart: always
         volumes:
-          - "/home/shahedk/docker/data/apigateway/appsettings.json:/app/appsettings.json"
+          - "/home/shahedk/docker/config/apigateway/appsettings.json:/app/appsettings.json"
         ports:
           - "8090:80"
 networks:
