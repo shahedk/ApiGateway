@@ -36,14 +36,13 @@ namespace ApiGateway.WebApi.Controllers
             
             var serviceName = id.ToLower();
          
-            var clientKey = new KeyModel
+            var challenge = new KeyChallenge
             {
                 Type = ApiKeyType,
-                PublicKey = ApiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret1] = ApiSecret}
+                Properties = {[ApiKeyPropertyNames.ClientSecret1] = ApiSecret, [ApiKeyPropertyNames.PublicKey] = ApiKey}
             };
 
-            var result = await _keyValidator.IsValid(clientKey, httpMethod, serviceName, api);
+            var result = await _keyValidator.IsValid(challenge, httpMethod, serviceName, api);
 
             return Ok(result.ToLite());
         }

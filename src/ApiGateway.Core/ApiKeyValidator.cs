@@ -33,11 +33,13 @@ namespace ApiGateway.Core
             _serviceManager = serviceManager;
         }
 
-        public async Task<KeyValidationResult> IsValid(KeyModel clientKey, string httpMethod,
-            string serviceName, string apiNameOrUrl)
+
+        public async Task<KeyValidationResult> IsValid(KeyChallenge keyChallenge, string httpMethod, string serviceName, string apiNameOrUrl)
         {
             // Validate client key
-            var clientKeyResult = await IsKeyValid(clientKey);
+            var clientKeyResult = await IsKeyValid(keyChallenge);
+            var publicKey = keyChallenge.Properties[ApiKeyPropertyNames.PublicKey];
+
             if (!clientKeyResult.IsValid)
             {
                 // Client key validation failed
@@ -53,7 +55,7 @@ namespace ApiGateway.Core
             
             var result = new KeyValidationResult();
 
-            var service = await _serviceManager.GetByName(clientKey.PublicKey, serviceName);
+            var service = await _serviceManager.GetByName(publicKey, serviceName);
 
             if (service == null)
             {
@@ -62,16 +64,16 @@ namespace ApiGateway.Core
                 return result;
             }
             
-            var api = await _apiManager.GetByApiName(clientKey.PublicKey, service.Id, httpMethod, apiNameOrUrl);
+            var api = await _apiManager.GetByApiName(publicKey, service.Id, httpMethod, apiNameOrUrl);
 
             if (api == null && !string.IsNullOrEmpty(apiNameOrUrl))
             {
-                api = await _apiManager.GetByApiUrl(clientKey.PublicKey, service.Id, httpMethod, apiNameOrUrl);
+                api = await _apiManager.GetByApiUrl(publicKey, service.Id, httpMethod, apiNameOrUrl);
             }
             
             if (api == null)
             {
-                api = await _apiManager.GetByApiName(clientKey.PublicKey, service.Id, httpMethod, string.Empty);
+                api = await _apiManager.GetByApiName(publicKey, service.Id, httpMethod, string.Empty);
             }
             
             if (api == null)
@@ -81,7 +83,7 @@ namespace ApiGateway.Core
                 return result;
             }
 
-            var clientKeyWithRoles = await _keyManager.GetByPublicKey(clientKey.PublicKey);
+            var clientKeyWithRoles = await _keyManager.GetByPublicKey(publicKey);
             foreach (var role in api.Roles)
             {
                 result.IsValid = clientKeyWithRoles.Roles.SingleOrDefault(x => x.Id == role.Id && !role.IsDisabled) != null;
@@ -105,17 +107,12 @@ namespace ApiGateway.Core
 
         }
 
-        private async Task<KeyValidationResult> IsKeyValid(KeyModel key)
+        private async Task<KeyValidationResult> IsKeyValid(KeyChallenge key)
         {
             KeyValidationResult result;
             if (key.Type == ApiKeyTypes.ClientSecret)
             {
-                result = await _keySecretValidator.IsValid(key.PublicKey, key.GetSecret1());
-
-                if (!result.IsValid)
-                {
-                    result = await _keySecretValidator.IsValid(key.PublicKey, key.GetSecret2());
-                }
+                result = await _keySecretValidator.IsValid(key.Properties[ApiKeyPropertyNames.PublicKey], key.Properties[ApiKeyPropertyNames.ClientSecret]);
             }
             else
             {

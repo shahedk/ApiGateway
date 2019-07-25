@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ApiGateway.Client;
 using ApiGateway.Common.Constants;
-using ApiGateway.Common.Extensions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core;
 
@@ -21,14 +21,17 @@ namespace ApiGateway.InternalClient
         public async Task<KeyValidationResult> IsClientApiKeyValidAsync(string apiKey, string apiSecret, 
             string serviceName, string apiName, string httpMethod)
         {
-            var clientKey = new KeyModel
+            var challenge = new KeyChallenge
             {
                 Type = _apiRequestHelper.GetApiKeyType(),
-                PublicKey = apiKey,
-                Properties = {[ApiKeyPropertyNames.ClientSecret1] = apiSecret}
+                Properties = new Dictionary<string, string>()
+                {
+                    [ApiKeyPropertyNames.ClientSecret] = apiSecret, [ApiKeyPropertyNames.PublicKey] = apiKey
+                }
             };
 
-            var result = await _keyValidator.IsValid(clientKey, httpMethod, serviceName, apiName);
+
+            var result = await _keyValidator.IsValid(challenge, httpMethod, serviceName, apiName);
             
             return result;
         }

@@ -56,7 +56,7 @@ namespace ApiGateway.Core.KeyValidators
 
                     if (key == null || key.IsDisabled ||
                         !(key.GetSecret1() == secret ||
-                          key.GetSecret3() == secret ||
+                          key.GetSecret2() == secret ||
                           key.GetSecret3() == secret))
                     {
                         result.IsValid = false;

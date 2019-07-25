@@ -219,8 +219,10 @@ namespace ApiGateway.Data.EFCore.DataAccess
             var serviceId2 = int.Parse(serviceId);
             var ownerKeyId2 = int.Parse(ownerKeyId);
             
-            return await _context.Roles.CountAsync(x =>
-                x.ServiceId == serviceId2 && x.OwnerKeyId == ownerKeyId2 && x.IsDisabled == isDisabled);
+            return await _context.Roles
+                .Join(_context.ServiceInRoles, roles=>roles.Id, serviceInRoles=>serviceInRoles.RoleId, (roles, serviceInRoles)=>new {Role=roles, serviceInRoles = serviceInRoles})
+                .CountAsync(x =>
+                x.serviceInRoles.ServiceId == serviceId2 && x.Role.OwnerKeyId == ownerKeyId2 && x.Role.IsDisabled == isDisabled);
         }
 
         public async Task<int> CountByKey(string ownerKeyId, string keyId, bool isDisabled)

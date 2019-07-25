@@ -221,8 +221,6 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Description = model.Description,
                 Properties = model.Properties.ToJson(),
                 Name = model.Name,
-                ServiceId = model.ServiceId,
-                
                 Type = model.Type,
                 OwnerKeyId = int.Parse(model.OwnerKeyId),
                 CreateDate = model.CreateDate.ToDbTime(),
@@ -240,8 +238,6 @@ namespace ApiGateway.Data.EFCore.Extensions
                 Description = entity.Description,
                 Name = entity.Name,
                 Properties = entity.Properties.ToProperties(),
-                ServiceId = entity.ServiceId,
-                
                 Type = entity.Type,
                 OwnerKeyId = entity.OwnerKeyId.ToString(),
                 CreateDate = entity.CreateDate.ToClientLocalTime(),

@@ -2,19 +2,15 @@
 
 namespace ApiGateway.Data.EFCore.Entity
 {
-    public class AccessRuleForRole : EntityBase
+    public class AccessRuleForRole : ManyToManyBase
     {
         [Required]
-        [StringLength(20)]
-        public string ServiceId { get; set; }
-        
-        [Required]
-        [StringLength(20)]
-        public string AcccessRuleId { get; set; }
+        public int AccessRuleId { get; set; }
         
         [Required]
         public int RoleId { get; set; }
         
         public Role Role { get; set; }
+        public AccessRule AccessRule { get; set; }
     }
 }

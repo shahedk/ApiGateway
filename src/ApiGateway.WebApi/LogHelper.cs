@@ -2,6 +2,7 @@ using System;
 using ApiGateway.Common.Models;
 using Serilog;
 using Serilog.Events;
+using Serilog.Formatting.Elasticsearch;
 using Serilog.Sinks.Elasticsearch;
 
 namespace ApiGateway.WebApi

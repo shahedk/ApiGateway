@@ -55,12 +55,11 @@ namespace ApiGateway.Data.EFCore.Entity
 
         public List<KeyInRole> KeyInRoles { get; set; }
         
-        public List<AccessRule> AccessRules { get; set; }
-
+        
         // Owner references
         public List<Key> Keys { get; set; }
         public List<Service> Services { get; set; }
         public List<Role> Roles { get; set; }
-
+        public List<AccessRule> AccessRules { get; set; }
     }
 }
