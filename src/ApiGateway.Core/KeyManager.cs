@@ -36,6 +36,12 @@ namespace ApiGateway.Core
 
         public async Task<KeyModel> Create(string ownerPublicKey, KeyModel model)
         {
+            var existing = await _keyData.GetByPublicKey(model.PublicKey);
+            if (existing != null)
+            {
+                throw new ApiGatewayException("A key with same PublicKey already exists", HttpStatusCode.BadRequest);
+            }
+
             var ownerKey = await _keyData.GetByPublicKey(ownerPublicKey);
             model.OwnerKeyId = ownerKey.Id;
 

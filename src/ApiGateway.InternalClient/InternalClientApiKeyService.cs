@@ -24,12 +24,12 @@ namespace ApiGateway.InternalClient
             var challenge = new KeyChallenge
             {
                 Type = _apiRequestHelper.GetApiKeyType(),
-                Properties = new Dictionary<string, string>()
+                Properties = new Dictionary<string, string>
                 {
-                    [ApiKeyPropertyNames.ClientSecret] = apiSecret, [ApiKeyPropertyNames.PublicKey] = apiKey
+                    [ApiKeyPropertyNames.ClientSecret] = apiSecret,
+                    [ApiKeyPropertyNames.PublicKey] = apiKey
                 }
             };
-
 
             var result = await _keyValidator.IsValid(challenge, httpMethod, serviceName, apiName);
             
