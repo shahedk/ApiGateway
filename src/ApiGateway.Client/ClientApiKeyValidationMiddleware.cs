@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ApiGateway.Common;
 using ApiGateway.Common.Constants;
@@ -14,16 +15,33 @@ namespace ApiGateway.Client
         private readonly RequestDelegate _next;
         private readonly IClientApiKeyService _clientApiKeyService;
         private readonly ApiGatewaySettings _settings;
+        private static Regex _allowAnnon;
 
         public ClientApiKeyValidationMiddleware(RequestDelegate next, IClientApiKeyService clientApiKeyService, IOptions<ApiGatewaySettings> settings)
         {
             _next = next;
             _clientApiKeyService = clientApiKeyService;
             _settings = settings.Value;
+
+            if (!string.IsNullOrWhiteSpace(_settings.AllowAnonymousApiPath) && _settings.AllowAnonymousApiPath.Length > 0)
+            {
+                _allowAnnon = new Regex(_settings.AllowAnonymousApiPath, RegexOptions.IgnoreCase);
+            }
         }
 
         public async Task Invoke(HttpContext context)
-        {   
+        {
+            if (_allowAnnon != null)
+            {
+                var path = context.Request.Path.Value.ToLower();
+
+                if (_allowAnnon.IsMatch(path))
+                {
+                    // Skip ApiKey validation. This path is allowed for anonymous access
+                    await _next.Invoke(context);
+                }
+            }
+
             if (!context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiKey) || !context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiSecret))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
