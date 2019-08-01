@@ -31,41 +31,43 @@ namespace ApiGateway.Client
 
         public async Task Invoke(HttpContext context)
         {
-            if (_allowAnnon != null)
-            {
-                var path = context.Request.Path.Value.ToLower();
+            var path = context.Request.Path.Value.ToLower();
 
-                if (_allowAnnon.IsMatch(path))
-                {
-                    // Skip ApiKey validation. This path is allowed for anonymous access
-                    await _next.Invoke(context);
-                }
-            }
-
-            if (!context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiKey) || !context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiSecret))
+            if (_allowAnnon != null && _allowAnnon.IsMatch(path))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync($"{ApiHttpHeaders.ApiKey} and/or {ApiHttpHeaders.ApiSecret} missing");
+                // Skip ApiKey validation. This path is allowed for anonymous access
+                await _next.Invoke(context);
             }
             else
             {
-                string apiKey = context.Request.Headers[ApiHttpHeaders.ApiKey];
-                string apiSecret = context.Request.Headers[ApiHttpHeaders.ApiSecret];
-                string action = context.Request.Method;
-                string apiName = context.Request.GetApiName();
-
-                var result = await _clientApiKeyService.IsClientApiKeyValidAsync(apiKey, apiSecret, _settings.ServiceName,  apiName, action);
-
-                if (result.IsValid)
+                if (!context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiKey) ||
+                    !context.Request.Headers.Keys.Contains(ApiHttpHeaders.ApiSecret))
                 {
-                    context.Items.Add(ApiHttpHeaders.ApiKey, apiKey);
-                    await _next.Invoke(context);
+                    context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                    await context.Response.WriteAsync(
+                        $"{ApiHttpHeaders.ApiKey} and/or {ApiHttpHeaders.ApiSecret} missing");
                 }
                 else
                 {
-                    // Validation failed
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    await context.Response.WriteAsync(result.ToJson());
+                    string apiKey = context.Request.Headers[ApiHttpHeaders.ApiKey];
+                    string apiSecret = context.Request.Headers[ApiHttpHeaders.ApiSecret];
+                    string action = context.Request.Method;
+                    string apiName = context.Request.GetApiName();
+
+                    var result = await _clientApiKeyService.IsClientApiKeyValidAsync(apiKey, apiSecret,
+                        _settings.ServiceName, apiName, action);
+
+                    if (result.IsValid)
+                    {
+                        context.Items.Add(ApiHttpHeaders.ApiKey, apiKey);
+                        await _next.Invoke(context);
+                    }
+                    else
+                    {
+                        // Validation failed
+                        context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                        await context.Response.WriteAsync(result.ToJson());
+                    }
                 }
             }
         }
