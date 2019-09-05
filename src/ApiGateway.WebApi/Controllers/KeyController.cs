@@ -5,8 +5,6 @@ using ApiGateway.Client;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Core;
-using ApiGateway.Data;
-using ApiGateway.Data.EFCore.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateway.WebApi.Controllers
@@ -58,14 +56,12 @@ namespace ApiGateway.WebApi.Controllers
             return null;
         }
         
-        // GET: api/Key/5
         [HttpGet("/sys/key-detail/{id}")]
         public async Task<KeyModel> Get(string id)
         {
             return await _manager.Get(ApiKey, id);
         }
         
-        // POST: api/Key
         [HttpPost]
         public async Task<KeyModel> Post([FromBody]KeyModelLite liteModel)
         {
@@ -102,7 +98,6 @@ namespace ApiGateway.WebApi.Controllers
             return keyModel;
         }
         
-        // PUT: api/Key/5
         [HttpPut("{id}")]
         public async Task<KeyModel> Put(string id, [FromBody]KeyModel model)
         {
@@ -112,7 +107,6 @@ namespace ApiGateway.WebApi.Controllers
             return keyModel;
         }
         
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {

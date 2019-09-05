@@ -9,7 +9,8 @@ namespace ApiGateway.Core
         Task<IList<ServiceSummaryModel>> GetAllSummary(string ownerPublicKey);
         
         Task<ServiceModel> GetByName(string ownerPublicKey, string serviceName);
-        
+        Task<ServiceModel> GetSysService();
+
         Task<int> Count();
     }
 }

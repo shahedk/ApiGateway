@@ -96,7 +96,18 @@ namespace ApiGateway.Core
                 ServiceId = sysService.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keyApiGet.Id);
-            
+
+
+            var keySummaryApiGet = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "key-summary",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "key-summary/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, keySummaryApiGet.Id);
+
+
             var keyApiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {
                 Name = "Key-Detail",
@@ -352,6 +363,16 @@ namespace ApiGateway.Core
                 ServiceId = sysService.Id
             });
             await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiGet.Id);
+
+            var apiSummaryGet = await _apiManager.Create(rootKey.PublicKey, new ApiModel
+            {
+                Name = "Api-Summary",
+                HttpMethod = ApiHttpMethods.Get,
+                Url = AppConstants.SysApiUrlPrefix + "api-summary/",
+                ServiceId = sysService.Id
+            });
+            await _roleManager.AddApiInRole(rootKey.PublicKey, role.Id, apiSummaryGet.Id);
+
 
             var apiGetDetail = await _apiManager.Create(rootKey.PublicKey, new ApiModel
             {

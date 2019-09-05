@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiGateway.Common\ApiGateway.Common.csproj" />
+    <ProjectReference Include="..\ApiGateway.Data.EFCore\ApiGateway.Data.EFCore.csproj" />
     <ProjectReference Include="..\ApiGateway.Data\ApiGateway.Data.csproj" />
   </ItemGroup>
 

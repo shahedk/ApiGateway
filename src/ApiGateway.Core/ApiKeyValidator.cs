@@ -55,7 +55,16 @@ namespace ApiGateway.Core
             
             var result = new KeyValidationResult();
 
-            var service = await _serviceManager.GetByName(publicKey, serviceName);
+            ServiceModel service = null;
+            if (serviceName.ToLower() == AppConstants.SysApiServiceName.ToLower())
+            {
+                // Its a core service (eg. manage key, service, role, etc. All active clients can use this service) 
+                service = await _serviceManager.GetSysService();
+            }
+            else
+            {
+                service = await _serviceManager.GetByName(publicKey, serviceName);
+            }
 
             if (service == null)
             {

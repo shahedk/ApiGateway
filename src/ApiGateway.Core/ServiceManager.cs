@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ApiGateway.Common.Constants;
 using ApiGateway.Common.Exceptions;
 using ApiGateway.Common.Models;
 using ApiGateway.Data;
@@ -124,6 +125,11 @@ namespace ApiGateway.Core
         public async Task<int> Count()
         {
             return await _serviceData.Count();
+        }
+
+        public async Task<ServiceModel> GetSysService()
+        {
+            return await _serviceData.GetByName(AppConstants.SysApiServiceName);
         }
     }
 }
