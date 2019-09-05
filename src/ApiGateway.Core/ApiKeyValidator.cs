@@ -72,8 +72,18 @@ namespace ApiGateway.Core
                 result.IsValid = false;
                 return result;
             }
-            
-            var api = await _apiManager.GetByApiName(publicKey, service.Id, httpMethod, apiNameOrUrl);
+
+            ApiModel api;
+            if(serviceName.ToLower() == AppConstants.SysApiServiceName.ToLower())
+            {
+                // System API
+                api = await _apiManager.GetByApiName(service.Id, httpMethod, apiNameOrUrl);
+            }
+            else
+            {
+                // User API
+                api = await _apiManager.GetByApiName(publicKey, service.Id, httpMethod, apiNameOrUrl);
+            }
 
             if (api == null && !string.IsNullOrEmpty(apiNameOrUrl))
             {

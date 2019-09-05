@@ -117,6 +117,14 @@ namespace ApiGateway.Core
 
             return api;
         }
+
+        public async Task<ApiModel> GetByApiName(string serviceId, string httpMethod, string apiName)
+        {
+            var api = await _apiData.GetByName(serviceId, httpMethod, apiName);
+
+            return api;
+        }
+
         public async Task<ApiModel> GetByApiUrl(string ownerPublicKey, string serviceId, string httpMethod, string apiUrl)
         {
             var ownerKey = await _keyManager.GetByPublicKey(ownerPublicKey);
