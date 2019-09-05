@@ -1,6 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Version>1.1.0</Version>
+    <Authors>Shahedul Huq Khandkar</Authors>
+    <Company>https://shahed.ca</Company>
+    <Copyright>Shahedul Huq Khandkar</Copyright>
+    <PackageLicenseUrl>https://github.com/shahedk/ApiGateway/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/shahedk/ApiGateway</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shahedk/ApiGateway</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>Api Gateway</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />

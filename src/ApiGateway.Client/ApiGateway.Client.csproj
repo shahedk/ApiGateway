@@ -5,13 +5,17 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Shahedul Huq Khandkar</Authors>
     <Company>https://shahed.ca</Company>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/shahedk/ApiGateway</PackageProjectUrl>
     <RepositoryUrl>https://github.com/shahedk/ApiGateway</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageTags>Api Gateway</PackageTags>
-    <Version>0.5.1</Version>
+    <Version>0.7.2</Version>
     <Description>A library to add ApiGateway authentication in external API services</Description>
     <RepositoryType>GIT</RepositoryType>
+    <AssemblyVersion>0.7.2.0</AssemblyVersion>
+    <FileVersion>0.7.2.0</FileVersion>
+    <PackageLicenseUrl>https://github.com/shahedk/ApiGateway/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Shahedul Huq Khandkar</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
